@@ -1,22 +1,24 @@
-package com;
 public class Token {
 
-        //Fix this scope, it's only public for chris's shitty testing
-	public String attribute = new String(); //Is this instantiation necessary?
-    public String name;
+	public String attribute;// = new String();
+	public String name;
 	public TokenType type;
 	
 	public Token(String attribute, String name, String stringType)
 	{
 		this.attribute=attribute;
 		this.name=name;
-		if(stringType.compareToIgnoreCase("keyword") == 0)
+		if(stringType.equals("keyword"))
 		{
 			this.type=TokenType.KEYWORD;
 		}
-		else if(stringType.compareToIgnoreCase("terminal") == 0)
+		else if(stringType.compareToIgnoreCase("terminal")==0)
 		{
 			this.type=TokenType.TERMINAL;
+		}
+		else if(stringType.compareToIgnoreCase("nonterminal")==0)
+		{
+			this.type=TokenType.NON_TERMINAL;
 		}
 	}
 

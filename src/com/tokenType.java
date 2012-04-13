@@ -1,10 +1,9 @@
-package com;
 
 public enum tokenType {
-		KEYWORD(1),
-		TERMINAL(2),
-		NON_TERMINAL(3),
-		END_OF_TOKENS(4);
+		KEYWORD(0),
+		TERMINAL(1),
+		NON_TERMINAL(2),
+		END_OF_TOKENS(3);
 		
 		private final int type;
 		
