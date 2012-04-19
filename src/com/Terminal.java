@@ -1,4 +1,3 @@
-
 public class Terminal {
 
 	private static Lexer lex;

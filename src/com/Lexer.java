@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.StringTokenizer;
 import java.nio.charset.Charset;
 import java.io.File;
+import java.util.LinkedList;
 
 public class Lexer {
   FileReader tempread;
