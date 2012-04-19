@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.StringTokenizer;
 import java.nio.charset.Charset;
 import java.io.File;
+import java.util.LinkedList;
 
 public class Lexer {
 	FileReader tempread;
@@ -13,14 +14,18 @@ public class Lexer {
 	File file;
 	Token[] token_list;
 	StringTokenizer tokenizer;
+	int token_list_index;
+	LinkedList<Token> ll_token_list;
 	public Lexer(String filepath)
 	{
 		try
 		{
+			ll_token_list = new LinkedList<Token>();
 			file = new File(filepath);
 			tempread = new FileReader(file);
 			bufread = new BufferedReader(tempread);
 			token_list = new Token[500];
+			token_list_index=0;
 		}
 		catch(NullPointerException e)
 		{
@@ -43,6 +48,13 @@ public class Lexer {
 				Token tokenizer[];
 				tokenizer=getTokens(line);
 				System.out.println(line);
+
+				for(int j=0;j<tokenizer.length;j++)
+				{
+					//token_list[token_list_index]=tokenizer[j];
+					ll_token_list.add(tokenizer[j]);
+					token_list_index++;
+				}
 			}
 		}
 		catch(IOException e)
@@ -52,14 +64,11 @@ public class Lexer {
 		return null;
 	}
 	
-	@SuppressWarnings("unused")
 	private Token[] getNonTerminals(String line)
 	{
 		
 		return null;
 	}
-	
-	
 	public Token[] getTokens(String tokenized)
 	{
 		tokenizer = new StringTokenizer(tokenized);
@@ -69,7 +78,6 @@ public class Lexer {
 		{
 			stringTokenArray[i]=tokenizer.nextToken();
 		}
-		
 		return stringToToken(stringTokenArray,false);
 	}
 	
@@ -91,10 +99,16 @@ public class Lexer {
 		}
 		return returnArray;
 	}
+	
+	public Token getToken()
+	{
+		return ll_token_list.poll();
+	}
 	public static void main(String [] args)
 	{
-		Lexer lex = new Lexer("~/cmplerprj/CS3240-Parser/compiler/com/input.txt");
+		Lexer lex = new Lexer("../../input.txt");
 		lex.readFile();
-		//lex.getToken();
+		lex.getToken()
+		//lex.getTokens();
 	}
 }
