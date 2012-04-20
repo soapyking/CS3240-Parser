@@ -8,6 +8,7 @@ public class ParseGen
 	 * This program will be command line only and will consist of java 
 	 * (file that contains the grammar definition) (where to save) (if last
 	 * request was a file, this will have the name of the file in the current directory)
+	 */
 	public void main()
 	{
 		

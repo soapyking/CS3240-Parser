@@ -16,6 +16,11 @@ public class Lexer {
 	int token_list_index;
 	LinkedList<Token> ll_token_list;
 
+	public Lexer()
+	{
+		ll_token_list = new LinkedList<Token>();
+	}
+
 	public Lexer(String filepath)
 	{
 		try
@@ -63,16 +68,20 @@ public class Lexer {
 	/**
 	 * This method will return the "tokens" from the string tokenized that are space delimited.
 	 *
-	 * @param tokenized the string that is to be tokenized
+	 * @param toToken the string that is to be tokenized
 	 */
-	public void getTokens(String tokenized)
+	public void getTokens(String toToken)
 	{
-		StringTokenizer tokenizer = new StringTokenizer(tokenized);
+		StringTokenizer tokenizer = new StringTokenizer(toToken);
 		int numtokens = tokenizer.countTokens();
 		String stringTokenArray[] = new String[numtokens];
 		for(int i=0;i<numtokens;i++)
 		{
-			stringTokenArray[i]=tokenizer.nextToken();
+			if(stringTokenArray[i].compareToIgnoreCase("%tokens")!=0)
+			{
+				stringTokenArray[i]=tokenizer.nextToken();
+				stringToToken(stringTokenArray[i],true);
+			}
 		}
 	}
 
@@ -122,8 +131,6 @@ public class Lexer {
 		Lexer lex = new Lexer("../../res/input.txt");
 		lex.readFile();
 		Token temp=lex.getToken();
-		System.out.println(temp);
 		temp=lex.getToken();
-		System.out.println(temp);
 	}
 }
