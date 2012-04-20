@@ -24,6 +24,10 @@ public class Token {
 
 	private enum TokenType {KEYWORD,TERMINAL,NON_TERMINAL,END_OF_TOKENS}
 	
+	public String toString()
+	{
+		return "Token name " + this.name + " Token type: " + this.type;
+	}
 	/*
 	@SuppressWarnings("unused")
 	private TokenType getTokenType()
