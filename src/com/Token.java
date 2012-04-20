@@ -28,10 +28,4 @@ public class Token {
 	{
 		return "Token name " + this.name + " Token type: " + this.type;
 	}
-	/*
-	@SuppressWarnings("unused")
-	private TokenType getTokenType()
-	{
-		return type;
-	}*/
 }

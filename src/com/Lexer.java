@@ -37,7 +37,11 @@ public class Lexer {
 		}
 	}
 
-	public String readFile()
+	/**
+	 * Reads in a file and then calls the getTokens method to add all of the tokens
+	 * into the token queue.
+	 */
+	public void readFile()
 	{
 		try
 		{
@@ -53,7 +57,6 @@ public class Lexer {
 		{
 			e.printStackTrace();
 		}
-		return null;
 	}
 
 
