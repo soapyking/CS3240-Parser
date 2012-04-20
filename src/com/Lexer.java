@@ -74,14 +74,22 @@ public class Lexer {
 	{
 		StringTokenizer tokenizer = new StringTokenizer(toToken);
 		int numtokens = tokenizer.countTokens();
-		String stringTokenArray[] = new String[numtokens];
-		for(int i=0;i<numtokens;i++)
+		System.out.println("The number of tokens are: "+ numtokens);
+		//String stringTokenArray[] = new String[numtokens];
+		for(int i=0;i<tokenizer.countTokens();i++)
 		{
-			if(stringTokenArray[i].compareToIgnoreCase("%tokens")!=0)
+			String strToken=tokenizer.nextToken();
+			System.out.println("i is: "+i);
+			if(strToken.compareToIgnoreCase("%tokens")==0)
+			{
+				strToken=tokenizer.nextToken();
+				stringToToken(strToken,true);
+			}
+			/*if(stringTokenArray[i].compareToIgnoreCase("%tokens")!=0)
 			{
 				stringTokenArray[i]=tokenizer.nextToken();
 				stringToToken(stringTokenArray[i],true);
-			}
+			}*/
 		}
 	}
 
