@@ -2,7 +2,7 @@ import java.util.LinkedList;
 
 public class Rule
 {
-	Token lefths;
-
+	Token left_hs;
+	LinkedList<Token> link=new LinkedList<Token>();
 
 }
