@@ -11,7 +11,7 @@ public class Rule
 		right_hs=new LinkedList<Token>();
 	}
 
-	public getLeft_hs()
+	public Token getLeft_hs()
 	{
 		return left_hs;
 	}

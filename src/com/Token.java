@@ -20,12 +20,21 @@ public class Token {
 		{
 			this.type=TokenType.NON_TERMINAL;
 		}
+		else if(stringType.compareToIgnoreCase("meta")==0)
+		{
+			this.type=TokenType.META;
+		}
+		else if(stringType.compareToIgnoreCase("assign")==0)
+		{
+			this.type=TokenType.ASSIGN;
+		}
 	}
 
-	private enum TokenType {KEYWORD,TERMINAL,NON_TERMINAL,END_OF_TOKENS}
+	private enum TokenType {KEYWORD,TERMINAL,NON_TERMINAL,END_OF_TOKENS,META,ASSIGN}
 	
 	public String toString()
 	{
-		return "Token name " + this.name + " Token type: " + this.type;
+		return "Token name " + this.name + " Token attribute: " + this.attribute +
+		" Token type: " + this.type;
 	}
 }

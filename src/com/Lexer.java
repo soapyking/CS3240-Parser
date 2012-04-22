@@ -65,27 +65,36 @@ public class Lexer {
 	{
 		StringTokenizer tokenizer = new StringTokenizer(toToken);
 		int numtokens = tokenizer.countTokens();
-		System.out.println(numtokens);
-		//String stringTokenArray[] = new String[numtokens];
-		for(int i=0;i<tokenizer.countTokens();i++)
+		boolean token=true;
+		for(int i=0;i<numtokens;i++)
 		{
 			String strToken=tokenizer.nextToken();
 			System.out.println("i is: " + i + "\nstrToken is: " + strToken + ".\n");
 			if(strToken.compareToIgnoreCase("%tokens")==0)
 			{
-				strToken=tokenizer.nextToken();
-				stringToToken(strToken,true);
+				stringToToken(strToken,"meta");
 			}
-			if(strToken.compareToIgnoreCase("%non-terminals")==0)
+			else if(strToken.compareToIgnoreCase("%non-terminals")==0)
 			{
-				strToken=tokenizer.nextToken();
-				stringToToken(strToken,false);
+				stringToToken(strToken,"meta");
+				token=false;
 			}
-			/*if(stringTokenArray[i].compareToIgnoreCase("%tokens")!=0)
+			else if(strToken.compareToIgnoreCase("%Start")==0)
 			{
-				stringTokenArray[i]=tokenizer.nextToken();
-				stringToToken(stringTokenArray[i],true);
-			}*/
+				stringToToken(strToken,"meta");
+			}
+			else if(strToken.compareToIgnoreCase("%rules")==0)
+			{
+				stringToToken(strToken,"meta");
+			}
+			else if(token==true)
+			{
+				stringToToken(strToken,"terminal");
+			}
+			else if(token==false)
+			{
+				stringToToken(strToken,"nonterminal");
+			}
 		}
 	}
 
@@ -94,20 +103,12 @@ public class Lexer {
 	 * Changes the string "token" that is passed in and wraps it into the class Token.
 	 * This method will add the token to the ll_token_list automatically.
 	 *
-	 * @param input 		The strinlng that will be the token's description
-	 * @param isTerminal	A boolean describing if the token is a terminal
+	 * @param input 		The string that will be the token's description
+	 * @param type			The string that is the type of the token
 	 */
-	private void stringToToken(String input, boolean isTerminal)
+	private void stringToToken(String input, String type)
 	{
-		Token token;
-		if(isTerminal)
-		{
-			token = new Token(input,null,"terminal");
-		}
-		else
-		{
-			token = new Token(input,null,"nonterminal");
-		}
+		Token token=new Token(input,null,type);
 		ll_token_list.add(token);
 	}
 

@@ -1,4 +1,4 @@
-%Tokens BEGIN END SEMICOLON COMMA INTNUM
+%Tokens BEGIN END SEMICOLON COMMA INTNUM LEFTPAR RIGHTPAR ASSIGN
 %Non-terminals <Tiny-program> <statement-list> <statement>
 %Start <Tiny-program>
 %Rules
