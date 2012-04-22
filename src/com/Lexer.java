@@ -3,17 +3,11 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.StringTokenizer;
-import java.nio.charset.Charset;
 import java.io.File;
 import java.util.LinkedList;
 
 public class Lexer {
-	FileReader tempread;
-	BufferedReader bufread;
-	Charset chars;
 	File file;
-	Token[] token_list;
-	int token_list_index;
 	LinkedList<Token> ll_token_list;
 
 	public Lexer()
@@ -27,18 +21,10 @@ public class Lexer {
 		{
 			ll_token_list = new LinkedList<Token>();
 			file = new File(filepath);
-			tempread = new FileReader(file);
-			bufread = new BufferedReader(tempread);
-			token_list = new Token[500];
-			token_list_index=0;
 		}
 		catch(NullPointerException e)
 		{
 			e.printStackTrace();
-		}
-		catch(FileNotFoundException e)
-		{
-			System.out.println("fuck you!!!!!!!!\n Enter in a godddamned real file");
 		}
 	}
 
@@ -50,13 +36,18 @@ public class Lexer {
 	{
 		try
 		{
-			int i=0;
+			FileReader tempread = new FileReader(file);
+			BufferedReader bufread = new BufferedReader(tempread);
 			while(bufread.ready())
 			{
 				String line = bufread.readLine();
+				System.out.println("line is: " + line);
 				getTokens(line);
-				System.out.println(line);
 			}
+		}
+		catch(FileNotFoundException e)
+		{
+			System.out.println("fuck you!!!!!!!!\n Enter in a godddamned real file");
 		}
 		catch(IOException e)
 		{
@@ -74,16 +65,21 @@ public class Lexer {
 	{
 		StringTokenizer tokenizer = new StringTokenizer(toToken);
 		int numtokens = tokenizer.countTokens();
-		System.out.println("The number of tokens are: "+ numtokens);
+		System.out.println(numtokens);
 		//String stringTokenArray[] = new String[numtokens];
 		for(int i=0;i<tokenizer.countTokens();i++)
 		{
 			String strToken=tokenizer.nextToken();
-			System.out.println("i is: "+i);
+			System.out.println("i is: " + i + "\nstrToken is: " + strToken + ".\n");
 			if(strToken.compareToIgnoreCase("%tokens")==0)
 			{
 				strToken=tokenizer.nextToken();
 				stringToToken(strToken,true);
+			}
+			if(strToken.compareToIgnoreCase("%non-terminals")==0)
+			{
+				strToken=tokenizer.nextToken();
+				stringToToken(strToken,false);
 			}
 			/*if(stringTokenArray[i].compareToIgnoreCase("%tokens")!=0)
 			{
@@ -98,7 +94,7 @@ public class Lexer {
 	 * Changes the string "token" that is passed in and wraps it into the class Token.
 	 * This method will add the token to the ll_token_list automatically.
 	 *
-	 * @param input 		The string that will be the token's description
+	 * @param input 		The strinlng that will be the token's description
 	 * @param isTerminal	A boolean describing if the token is a terminal
 	 */
 	private void stringToToken(String input, boolean isTerminal)
@@ -134,11 +130,33 @@ public class Lexer {
 		}
 	}
 
+
+	/**
+	 * Returns whether or not the Lexer has any tokens
+	 *
+	 * @return true if the lexer has more tokens
+	 * 		   false if the lexer doesn't
+	 */
+	public boolean hasTokens()
+	{
+		if(ll_token_list.peek()!=null)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
 	public static void main(String [] args)
 	{
 		Lexer lex = new Lexer("../../res/input.txt");
 		lex.readFile();
-		Token temp=lex.getToken();
-		temp=lex.getToken();
+		while(lex.hasTokens())
+		{
+			Token temp = lex.getToken();
+			System.out.println(temp);
+		}
 	}
 }
