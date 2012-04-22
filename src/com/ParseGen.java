@@ -1,5 +1,5 @@
 import java.lang.ArrayIndexOutOfBoundsException;
-
+import java.util.LinkedList;
 
 public class ParseGen
 {
@@ -8,16 +8,47 @@ public class ParseGen
 	private static LinkedList<Token> terminals;
 	private static LinkedList<Token> nonTerminals;
 
-
 		
+	public ParseGen()
+	{
+		terminals = new LinkedList<Token>();
+		nonTerminals = new LinkedList<Token>();
+		grammar = new Grammar();
+	}
 
+
+	/**
+	 * Creates a grammar from the lexer's tokens.
+	 * Will make sure that the lexer has tokens before beginning.
+	 */
 	public void makeGrammar()
 	{
-		lex.getToken();
-
+		while(lex.hasTokens())
+		{
+			Token token=lex.getToken();
+			System.out.println(token);
+			if(token.type==TokenType.TERMINAL)
+			{
+				terminals.add(token);
+			}
+			else if(token.type==TokenType.NON_TERMINAL)
+			{
+				if(lex.nextToken().type==TokenType.ASSIGN)
+				{
+					Rule nextRule=new Rule(token);
+					LinkedList<Token> right = new LinkedList<Token>();
+					while((token=lex.getToken()).type!=TokenType.END_OF_RULE)
+					{
+						right.add(token);
+					}
+					nextRule.addRight_hs(right);
+					grammar.add(nextRule);
+				}
+			}
+		}
 	}
+
 	/**
-	 * Going to try and do this as eloquantly as possible
 	 * This program will be command line only and will consist of java 
 	 * (file that contains the grammar definition) (where to save) (if last
 	 * request was a file, this will have the name of the file in the current directory)
@@ -33,6 +64,10 @@ public class ParseGen
 			e.printStackTrace();
 		}
 		lex.readFile();
-		lex.getToken();
+		ParseGen parse = new ParseGen();
+		parse.makeGrammar();
+		System.out.println("The grammar is");
+		System.out.println(grammar);
+		grammar.removeRecursion();
 	}
 }

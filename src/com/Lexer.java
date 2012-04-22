@@ -41,7 +41,6 @@ public class Lexer {
 			while(bufread.ready())
 			{
 				String line = bufread.readLine();
-				System.out.println("line is: " + line);
 				getTokens(line);
 			}
 		}
@@ -66,10 +65,10 @@ public class Lexer {
 		StringTokenizer tokenizer = new StringTokenizer(toToken);
 		int numtokens = tokenizer.countTokens();
 		boolean token=true;
+		boolean hitRules=false;
 		for(int i=0;i<numtokens;i++)
 		{
 			String strToken=tokenizer.nextToken();
-			System.out.println("i is: " + i + "\nstrToken is: " + strToken + ".\n");
 			if(strToken.compareToIgnoreCase("%tokens")==0)
 			{
 				stringToToken(strToken,"meta");
@@ -86,6 +85,15 @@ public class Lexer {
 			else if(strToken.compareToIgnoreCase("%rules")==0)
 			{
 				stringToToken(strToken,"meta");
+				hitRules=true;
+			}
+			else if(strToken.charAt(0)=='<')
+			{
+				stringToToken(strToken,"nonterminal");
+			}
+			else if(strToken.compareTo(":")==0)
+			{
+				stringToToken(strToken,"assign");
 			}
 			else if(token==true)
 			{
@@ -95,7 +103,12 @@ public class Lexer {
 			{
 				stringToToken(strToken,"nonterminal");
 			}
+			//if(hitRules)
+			//{
+			//}
 		}
+		stringToToken("","endofrule");
+		
 	}
 
 
@@ -150,14 +163,37 @@ public class Lexer {
 		}
 	}
 
+
+	/**
+	 * Returns the next token in the linked list without removing it from the linked list.
+	 *
+	 * @return the token that is next in the linked list.
+	 */
+	public Token nextToken()
+	{
+		if(hasTokens())
+		{
+			return ll_token_list.peek();
+		}
+		return null;
+	}
+
+
+	public String toString()
+	{
+		String returned = new String();
+		for(int i=0;i<ll_token_list.size();i++)
+		{
+			returned+=ll_token_list.get(i);
+			returned+="\n";
+		}
+		return returned;
+	}
+
 	public static void main(String [] args)
 	{
 		Lexer lex = new Lexer("../../res/input.txt");
 		lex.readFile();
-		while(lex.hasTokens())
-		{
-			Token temp = lex.getToken();
-			System.out.println(temp);
-		}
+		System.out.println(lex);
 	}
 }

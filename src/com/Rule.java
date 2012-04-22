@@ -15,5 +15,25 @@ public class Rule
 	{
 		return left_hs;
 	}
+
+	public void addRight_hs(LinkedList<Token> right)
+	{
+		right_hs=right;
+	}
+
+	public String toString()
+	{
+		String returned = new String();
+		returned += left_hs;
+		returned += " -> \n";
+		for(int i=0;i<right_hs.size();i++)
+		{
+			returned+="          ";
+			returned+= right_hs.get(i);
+			returned+="\n";
+		}
+		returned += "\n";
+		return returned;
+	}
 	
 }

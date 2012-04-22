@@ -1,4 +1,5 @@
-public class Token {
+public class Token 
+{
 
 	public String attribute;// = new String();
 	public String name;
@@ -28,9 +29,13 @@ public class Token {
 		{
 			this.type=TokenType.ASSIGN;
 		}
+		else if(stringType.compareToIgnoreCase("endofrule")==0)
+		{
+			this.type=TokenType.END_OF_RULE;
+		}
 	}
 
-	private enum TokenType {KEYWORD,TERMINAL,NON_TERMINAL,END_OF_TOKENS,META,ASSIGN}
+	//public enum TokenType {KEYWORD,TERMINAL,NON_TERMINAL,END_OF_TOKENS,META,ASSIGN}
 	
 	public String toString()
 	{
