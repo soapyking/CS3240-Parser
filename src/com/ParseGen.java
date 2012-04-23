@@ -26,17 +26,17 @@ public class ParseGen
 		while(lex.hasTokens())
 		{
 			Token token=lex.getToken();
-			if(token.type==TokenType.TERMINAL)
+			if(token.getType() ==TokenType.TERMINAL)
 			{
 				terminals.add(token);
 			}
-			else if(token.type==TokenType.NON_TERMINAL)
+			else if(token.getType() ==TokenType.NON_TERMINAL)
 			{
-				if(lex.nextToken().type==TokenType.ASSIGN)
+				if(lex.nextToken().getType()==TokenType.ASSIGN)
 				{
 					Rule nextRule=new Rule(token);
 					LinkedList<Token> right = new LinkedList<Token>();
-					while((token=lex.getToken()).type!=TokenType.END_OF_RULE)
+					while((token=lex.getToken()).getType()!=TokenType.END_OF_RULE)
 					{
 						right.add(token);
 					}

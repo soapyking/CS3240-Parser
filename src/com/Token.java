@@ -1,13 +1,13 @@
-public class Token 
+public class Token implements Comparable
 {
 
-	public String attribute;// = new String();
-	public String name;
-	public TokenType type;
 	public FirstSet firstSet;
 	public FollowSet followSet;
+	private String attribute;
+	private String name;
+	private TokenType type;
 	
-	public Token(String attribute, String name, String stringType)
+	public Token(String attribute, String name, String stringType) 
 	{
 		this.attribute=attribute;
 		this.name=name;
@@ -40,11 +40,31 @@ public class Token
 	//public enum TokenType {KEYWORD,TERMINAL,NON_TERMINAL,END_OF_TOKENS,META,ASSIGN}
 	
 
-
-
 	public String toString()
 	{
 		return /*"Token name " + this.name +*/ " Token attribute: " + this.attribute +
 		" Token type: " + this.type;
+	}
+	
+	public String getAttribute() {
+		return attribute;
+	}
+	
+	public String getName() {
+		return name;
+	}
+	
+	public TokenType getType() {
+		return type;
+	}
+
+	/**
+	 * Comparator for two Tokens. Simply uses a string compareTo() on the Tokens' attributes
+	 */
+	@Override
+	public int compareTo(Object inOther) {
+		if (inOther == this) return 0;
+		Token other = (Token)inOther;
+		return this.attribute.compareTo(other.getAttribute());
 	}
 }
