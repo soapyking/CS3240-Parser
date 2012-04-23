@@ -38,10 +38,21 @@ public class Grammar
 	/**
 	 * This method removes all immediate left recursion.
 	 * Will check every rule in the grammar to be sure.
+	 * Call this method before the seperate method.
 	 */
 	public void removeRecursion()
 	{
-		
+		for(int i=0;i<countRules();i++)
+		{
+			Rule leftrecurse = rules.get(i);
+			for(int j=0;j<(i-1);j++)
+			{
+				if(leftrecurse.searchRules(rules.get(j).attribute))	
+				{
+					
+				}
+			}
+		}
 	}
 
 

@@ -26,7 +26,6 @@ public class ParseGen
 		while(lex.hasTokens())
 		{
 			Token token=lex.getToken();
-			System.out.println(token);
 			if(token.type==TokenType.TERMINAL)
 			{
 				terminals.add(token);

@@ -37,9 +37,12 @@ public class Token
 
 	//public enum TokenType {KEYWORD,TERMINAL,NON_TERMINAL,END_OF_TOKENS,META,ASSIGN}
 	
+
+
+
 	public String toString()
 	{
-		return "Token name " + this.name + " Token attribute: " + this.attribute +
+		return /*"Token name " + this.name +*/ " Token attribute: " + this.attribute +
 		" Token type: " + this.type;
 	}
 }
