@@ -12,11 +12,11 @@ public class Rule
 		right_hs=new LinkedList<Token>();
 	}
 
-	public boolean searchRightForAttribute(String search)
+	public boolean searchRightForName(String search)
 	{
 		for(int i=0;i<right_hs.size();i++)
 		{
-			if(right_hs.get(i).getAttribute().compareTo(search)==0)
+			if(right_hs.get(i).getName().compareTo(search)==0)
 			{
 				return true;
 			}
@@ -37,6 +37,15 @@ public class Rule
 	public void addRight_hs(LinkedList<Token> right)
 	{
 		right_hs=right;
+	}
+
+	public Rule clone()
+	{
+		//TODO finish this section.  It doesn't compile at the moment but I wanted to push what I had.
+		//Token LHS = new Token(this.left_hs.getName(),this.left_hs.getTypeString());
+		//LinkedList<Token> right  = new LinkedList<Token>();
+		//right.add(
+		//return null;
 	}
 
 	public String toString()

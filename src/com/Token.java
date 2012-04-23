@@ -3,13 +3,11 @@ public class Token implements Comparable
 
 	public FirstSet firstSet;
 	public FollowSet followSet;
-	private String attribute;
 	private String name;
 	private TokenType type;
 	
-	public Token(String attribute, String name, String stringType) 
+	public Token(String name, String stringType) 
 	{
-		this.attribute=attribute;
 		this.name=name;
 		if(stringType.equals("keyword"))
 		{
@@ -37,18 +35,13 @@ public class Token implements Comparable
 		}
 	}
 
-	//public enum TokenType {KEYWORD,TERMINAL,NON_TERMINAL,END_OF_TOKENS,META,ASSIGN}
 	
 
 	public String toString()
 	{
-		return /*"Token name " + this.name +*/ " Token attribute: " + this.attribute +
-		" Token type: " + this.type;
+		return "Token name " + this.name + " Token type: " + this.type;
 	}
 	
-	public String getAttribute() {
-		return attribute;
-	}
 	
 	public String getName() {
 		return name;
@@ -57,14 +50,36 @@ public class Token implements Comparable
 	public TokenType getType() {
 		return type;
 	}
+	public String getTypeString()
+	{
+		if(type==TokenType.KEYWORD)
+		{
+			return "keyword";
+		}
+		else if(type==TokenType.TERMINAL)
+		{
+			return "terminal";
+		}
+		else if(type==TokenType.NON_TERMINAL)
+		{
+			return "nonterminal";
+		}
+		else if(type==TokenType.ASSIGN)
+		{
+			return "assign";
+		}
+		return null;
+	}
+
+		
 
 	/**
-	 * Comparator for two Tokens. Simply uses a string compareTo() on the Tokens' attributes
+	 * Comparator for two Tokens. Simply uses a string compareTo() on the Tokens' name
 	 */
 	@Override
 	public int compareTo(Object inOther) {
 		if (inOther == this) return 0;
 		Token other = (Token)inOther;
-		return this.attribute.compareTo(other.getAttribute());
+		return this.name.compareTo(other.getName());
 	}
 }
