@@ -4,16 +4,14 @@ public class Rule
 {
 	Token left_hs;
 	LinkedList<Token> right_hs;
-	boolean hasOr;
 
 	public Rule(Token left_hs)
 	{
-		hasOr=false;
 		this.left_hs=left_hs;
 		right_hs=new LinkedList<Token>();
 	}
 
-	public boolean searchRules(String search)
+	public boolean searchRightForAttribute(String search)
 	{
 		for(int i=0;i<right_hs.size();i++)
 		{

@@ -47,14 +47,26 @@ public class Grammar
 			Rule leftrecurse = rules.get(i);
 			for(int j=0;j<(i-1);j++)
 			{
-				if(leftrecurse.searchRules(rules.get(j).attribute))	
-				{
-					
-				}
 			}
 		}
 	}
 
+
+	public FollowSet makeFollowSet(Token nonterminal)
+	{
+		return null;	
+	}
+
+	public FirstSet makeFirstSet(Token nonterminal)
+	{
+		for(int i=0;i<countRules();i++)
+		{
+			Rule rule = rules.get(i);
+			Token token = rule.getLeft_hs();
+			//assert token.type==TokenType.NONTERMINAL; 
+		}
+		return null;
+	}
 
 	public String toString()
 	{
@@ -64,5 +76,15 @@ public class Grammar
 			returned+=rules.get(i);
 		}
 		return returned;
+	}
+
+	public Rule getRule(int index)
+	{
+		return rules.get(index);
+	}
+
+	public void separate()
+	{
+
 	}
 }

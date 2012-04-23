@@ -4,6 +4,8 @@ public class Token
 	public String attribute;// = new String();
 	public String name;
 	public TokenType type;
+	public FirstSet firstSet;
+	public FollowSet followSet;
 	
 	public Token(String attribute, String name, String stringType)
 	{

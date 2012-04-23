@@ -67,6 +67,7 @@ public class ParseGen
 		parse.makeGrammar();
 		System.out.println("The grammar is");
 		System.out.println(grammar);
-		grammar.removeRecursion();
+		//grammar.removeRecursion();
+		//grammar.makeFirstSet((grammar.getRule(1)).getLeft_hs());
 	}
 }
