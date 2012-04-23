@@ -1,4 +1,5 @@
-public class Token {
+public class Token 
+{
 
 	public String attribute;// = new String();
 	public String name;
@@ -20,14 +21,28 @@ public class Token {
 		{
 			this.type=TokenType.NON_TERMINAL;
 		}
+		else if(stringType.compareToIgnoreCase("meta")==0)
+		{
+			this.type=TokenType.META;
+		}
+		else if(stringType.compareToIgnoreCase("assign")==0)
+		{
+			this.type=TokenType.ASSIGN;
+		}
+		else if(stringType.compareToIgnoreCase("endofrule")==0)
+		{
+			this.type=TokenType.END_OF_RULE;
+		}
 	}
 
-	private enum TokenType {KEYWORD,TERMINAL,NON_TERMINAL,END_OF_TOKENS}
+	//public enum TokenType {KEYWORD,TERMINAL,NON_TERMINAL,END_OF_TOKENS,META,ASSIGN}
 	
-	/*
-	@SuppressWarnings("unused")
-	private TokenType getTokenType()
+
+
+
+	public String toString()
 	{
-		return type;
-	}*/
+		return /*"Token name " + this.name +*/ " Token attribute: " + this.attribute +
+		" Token type: " + this.type;
+	}
 }
