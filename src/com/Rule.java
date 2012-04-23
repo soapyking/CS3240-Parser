@@ -2,9 +2,9 @@ import java.util.LinkedList;
 
 public class Rule
 {
-	Token left_hs;
-	LinkedList<Token> right_hs;
-	boolean hasOr;
+	private Token left_hs;
+	private LinkedList<Token> right_hs;
+	private boolean hasOr;
 
 	public Rule(Token left_hs)
 	{
@@ -17,7 +17,7 @@ public class Rule
 	{
 		for(int i=0;i<right_hs.size();i++)
 		{
-			if(right_hs.get(i).attribute.compareTo(search)==0)
+			if(right_hs.get(i).getAttribute().compareTo(search)==0)
 			{
 				return true;
 			}
@@ -25,11 +25,16 @@ public class Rule
 		return false;
 	}
 
-	public Token getLeft_hs()
+	public Token getLeftHS()
 	{
 		return left_hs;
 	}
 
+	public LinkedList<Token> getRightHS()
+	{
+		return right_hs;
+	}
+	
 	public void addRight_hs(LinkedList<Token> right)
 	{
 		right_hs=right;

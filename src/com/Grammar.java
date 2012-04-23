@@ -44,13 +44,11 @@ public class Grammar
 	{
 		for(int i=0;i<countRules();i++)
 		{
-			Rule leftrecurse = rules.get(i);
-			for(int j=0;j<(i-1);j++)
-			{
-				if(leftrecurse.searchRules(rules.get(j).attribute))	
-				{
-					
-				}
+			Rule thisRule = rules.get(i);
+			Token leftHS = thisRule.getLeftHS();
+			LinkedList<Token> rightHS = thisRule.getRightHS();
+			for(Token t: rightHS) {
+				//TODO: This
 			}
 		}
 	}
