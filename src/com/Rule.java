@@ -1,3 +1,4 @@
+package com;
 import java.util.LinkedList;
 
 public class Rule
@@ -45,14 +46,14 @@ public class Rule
 		right_hs=right;
 	}
 
-	public Rule clone()
-	{
-		//TODO finish this section.  It doesn't compile at the moment but I wanted to push what I had.
-		//Token LHS = new Token(this.left_hs.getName(),this.left_hs.getTypeString());
-		//LinkedList<Token> right  = new LinkedList<Token>();
-		//right.add(
-		//return null;
-	}
+//	public Rule clone()
+//	{
+//		//TODO finish this section.  It doesn't compile at the moment but I wanted to push what I had.
+//		//Token LHS = new Token(this.left_hs.getName(),this.left_hs.getTypeString());
+//		//LinkedList<Token> right  = new LinkedList<Token>();
+//		//right.add(
+//		//return null;
+//	}
 
 	public String toString()
 	{

@@ -1,4 +1,0 @@
-%Tokens BEGIN END SEMICOLON COMMA INTNUM
-%Non-terminals <Tiny-program> <statement-list> <statement>
-%Start <Tiny-program>
-%Rules
