@@ -48,6 +48,7 @@ public class Grammar
 			Token leftHS = thisRule.getLeftHS();
 			LinkedList<Token> rightHS = thisRule.getRightHS();
 			for(Token t: rightHS) {
+				if (t.compareTo(rightHS.getFirst())==0);
 				//TODO: This
 			}
 		}
@@ -64,7 +65,7 @@ public class Grammar
 		for(int i=0;i<countRules();i++)
 		{
 			Rule rule = rules.get(i);
-			Token token = rule.getLeft_hs();
+			Token token = rule.getLeftHS();
 			//assert token.type==TokenType.NONTERMINAL; 
 		}
 		return null;

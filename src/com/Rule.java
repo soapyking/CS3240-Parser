@@ -11,6 +11,12 @@ public class Rule
 		this.left_hs=left_hs;
 		right_hs=new LinkedList<Token>();
 	}
+	
+	public Rule(Token left_hs, LinkedList<Token> right_hs)
+	{
+		this.left_hs=left_hs;
+		this.right_hs=right_hs;
+	}
 
 	public boolean searchRightForAttribute(String search)
 	{
