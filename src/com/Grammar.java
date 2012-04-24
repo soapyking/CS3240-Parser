@@ -76,7 +76,7 @@ public class Grammar
 		String returned=new String();
 		for(int i=0;i<countRules();i++)
 		{
-			returned+=rules.get(i);
+			returned+=rules.get(i).toString();
 		}
 		return returned;
 	}
@@ -88,6 +88,28 @@ public class Grammar
 
 	public void separate()
 	{
-
+		for(int i=0;i<countRules();i++)
+		{
+			Rule rule = rules.get(i);
+			LinkedList<Token> rightHS = rule.getRightHS();
+			int size = rule.getRightHS().size();
+			for(int j=0;j<size;j++)
+			{
+				LinkedList<Token> allTheTokens = new LinkedList<Token>();
+				Token compare = rightHS.get(j);
+				allTheTokens.add(compare);
+				System.out.println("\n\n\n" + allTheTokens + " = all the tokens");
+				if(compare.getName()=="|")
+				{
+					allTheTokens.removeLast();
+					Rule newRule = new Rule(rule.getLeftHS());
+					newRule.addRight_hs(allTheTokens);
+					rules.add(i,newRule);
+					i++;
+					size++;
+					allTheTokens = new LinkedList<Token>();
+				}
+			}
+		}
 	}
 }

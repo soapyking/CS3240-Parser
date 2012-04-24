@@ -121,7 +121,7 @@ public class Lexer {
 	 */
 	private void stringToToken(String input, String type)
 	{
-		Token token=new Token(input,null,type);
+		Token token=new Token(input,type);
 		ll_token_list.add(token);
 	}
 
