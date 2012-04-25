@@ -7,6 +7,11 @@ public class Token implements Comparable
 	private String name;
 	private TokenType type;
 	
+
+	public Token()
+	{
+		this.type=TokenType.NON_TERMINAL;
+	}
 	public Token(String name, String stringType) 
 	{
 		this.name=name;
@@ -83,5 +88,13 @@ public class Token implements Comparable
 		if (inOther == this) return 0;
 		Token other = (Token)inOther;
 		return this.name.compareTo(other.getName());
+	}
+
+	public Token clone()
+	{
+		Token cloned = new Token();
+		cloned.name = this.name;
+		cloned.type = this.type;
+		return cloned;
 	}
 }
