@@ -9,7 +9,13 @@ public class Rule
 	public Rule(Token left_hs)
 	{
 		this.left_hs=left_hs;
-		right_hs=new LinkedList<Token>();
+		right_hs=null;
+	}
+	
+	public Rule(Token left_hs,LinkedList<Token> right_hs)
+	{
+		this.left_hs=left_hs;
+		this.right_hs=right_hs;
 	}
 
 	public boolean searchRightForName(String search)
@@ -24,6 +30,16 @@ public class Rule
 		return false;
 	}
 
+	public LinkedList<Token> chopOffAt(int index)
+	{
+		LinkedList<Token> chopped = new LinkedList<Token>();
+		for(int i=index;i<right_hs.size();i++)
+		{
+			chopped.add(right_hs.get(index));
+		}
+		return chopped;
+	}
+
 	public Token getLeftHS()
 	{
 		return left_hs;
@@ -36,16 +52,20 @@ public class Rule
 	
 	public void addRight_hs(LinkedList<Token> right)
 	{
-		right_hs=right;
+		this.right_hs=right;
 	}
 
 	public Rule clone()
 	{
-		//TODO finish this section.  It doesn't compile at the moment but I wanted to push what I had.
-		//Token LHS = new Token(this.left_hs.getName(),this.left_hs.getTypeString());
-		//LinkedList<Token> right  = new LinkedList<Token>();
-		//right.add(
-		//return null;
+		Token left = new Token(this.left_hs.getName(),this.left_hs.getTypeString());
+		LinkedList<Token> right  = new LinkedList<Token>();
+		for(int i=0;i<this.right_hs.size();i++)
+		{
+			right.add(this.right_hs.get(i));
+		}
+		Rule returning = new Rule(left);
+		returning.addRight_hs(right);
+		return returning;
 	}
 
 	public String toString()

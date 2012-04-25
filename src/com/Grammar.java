@@ -85,30 +85,38 @@ public class Grammar
 		return rules.get(index);
 	}
 
+
 	public void separate()
 	{
-		for(int i=0;i<countRules();i++)
+		LinkedList<Rule> newRules = new LinkedList<Rule>();
+		while(!(rules.isEmpty()))
 		{
-			Rule rule = rules.get(i);
-			LinkedList<Token> rightHS = rule.getRightHS();
-			int size = rule.getRightHS().size();
-			for(int j=0;j<size;j++)
+			Rule removed = rules.poll().clone();
+			Token leftHS = removed.getLeftHS().clone();
+			LinkedList<Token> rightHS = removed.getRightHS();
+			LinkedList<Token> newRight = new LinkedList<Token>();
+			while(!(rightHS.isEmpty()))
 			{
-				LinkedList<Token> allTheTokens = new LinkedList<Token>();
-				Token compare = rightHS.get(j);
-				allTheTokens.add(compare);
-				System.out.println("\n\n\n" + allTheTokens + " = all the tokens");
-				if(compare.getName()=="|")
+				Token removeToken = rightHS.poll().clone();
+				if(removeToken.getName().compareTo("|")==0)
 				{
-					allTheTokens.removeLast();
-					Rule newRule = new Rule(rule.getLeftHS());
-					newRule.addRight_hs(allTheTokens);
-					rules.add(i,newRule);
-					i++;
-					size++;
-					allTheTokens = new LinkedList<Token>();
+					Rule toAdd = new Rule(leftHS,newRight);
+					newRules.add(toAdd);
+					newRight = new LinkedList<Token>();
+				}
+				else
+				{
+					newRight.add(removeToken);
+					if(rightHS.isEmpty())
+					{
+						Rule toAdd = new Rule(leftHS,newRight);
+						newRules.add(toAdd);
+					}
 				}
 			}
 		}
+		rules = null;
+		rules = newRules;
 	}
+
 }
