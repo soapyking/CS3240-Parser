@@ -51,6 +51,7 @@ public class Token implements Comparable
 	public TokenType getType() {
 		return type;
 	}
+	
 	public String getTypeString()
 	{
 		if(type==TokenType.KEYWORD)

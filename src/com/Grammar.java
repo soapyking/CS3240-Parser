@@ -39,7 +39,7 @@ public class Grammar
 	/**
 	 * This method removes all immediate left recursion.
 	 * Will check every rule in the grammar to be sure.
-	 * Call this method before the seperate method.
+	 * Call this method before the separate method.
 	 */
 	public void removeRecursion()
 	{
@@ -48,9 +48,9 @@ public class Grammar
 			Rule thisRule = rules.get(i);
 			Token leftHS = thisRule.getLeftHS();
 			LinkedList<Token> rightHS = thisRule.getRightHS();
-			for(Token t: rightHS) {
-				if (t.compareTo(rightHS.getFirst())==0);
-				//TODO: This
+			if (leftHS.compareTo(rightHS.getFirst()) == 0) {
+				Token left_rem = new Token(leftHS.getName()+"_prime", leftHS.getTypeString());
+				
 			}
 		}
 	}
