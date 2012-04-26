@@ -9,7 +9,7 @@ import java.util.LinkedList;
 public class Lexer {
 	private File file;
 	private TokenWriter tokenWriter;
-	private LinkedList<Token> ll_token_list;
+	public LinkedList<Token> ll_token_list;
 
 	public Lexer()
 	{

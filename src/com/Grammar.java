@@ -57,9 +57,8 @@ public class Grammar
 	}
 
 
-	public FollowSet makeFollowSet(Token nonterminal)
+	public void makeFollowSet(Token nonterminal)
 	{
-		return null;	
 	}
 
 	public void makeFirstSet()
@@ -74,12 +73,18 @@ public class Grammar
 				Token Xi = rightHS.get(j);
 				if(Xi.getTypeString().compareToIgnoreCase("terminal")==0)
 				{
-					left.getFirstSet().add(Xi.clone());
+					if(left.getFirstSet()!=null)
+					{
+						left.getFirstSet().add(Xi.clone());
 					//System.out.println("Added token " + Xi + " to the first set of " + left);
+					}
 				}
 				if(Xi.getTypeString().compareToIgnoreCase("nonterminal")==0)
 				{
-					left.getFirstSet().add(Xi.getFirstSet().getSet());
+					if(left.getFirstSet()!=null)
+					{
+						left.getFirstSet().add(Xi.getFirstSet().getSet());
+					}
 				}
 			}
 		}
@@ -90,8 +95,15 @@ public class Grammar
 	{
 		for(int i=0;i<rules.size();i++)
 		{
-			System.out.println(rules.get(i).getLeftHS().toString() + " = { \n");
-			System.out.println(rules.get(i).getLeftHS().getFirstSet().toString());
+			if(rules.get(i).getLeftHS()!=null)
+			{
+				System.out.println(rules.get(i).getLeftHS().toString() + " = { \n");
+			}
+			if(rules.get(i).getLeftHS().getFirstSet()!=null)
+			{
+				System.out.println(rules.get(i).getLeftHS().getFirstSet().toString());
+			}
+
 			System.out.println("\n}\n");
 		}
 	}
