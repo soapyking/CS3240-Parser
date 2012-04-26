@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="com"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="/home/alex/cmplerprj/CS3240-Parser/res/junit-4.11-SNAPSHOT-20120416-1530.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

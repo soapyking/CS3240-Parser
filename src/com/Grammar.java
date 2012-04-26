@@ -4,6 +4,9 @@ import java.util.LinkedList;
 public class Grammar
 {
 	private LinkedList<Rule> rules;
+	private LinkedList<Token> nonTerminals;
+	//Used for determining unique nonterminals for use in the
+	//first and follow set methods
 
 	public Grammar()
 	{
@@ -79,34 +82,73 @@ public class Grammar
 						if(r.getLeftHS().compareTo(thisRule.getLeftHS()) == 0) {
 							if(r.getRightHS().getLast().getName() != leftRemName) {
 								r.getRightHS().add(new Token(leftRemName, left.getTypeString()));
-							}						if(r.getLeftHS().compareTo(thisRule.getLeftHS()) == 0) {
-								if(r.getRightHS().getLast().getName() != leftRemName) {
-									r.getRightHS().add(new Token(leftRemName, left.getTypeString()));
-								}
+							}
+						}
+						if(r.getLeftHS().compareTo(thisRule.getLeftHS()) == 0) {
+							if(r.getRightHS().getLast().getName() != leftRemName) {
+								r.getRightHS().add(new Token(leftRemName, left.getTypeString()));
 							}
 						}
 					}
 				}
+			}
+			else {
+				rulesCleaned.add(thisRule);
 			}
 		}
 		rules = rulesCleaned;
 	}
 
 
-	public FollowSet makeFollowSet(Token nonterminal)
+	public void makeFollowSet(Token nonterminal)
 	{
-		return null;	
 	}
 
-	public FirstSet makeFirstSet(Token nonterminal)
+	public void makeFirstSet()
 	{
 		for(int i=0;i<countRules();i++)
 		{
 			Rule rule = rules.get(i);
-			Token token = rule.getLeftHS();
-			//assert token.type==TokenType.NONTERMINAL; 
+			Token left = rule.getLeftHS();
+			LinkedList<Token> rightHS = rule.getRightHS();
+			for(int j=0;j<rightHS.size();j++)
+			{
+				Token Xi = rightHS.get(j);
+				if(Xi.getTypeString().compareToIgnoreCase("terminal")==0)
+				{
+					if(left.getFirstSet()!=null)
+					{
+						left.getFirstSet().add(Xi.clone());
+					//System.out.println("Added token " + Xi + " to the first set of " + left);
+					}
+				}
+				if(Xi.getTypeString().compareToIgnoreCase("nonterminal")==0)
+				{
+					if(left.getFirstSet()!=null)
+					{
+						left.getFirstSet().add(Xi.getFirstSet().getSet());
+					}
+				}
+			}
 		}
-		return null;
+		printFirstSet();
+	}
+	
+	public void printFirstSet()
+	{
+		for(int i=0;i<rules.size();i++)
+		{
+			if(rules.get(i).getLeftHS()!=null)
+			{
+				System.out.println(rules.get(i).getLeftHS().toString() + " = { \n");
+			}
+			if(rules.get(i).getLeftHS().getFirstSet()!=null)
+			{
+				System.out.println(rules.get(i).getLeftHS().getFirstSet().toString());
+			}
+
+			System.out.println("\n}\n");
+		}
 	}
 
 	public String toString()
@@ -121,7 +163,8 @@ public class Grammar
 
 	public Rule getRule(int index)
 	{
-		return rules.get(index);
+		Rule returned = rules.get(index);
+		return returned;
 	}
 
 
@@ -157,5 +200,4 @@ public class Grammar
 		rules = null;
 		rules = newRules;
 	}
-
 }

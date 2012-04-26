@@ -1,7 +1,6 @@
 package com;
 public class Token implements Comparable
 {
-
 	public FirstSet firstSet;
 	public FollowSet followSet;
 	private String name;
@@ -11,6 +10,8 @@ public class Token implements Comparable
 	public Token()
 	{
 		this.type=TokenType.NON_TERMINAL;
+		firstSet = new FirstSet();
+		followSet = new FollowSet();
 	}
 	public Token(String name, String stringType) 
 	{
@@ -52,7 +53,6 @@ public class Token implements Comparable
 	public String getName() {
 		return name;
 	}
-	
 	public TokenType getType() {
 		return type;
 	}
@@ -77,6 +77,14 @@ public class Token implements Comparable
 		}
 		return null;
 	}
+	public FollowSet getFollowSet()
+	{
+		return followSet;
+	}
+	public FirstSet getFirstSet()
+	{
+		return firstSet;
+	}
 
 		
 
@@ -88,6 +96,19 @@ public class Token implements Comparable
 		if (inOther == this) return 0;
 		Token other = (Token)inOther;
 		return this.name.compareTo(other.getName());
+	}
+
+	public boolean equals(Token obj)
+	{
+		Token compared = obj;
+		if(this.name.compareTo(compared.getName())==0)
+		{
+			if(this.type==obj.getType())
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public Token clone()

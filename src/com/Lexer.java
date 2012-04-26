@@ -8,12 +8,14 @@ import java.io.File;
 import java.util.LinkedList;
 
 public class Lexer {
-	File file;
-	LinkedList<Token> ll_token_list;
+	private File file;
+	private TokenWriter tokenWriter;
+	public LinkedList<Token> ll_token_list;
 
 	public Lexer()
 	{
 		ll_token_list = new LinkedList<Token>();
+		tokenWriter = new TokenWriter("/home/alex/output.tik");
 	}
 
 	public Lexer(String filepath)
@@ -22,6 +24,7 @@ public class Lexer {
 		{
 			ll_token_list = new LinkedList<Token>();
 			file = new File(filepath);
+			tokenWriter = new TokenWriter("/home/alex/output.tik");
 		}
 		catch(NullPointerException e)
 		{
@@ -66,7 +69,7 @@ public class Lexer {
 		StringTokenizer tokenizer = new StringTokenizer(toToken);
 		int numtokens = tokenizer.countTokens();
 		boolean token=true;
-		boolean hitRules=false;
+		//boolean hitRules=false;
 		for(int i=0;i<numtokens;i++)
 		{
 			String strToken=tokenizer.nextToken();
@@ -86,7 +89,7 @@ public class Lexer {
 			else if(strToken.compareToIgnoreCase("%rules")==0)
 			{
 				stringToToken(strToken,"meta");
-				hitRules=true;
+				//hitRules=true;
 			}
 			else if(strToken.charAt(0)=='<')
 			{
@@ -104,9 +107,6 @@ public class Lexer {
 			{
 				stringToToken(strToken,"nonterminal");
 			}
-			//if(hitRules)
-			//{
-			//}
 		}
 		stringToToken("","endofrule");
 
@@ -162,6 +162,11 @@ public class Lexer {
 		{
 			return false;
 		}
+	}
+
+	public TokenWriter getTokenWriter()
+	{
+		return tokenWriter;
 	}
 
 
