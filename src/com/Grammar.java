@@ -59,15 +59,24 @@ public class Grammar
 		return null;	
 	}
 
-	public FirstSet makeFirstSet(Token nonterminal)
+	public void makeFirstSet()
 	{
 		for(int i=0;i<countRules();i++)
 		{
 			Rule rule = rules.get(i);
-			Token token = rule.getLeftHS();
-			//assert token.type==TokenType.NONTERMINAL; 
+			Token left = rule.getLeftHS();
+			LinkedList<Token> rightHS = rule.getRightHS();
+			for(int j=0;j<rightHS.size();j++)
+			{
+				Token Xi = rightHS.get(j);
+				if(Xi.getTypeString().compareToIgnoreCase("terminal")==0)
+				{
+					left.getFirstSet().getSet().add(Xi.clone());
+					System.out.println("Added token " + Xi + " to the first set of " + left);
+				}
+			}
+			System.out.println(left.getFirstSet().getSet().toString());
 		}
-		return null;
 	}
 
 	public String toString()
@@ -118,5 +127,4 @@ public class Grammar
 		rules = null;
 		rules = newRules;
 	}
-
 }

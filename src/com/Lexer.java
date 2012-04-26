@@ -65,7 +65,7 @@ public class Lexer {
 		StringTokenizer tokenizer = new StringTokenizer(toToken);
 		int numtokens = tokenizer.countTokens();
 		boolean token=true;
-		boolean hitRules=false;
+		//boolean hitRules=false;
 		for(int i=0;i<numtokens;i++)
 		{
 			String strToken=tokenizer.nextToken();
@@ -85,7 +85,7 @@ public class Lexer {
 			else if(strToken.compareToIgnoreCase("%rules")==0)
 			{
 				stringToToken(strToken,"meta");
-				hitRules=true;
+				//hitRules=true;
 			}
 			else if(strToken.charAt(0)=='<')
 			{
@@ -103,9 +103,6 @@ public class Lexer {
 			{
 				stringToToken(strToken,"nonterminal");
 			}
-			//if(hitRules)
-			//{
-			//}
 		}
 		stringToToken("","endofrule");
 

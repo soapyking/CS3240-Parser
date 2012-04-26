@@ -65,11 +65,8 @@ public class ParseGen
 		lex.readFile();
 		ParseGen parse = new ParseGen();
 		parse.makeGrammar();
-		System.out.println(grammar);
 		grammar.separate();
-		System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
 		System.out.println(grammar);
-		//grammar.removeRecursion();
-		//grammar.makeFirstSet((grammar.getRule(1)).getLeft_hs());
+		grammar.makeFirstSet();
 	}
 }
