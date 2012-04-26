@@ -3,7 +3,6 @@ import java.util.LinkedList;
 
 public class Grammar
 {
-	
 	private LinkedList<Rule> rules;
 
 	public Grammar()
@@ -43,16 +42,54 @@ public class Grammar
 	 */
 	public void removeRecursion()
 	{
+		LinkedList<Rule> rulesCleaned = new LinkedList<Rule>();
+		boolean recursionEncounter = false;
+		String curName = null;
+		String prevName = null;
 		for(int i=0;i<countRules();i++)
 		{
 			Rule thisRule = rules.get(i);
-			Token leftHS = thisRule.getLeftHS();
-			LinkedList<Token> rightHS = thisRule.getRightHS();
-			if (leftHS.compareTo(rightHS.getFirst()) == 0) {
-				Token left_rem = new Token(leftHS.getName()+"_prime", leftHS.getTypeString());
-				
+			Token left = thisRule.getLeftHS();
+			curName = left.getName();
+			if(curName != prevName) {
+				recursionEncounter = false;
+				prevName = curName;
+			}
+			LinkedList<Token> right = thisRule.getRightHS();
+			if (left.compareTo(right.getFirst()) == 0) {
+				recursionEncounter = true;
+				String leftRemName = left.getName() + "_rem";
+				Token leftRem = new Token(leftRemName, left.getTypeString());
+				LinkedList<Token> rightRem = new LinkedList<Token>();
+				for(int j = 1; j < right.size(); j++) { //Deep copy Linked List, less the first element which is causing recursion
+					rightRem.add(right.get(j));
+				}
+				rightRem.add(new Token(leftRem.getName(), left.getTypeString()));
+				Rule ruleRem = new Rule(leftRem, rightRem);
+				rulesCleaned.add(ruleRem);
+				if(recursionEncounter) {
+					for(Rule r: this.rules) {
+						if(r.getLeftHS().compareTo(thisRule.getLeftHS()) == 0) {
+							if(r.getRightHS().getLast().getName() != leftRemName) {
+								r.getRightHS().add(new Token(leftRemName, left.getTypeString()));
+							}
+						}
+					}
+					for(Rule r: rulesCleaned) {
+						if(r.getLeftHS().compareTo(thisRule.getLeftHS()) == 0) {
+							if(r.getRightHS().getLast().getName() != leftRemName) {
+								r.getRightHS().add(new Token(leftRemName, left.getTypeString()));
+							}						if(r.getLeftHS().compareTo(thisRule.getLeftHS()) == 0) {
+								if(r.getRightHS().getLast().getName() != leftRemName) {
+									r.getRightHS().add(new Token(leftRemName, left.getTypeString()));
+								}
+							}
+						}
+					}
+				}
 			}
 		}
+		rules = rulesCleaned;
 	}
 
 
