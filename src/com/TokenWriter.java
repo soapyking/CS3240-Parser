@@ -23,6 +23,20 @@ public class TokenWriter
 		String nonTerm = "%Non-terminals part";
 		String start = "%Start part";
 		String rules = "%Rules part";
+		for(int i=0;i<allTheRules.size();i++)
+		{
+			Token toAdd = allTheRules.get(i).getLeftHS().clone();
+			if(toAdd.getTypeString().compareToIgnoreCase("terminal")==0)
+			{
+				tokens+=toAdd.getName();
+				tokens+="\n";
+			}
+			else if(toAdd.getTypeString().compareToIgnoreCase("nonterminal")==0)
+			{
+				nonTerm += toAdd.getName();
+				nonTerm += "\n";
+			}
+		}
 		try
 		{
 			tokenWrite.write(tokens,0,12);

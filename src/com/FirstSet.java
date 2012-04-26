@@ -15,6 +15,17 @@ public class FirstSet
 			this.set.add(toAdd);
 		}
 	}
+	
+	public void add(LinkedList<Token> toAdd)
+	{
+		for(int i=0;i<toAdd.size();i++)
+		{
+			if(!set.contains(toAdd.get(i)))
+			{
+				set.add(toAdd.get(i).clone());
+			}
+		}
+	}
 
 	public LinkedList<Token> getSet()
 	{
@@ -26,7 +37,7 @@ public class FirstSet
 		String output=new String();
 		for(int i=0;i<set.size();i++)
 		{
-			output+=set.get(i).toString();
+			output+=set.get(i).getName();
 		}
 		return output;
 	}

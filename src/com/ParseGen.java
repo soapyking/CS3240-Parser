@@ -68,5 +68,8 @@ public class ParseGen
 		grammar.separate();
 		System.out.println(grammar);
 		grammar.makeFirstSet();
+		//lex.getTokenWriter().makeFirstSet();
+		//token.createFile(null);
+
 	}
 }

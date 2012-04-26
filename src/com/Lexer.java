@@ -7,12 +7,14 @@ import java.io.File;
 import java.util.LinkedList;
 
 public class Lexer {
-	File file;
-	LinkedList<Token> ll_token_list;
+	private File file;
+	private TokenWriter tokenWriter;
+	private LinkedList<Token> ll_token_list;
 
 	public Lexer()
 	{
 		ll_token_list = new LinkedList<Token>();
+		tokenWriter = new TokenWriter("/home/alex/output.tik");
 	}
 
 	public Lexer(String filepath)
@@ -21,6 +23,7 @@ public class Lexer {
 		{
 			ll_token_list = new LinkedList<Token>();
 			file = new File(filepath);
+			tokenWriter = new TokenWriter("/home/alex/output.tik");
 		}
 		catch(NullPointerException e)
 		{
@@ -158,6 +161,11 @@ public class Lexer {
 		{
 			return false;
 		}
+	}
+
+	public TokenWriter getTokenWriter()
+	{
+		return tokenWriter;
 	}
 
 

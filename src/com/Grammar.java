@@ -4,6 +4,9 @@ public class Grammar
 {
 	
 	private LinkedList<Rule> rules;
+	private LinkedList<Token> nonTerminals;
+	//Used for determining unique nonterminals for use in the
+	//first and follow set methods
 
 	public Grammar()
 	{
@@ -71,11 +74,25 @@ public class Grammar
 				Token Xi = rightHS.get(j);
 				if(Xi.getTypeString().compareToIgnoreCase("terminal")==0)
 				{
-					left.getFirstSet().getSet().add(Xi.clone());
-					System.out.println("Added token " + Xi + " to the first set of " + left);
+					left.getFirstSet().add(Xi.clone());
+					//System.out.println("Added token " + Xi + " to the first set of " + left);
+				}
+				if(Xi.getTypeString().compareToIgnoreCase("nonterminal")==0)
+				{
+					left.getFirstSet().add(Xi.getFirstSet().getSet());
 				}
 			}
-			System.out.println(left.getFirstSet().getSet().toString());
+		}
+		printFirstSet();
+	}
+	
+	public void printFirstSet()
+	{
+		for(int i=0;i<rules.size();i++)
+		{
+			System.out.println(rules.get(i).getLeftHS().toString() + " = { \n");
+			System.out.println(rules.get(i).getLeftHS().getFirstSet().toString());
+			System.out.println("\n}\n");
 		}
 	}
 
@@ -91,7 +108,8 @@ public class Grammar
 
 	public Rule getRule(int index)
 	{
-		return rules.get(index);
+		Rule returned = rules.get(index);
+		return returned;
 	}
 
 
