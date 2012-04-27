@@ -1,4 +1,3 @@
-package com;
 public class Terminal {
 
 	private static Lexer lex;

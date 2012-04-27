@@ -1,4 +1,3 @@
-package com;
 public class Token implements Comparable
 {
 	public FirstSet firstSet;
@@ -40,6 +39,12 @@ public class Token implements Comparable
 		{
 			this.type=TokenType.END_OF_RULE;
 		}
+		else if(stringType.compareToIgnoreCase("dollar")==0)
+		{
+			this.type=TokenType.DOLLAR;
+		}
+		firstSet = new FirstSet();
+		followSet = new FollowSet();
 	}
 
 	
@@ -74,6 +79,10 @@ public class Token implements Comparable
 		else if(type==TokenType.ASSIGN)
 		{
 			return "assign";
+		}
+		else if(type==TokenType.DOLLAR)
+		{
+			return "dollar";
 		}
 		return null;
 	}
@@ -116,6 +125,20 @@ public class Token implements Comparable
 		Token cloned = new Token();
 		cloned.name = this.name;
 		cloned.type = this.type;
+		FollowSet follow = new FollowSet();
+		FirstSet first = new FirstSet();
+		for(int i=0;i<firstSet.getSet().size();i++)
+		{
+			Token firstClone = firstSet.getSet().get(i).clone();
+			first.add(firstClone);
+		}
+		for(int i=0;i<followSet.getSet().size();i++)
+		{
+			Token followClone = followSet.getSet().get(i).clone();
+			first.add(followClone);
+		}
+		cloned.firstSet = first;
+		cloned.followSet = follow;
 		return cloned;
 	}
 }

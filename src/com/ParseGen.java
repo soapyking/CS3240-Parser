@@ -1,4 +1,3 @@
-package com;
 import java.lang.ArrayIndexOutOfBoundsException;
 import java.util.LinkedList;
 

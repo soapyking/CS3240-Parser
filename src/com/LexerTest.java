@@ -1,4 +1,3 @@
-package com;
 import junit.framework.TestCase;
 import org.junit.*;
 /*

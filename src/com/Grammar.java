@@ -1,4 +1,3 @@
-package com;
 import java.util.LinkedList;
 
 public class Grammar
@@ -100,29 +99,84 @@ public class Grammar
 	}
 
 
-	public void makeFollowSet(Token nonterminal)
-	{
-	}
-
-	public void makeFirstSet()
+	/**
+	 * This method populates the follow set of every nonterminal token in the 
+	 * grammar.
+	 */
+	public void makeFollowSet()
 	{
 		for(int i=0;i<countRules();i++)
 		{
 			Rule rule = rules.get(i);
 			Token left = rule.getLeftHS();
 			LinkedList<Token> rightHS = rule.getRightHS();
+			if(i==0)
+			{
+				left.getFollowSet().add(new Token("dollar","dollar"));
+			}
 			for(int j=0;j<rightHS.size();j++)
 			{
 				Token Xi = rightHS.get(j);
+				if(j==rightHS.size()-1)
+				{
+					if(left.getFirstSet()!=null)
+					{
+						left.getFollowSet().add(left.getFirstSet().getSet());
+					}
+				}
+				else
+				{
+					for(int k=(j+1);k<rightHS.size();k++)
+					{
+						Token Xiplus1 = rightHS.get(k);
+						if(Xiplus1.getTypeString().compareToIgnoreCase("nonterminal")== 0)
+						{
+							Xi.getFollowSet().add(Xiplus1.getFirstSet().getSet());
+						}
+						if(Xiplus1.getTypeString().compareToIgnoreCase("terminal")== 0)
+						{
+							Xi.getFollowSet().add(Xiplus1);
+						}
+					}
+//					if(Xi.getTypeString().compareToIgnoreCase("nonterminal")== 0)
+//					{
+//						if(Xi.getFirstSet()!=null)
+//						{
+//							left.getFollowSet().add(Xi.getFirstSet().getSet());
+//						}
+//					}
+//					if(Xi.getTypeString().compareToIgnoreCase("terminal")==0)
+//					{
+//						
+//						left.getFollowSet().add(Xi);
+//					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * This method populates the first set of every non terminal token in
+	 * the grammar.
+	 */
+	public void makeFirstSet()
+	{
+		for(int k=0;k<countRules();k++)
+		{
+			for(int i=0;i<countRules();i++)
+			{
+				Rule rule = rules.get(i);
+				Token left = rule.getLeftHS();
+				LinkedList<Token> rightHS = rule.getRightHS();
+				Token Xi = rightHS.get(0);
 				if(Xi.getTypeString().compareToIgnoreCase("terminal")==0)
 				{
 					if(left.getFirstSet()!=null)
 					{
 						left.getFirstSet().add(Xi.clone());
-					//System.out.println("Added token " + Xi + " to the first set of " + left);
 					}
 				}
-				if(Xi.getTypeString().compareToIgnoreCase("nonterminal")==0)
+				else if(Xi.getTypeString().compareToIgnoreCase("nonterminal")==0)
 				{
 					if(left.getFirstSet()!=null)
 					{
@@ -131,7 +185,6 @@ public class Grammar
 				}
 			}
 		}
-		printFirstSet();
 	}
 	
 	public void printFirstSet()
@@ -147,7 +200,7 @@ public class Grammar
 				System.out.println(rules.get(i).getLeftHS().getFirstSet().toString());
 			}
 
-			System.out.println("\n}\n");
+			System.out.println("}\n");
 		}
 	}
 
@@ -167,7 +220,10 @@ public class Grammar
 		return returned;
 	}
 
-
+	/**
+	 * It separates every grammar rule that has a right hand side with an | in
+	 * it.  It makes a separate rule for every | that it encounters.
+	 */
 	public void separate()
 	{
 		LinkedList<Rule> newRules = new LinkedList<Rule>();

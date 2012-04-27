@@ -1,4 +1,3 @@
-package com;
 import java.util.LinkedList;
 
 public class Rule

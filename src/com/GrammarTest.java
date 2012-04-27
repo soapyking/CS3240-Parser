@@ -1,25 +1,32 @@
-package com;
 import junit.framework.TestCase;
 import org.junit.*;
 import java.util.LinkedList;
 
 public class GrammarTest extends TestCase {
 
-	@Test
-	public void testMakeFirstSet()
+	Grammar gram;
+	Token leftpar;
+	Token number;
+	Token exp;
+	Token factor;
+	Token term;
+	Token addop;
+	Token mulop;
+	@Before
+	public void setUp()
 	{
-		Grammar gram;
-		Token exp = new Token("exp","nonterminal");
-		Token addop = new Token("addop","nonterminal");
-		Token term = new Token("term","nonterminal");
+		
+		exp = new Token("exp","nonterminal");
+		addop = new Token("addop","nonterminal");
+		term = new Token("term","nonterminal");
 		Token plus = new Token("+","terminal");
 		Token minus = new Token("-","terminal");
-		Token mulop = new Token("mulop","nonterminal");
-		Token factor = new Token("factor","nonterminal");
+		mulop = new Token("mulop","nonterminal");
+		factor = new Token("factor","nonterminal");
 		Token multiply = new Token("*","terminal");
-		Token leftpar = new Token("(","terminal");
+		leftpar = new Token("(","terminal");
 		Token rightpar = new Token(")","terminal");
-		Token number = new Token("number","terminal");
+		number = new Token("number","terminal");
 		
 		LinkedList<Token> right1 = new LinkedList<Token>();
 		LinkedList<Token> right2 = new LinkedList<Token>();
@@ -69,18 +76,54 @@ public class GrammarTest extends TestCase {
 		gram.add(rule7);
 		gram.add(rule8);
 		gram.add(rule9);
-		
-		System.out.println(gram.toString());
-		System.out.println("----------------------------------");
+	}
+	@Test
+	public void testMakeFirstSetNumber()
+	{
+		gram.makeFirstSet();
+		assertEquals(exp.getFirstSet().getSet().size(),2);
+		assertEquals(term.getFirstSet().getSet().size(),2);
+		assertEquals(factor.getFirstSet().getSet().size(),2);
+		assertEquals(addop.getFirstSet().getSet().size(),2);
+	}
+	
+	@Test
+	public void testMakeFirstSetContents()
+	{
+		gram.makeFirstSet();
+		assertTrue(exp.getFirstSet().get(0).getName().compareToIgnoreCase("(")==0);
+		assertTrue(exp.getFirstSet().get(1).getName().compareToIgnoreCase("number")==0);
+		assertTrue(term.getFirstSet().get(0).getName().compareToIgnoreCase("(")==0);
+		assertTrue(term.getFirstSet().get(1).getName().compareToIgnoreCase("number")==0);
+		assertTrue(factor.getFirstSet().get(0).getName().compareToIgnoreCase("(")==0);
+		assertTrue(factor.getFirstSet().get(1).getName().compareToIgnoreCase("number")==0);
+		assertTrue(addop.getFirstSet().get(0).getName().compareToIgnoreCase("+")==0);
+		assertTrue(addop.getFirstSet().get(1).getName().compareToIgnoreCase("-")==0);
+		assertTrue(mulop.getFirstSet().get(0).getName().compareToIgnoreCase("*")==0);
+	}
+	
+	@Test
+	public void testMakeFollowSet()
+	{
+		gram.makeFirstSet();
+		gram.makeFollowSet();
+		assertTrue(exp.getFollowSet().get(0).getTypeString().compareToIgnoreCase("dollar")==0);
+		assertTrue(exp.getFollowSet().get(1).getName().compareToIgnoreCase("+")==0);
+		assertTrue(exp.getFollowSet().get(2).getName().compareToIgnoreCase("-")==0);
+		assertTrue(exp.getFollowSet().get(3).getName().compareToIgnoreCase(")")==0);
+		assertTrue(addop.getFollowSet().get(0).getName().compareToIgnoreCase("(")==0);
+		assertTrue(addop.getFollowSet().get(1).getName().compareToIgnoreCase("number")==0);
+		//assertTrue(term.getFollowSet().get(0).getName().compareToIgnoreCase("dollar")==0);
+		assertTrue(term.getFollowSet().get(1).getName().compareToIgnoreCase("+")==0);
+	}
+	
+	@Test
+	public void testRemoveRecursion()
+	{
+		//System.out.println(gram.toString());
+		//System.out.println("----------------------------------");
 		gram.removeRecursion();
-		System.out.println(gram.toString());
-		System.out.println("----------------------------------");
-		
-//		gram.makeFirstSet();
-//		LinkedList<Token> expFirstSet = new LinkedList<Token>();
-//		expFirstSet.add(leftpar);
-//		expFirstSet.add(number);
-//		assertEquals(exp.getFirstSet().getSet(),expFirstSet);
-		
+		//System.out.println(gram.toString());
+		//System.out.println("----------------------------------");
 	}
 }
