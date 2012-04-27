@@ -129,11 +129,13 @@ public class Grammar
 					for(int k=(j+1);k<rightHS.size();k++)
 					{
 						Token Xiplus1 = rightHS.get(k);
-						if(Xiplus1.getTypeString().compareToIgnoreCase("nonterminal")== 0)
+						if(Xiplus1.getTypeString().compareToIgnoreCase("nonterminal")== 0 &&
+								Xiplus1.getTypeString()!="terminal")
 						{
 							Xi.getFollowSet().add(Xiplus1.getFirstSet().getSet());
 						}
-						if(Xiplus1.getTypeString().compareToIgnoreCase("terminal")== 0)
+						else if(Xiplus1.getTypeString().compareToIgnoreCase("terminal")== 0 &&
+								Xiplus1.getTypeString()!="terminal")
 						{
 							Xi.getFollowSet().add(Xiplus1);
 						}

@@ -4,7 +4,6 @@ public class Rule
 {
 	private Token left_hs;
 	private LinkedList<Token> right_hs;
-	private boolean hasOr;
 
 	public Rule(Token left_hs)
 	{

@@ -107,6 +107,7 @@ public class GrammarTest extends TestCase {
 	{
 		gram.makeFirstSet();
 		gram.makeFollowSet();
+		gram.countRules();
 		assertTrue(exp.getFollowSet().get(0).getTypeString().compareToIgnoreCase("dollar")==0);
 		assertTrue(exp.getFollowSet().get(1).getName().compareToIgnoreCase("+")==0);
 		assertTrue(exp.getFollowSet().get(2).getName().compareToIgnoreCase("-")==0);
