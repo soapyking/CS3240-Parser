@@ -59,6 +59,11 @@ public class FirstSet
 		return set;
 	}
 	
+	public int getSize()
+	{
+		return set.size();
+	}
+	
 	public Token get(int index)
 	{
 		if(index<set.size())

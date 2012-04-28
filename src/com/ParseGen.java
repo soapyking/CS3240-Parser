@@ -6,13 +6,14 @@ public class ParseGen
 	private static Lexer lex;
 	private static Grammar grammar;
 	private static LinkedList<Token> terminals;
-	private static LinkedList<Token> nonTerminals;
+	//private static LinkedList<Token> nonTerminals;
+	//private static ParseTable parseTable;
 
 		
 	public ParseGen()
 	{
 		terminals = new LinkedList<Token>();
-		nonTerminals = new LinkedList<Token>();
+		//nonTerminals = new LinkedList<Token>();
 		grammar = new Grammar();
 	}
 
@@ -68,6 +69,7 @@ public class ParseGen
 		grammar.separate();
 		System.out.println(grammar);
 		grammar.makeFirstSet();
+		grammar.makeFollowSet();
 		//lex.getTokenWriter().makeFirstSet();
 		//token.createFile(null);
 
