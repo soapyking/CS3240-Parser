@@ -101,6 +101,18 @@ public class GrammarTest extends TestCase {
 		assertTrue(addop.getFirstSet().get(1).getName().compareToIgnoreCase("-")==0);
 		assertTrue(mulop.getFirstSet().get(0).getName().compareToIgnoreCase("*")==0);
 	}
+
+	@Test
+	public void testMakeFollowSetSize()
+	{
+		gram.makeFirstSet();
+		gram.makeFollowSet();
+		assertEquals(exp.getFollowSet().getSet().size(),4);
+		assertEquals(addop.getFollowSet().getSet().size(),2);
+		assertEquals(term.getFollowSet().getSet().size(),5);
+		assertEquals(mulop.getFollowSet().getSet().size(),2);
+		assertEquals(factor.getFollowSet().getSet().size(),5);
+	}
 	
 	@Test
 	public void testMakeFollowSet()
@@ -114,8 +126,18 @@ public class GrammarTest extends TestCase {
 		assertTrue(exp.getFollowSet().get(3).getName().compareToIgnoreCase(")")==0);
 		assertTrue(addop.getFollowSet().get(0).getName().compareToIgnoreCase("(")==0);
 		assertTrue(addop.getFollowSet().get(1).getName().compareToIgnoreCase("number")==0);
-		//assertTrue(term.getFollowSet().get(0).getName().compareToIgnoreCase("dollar")==0);
+		assertTrue(term.getFollowSet().get(0).getName().compareToIgnoreCase("dollar")==0);
 		assertTrue(term.getFollowSet().get(1).getName().compareToIgnoreCase("+")==0);
+		assertTrue(term.getFollowSet().get(2).getName().compareToIgnoreCase("-")==0);
+		assertTrue(term.getFollowSet().get(3).getName().compareToIgnoreCase("*")==0);
+		assertTrue(term.getFollowSet().get(4).getName().compareToIgnoreCase(")")==0);
+		assertTrue(mulop.getFollowSet().get(0).getName().compareToIgnoreCase("(")==0);
+		assertTrue(mulop.getFollowSet().get(1).getName().compareToIgnoreCase("number")==0);
+		assertTrue(factor.getFollowSet().get(0).getName().compareToIgnoreCase("dollar")==0);
+		assertTrue(factor.getFollowSet().get(1).getName().compareToIgnoreCase("+")==0);
+		assertTrue(factor.getFollowSet().get(2).getName().compareToIgnoreCase("-")==0);
+		assertTrue(factor.getFollowSet().get(3).getName().compareToIgnoreCase("*")==0);
+		assertTrue(factor.getFollowSet().get(4).getName().compareToIgnoreCase(")")==0);
 	}
 	
 	@Test

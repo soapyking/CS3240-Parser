@@ -105,53 +105,56 @@ public class Grammar
 	 */
 	public void makeFollowSet()
 	{
-		for(int i=0;i<countRules();i++)
+		for(int l=0;l<countRules();l++)
 		{
-			Rule rule = rules.get(i);
-			Token left = rule.getLeftHS();
-			LinkedList<Token> rightHS = rule.getRightHS();
-			if(i==0)
+			for(int i=0;i<countRules();i++)
 			{
-				left.getFollowSet().add(new Token("dollar","dollar"));
-			}
-			for(int j=0;j<rightHS.size();j++)
-			{
-				Token Xi = rightHS.get(j);
-				if(j==rightHS.size()-1)
+				Rule rule = rules.get(i);
+				Token left = rule.getLeftHS();
+				LinkedList<Token> rightHS = rule.getRightHS();
+				if(i==0)
 				{
-					if(left.getFirstSet()!=null)
-					{
-						left.getFollowSet().add(left.getFirstSet().getSet());
-					}
+					left.getFollowSet().add(new Token("dollar","dollar"));
 				}
-				else
+				for(int j=0;j<rightHS.size();j++)
 				{
-					for(int k=(j+1);k<rightHS.size();k++)
+					Token Xi = rightHS.get(j);
+					if(j==rightHS.size()-1)
 					{
-						Token Xiplus1 = rightHS.get(k);
-						if(Xiplus1.getTypeString().compareToIgnoreCase("nonterminal")== 0 &&
-								Xiplus1.getTypeString()!="terminal")
+						if(left.getFollowSet()!=null)
 						{
-							Xi.getFollowSet().add(Xiplus1.getFirstSet().getSet());
-						}
-						else if(Xiplus1.getTypeString().compareToIgnoreCase("terminal")== 0 &&
-								Xiplus1.getTypeString()!="terminal")
-						{
-							Xi.getFollowSet().add(Xiplus1);
+							Xi.getFollowSet().add(left.getFollowSet().getSet());
 						}
 					}
-//					if(Xi.getTypeString().compareToIgnoreCase("nonterminal")== 0)
-//					{
-//						if(Xi.getFirstSet()!=null)
-//						{
-//							left.getFollowSet().add(Xi.getFirstSet().getSet());
-//						}
-//					}
-//					if(Xi.getTypeString().compareToIgnoreCase("terminal")==0)
-//					{
-//						
-//						left.getFollowSet().add(Xi);
-//					}
+					else
+					{
+						for(int k=(j+1);k<(j+2);k++)
+						{
+							Token Xiplus1 = rightHS.get(k);
+							if(Xiplus1.getTypeString().compareToIgnoreCase("nonterminal")== 0 &&
+									Xiplus1.getTypeString()!="terminal")
+							{
+								Xi.getFollowSet().add(Xiplus1.getFirstSet().getSet());
+							}
+							else if(Xiplus1.getTypeString().compareToIgnoreCase("terminal")== 0)
+							{
+								Xi.getFollowSet().add(Xiplus1);
+							}
+						}
+						
+	//					if(Xi.getTypeString().compareToIgnoreCase("nonterminal")== 0)
+	//					{
+	//						if(Xi.getFirstSet()!=null)
+	//						{
+	//							left.getFollowSet().add(Xi.getFirstSet().getSet());
+	//						}
+	//					}
+	//					if(Xi.getTypeString().compareToIgnoreCase("terminal")==0)
+	//					{
+	//						
+	//						left.getFollowSet().add(Xi);
+	//					}
+					}
 				}
 			}
 		}
