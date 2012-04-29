@@ -1,0 +1,108 @@
+OK, folks. Lexer.
+
+Commands are pretty simple, but I used an external REGEX library so you
+have to include that in your classpath. The easiest way to do this is to
+use the "lexer.sh" wrapper I included, but if you want to use it some
+other way, be sure to execute in the following manner:
+
+$ java -cp .:regex.jar Lexer <ARGUMENTS>
+
+The '-cp' adds "." and "regex.jar" to the classpath.
+
+
+------------
+
+Arguments & usage:
+
+By default, the lexer takes input from stdin and outputs the tokens to
+stdout.
+
+Passing the "-v" verbose argument will output some debugging information, and
+you can watch the parsing process; if you find something that isn't
+parsing right, show me the code and I'll get it fixed.
+
+Passing the "-o filename" argument will disable standard output (unless "-v"
+verbose mode is activated), instead writing to "filename".
+
+Passing the "-i filename" argument will cause the lexer to pull the
+source code from "filename" rather than stdin.
+
+
+-------------
+
+Examples:
+
+(from the same directory as Lexer.class and regexp.jar)
+
+####
+
+$ echo "(3*n+xy)" | ./lexer.sh -v
+
+(3*n+xy) | LEFTPAR          ==> 3*n+xy)
+ 3*n+xy) | INTNUM           ==> *n+xy)
+  *n+xy) | MULTIPLY         ==> n+xy)
+   n+xy) | ID               ==> +xy)
+    +xy) | PLUS             ==> xy)
+     xy) | ID               ==> )
+       ) | RIGHTPAR         ==>
+
+
+(3*n+xy)
+ ==>
+LEFTPAR INTNUM MULTIPLY ID PLUS ID RIGHTPAR
+
+####
+
+$  ./lexer.sh -i tests/given_example.tny
+LEFTPAR INTNUM MULTIPLY ID PLUS ID RIGHTPAR$
+
+####
+
+$ ./lexer.sh -v -i tests/sample.tny -o test_output.tok
+read x; if 0 < x then fact := 1; repeat fact := fact * x; x := x - 1 until x = 0; write fact end | READ             ==>  x; if 0 < x then fact := 1; repeat fact := fact * x; x := x - 1 until x = 0; write fact end
+     x; if 0 < x then fact := 1; repeat fact := fact * x; x := x - 1 until x = 0; write fact end | ID               ==> ; if 0 < x then fact := 1; repeat fact := fact * x; x := x - 1 until x = 0; write fact end
+      ; if 0 < x then fact := 1; repeat fact := fact * x; x := x - 1 until x = 0; write fact end | SEMICOLON        ==>  if 0 < x then fact := 1; repeat fact := fact * x; x := x - 1 until x = 0; write fact end
+        if 0 < x then fact := 1; repeat fact := fact * x; x := x - 1 until x = 0; write fact end | IF               ==>  0 < x then fact := 1; repeat fact := fact * x; x := x - 1 until x = 0; write fact end
+           0 < x then fact := 1; repeat fact := fact * x; x := x - 1 until x = 0; write fact end | INTNUM           ==>  < x then fact := 1; repeat fact := fact * x; x := x - 1 until x = 0; write fact end
+             < x then fact := 1; repeat fact := fact * x; x := x - 1 until x = 0; write fact end | LESSTHAN         ==>  x then fact := 1; repeat fact := fact * x; x := x - 1 until x = 0; write fact end
+               x then fact := 1; repeat fact := fact * x; x := x - 1 until x = 0; write fact end | ID               ==>  then fact := 1; repeat fact := fact * x; x := x - 1 until x = 0; write fact end
+                 then fact := 1; repeat fact := fact * x; x := x - 1 until x = 0; write fact end | THEN             ==>  fact := 1; repeat fact := fact * x; x := x - 1 until x = 0; write fact end
+                      fact := 1; repeat fact := fact * x; x := x - 1 until x = 0; write fact end | ID               ==>  := 1; repeat fact := fact * x; x := x - 1 until x = 0; write fact end
+                           := 1; repeat fact := fact * x; x := x - 1 until x = 0; write fact end | ASSIGN           ==>  1; repeat fact := fact * x; x := x - 1 until x = 0; write fact end
+                              1; repeat fact := fact * x; x := x - 1 until x = 0; write fact end | INTNUM           ==> ; repeat fact := fact * x; x := x - 1 until x = 0; write fact end
+                               ; repeat fact := fact * x; x := x - 1 until x = 0; write fact end | SEMICOLON        ==>  repeat fact := fact * x; x := x - 1 until x = 0; write fact end
+                                 repeat fact := fact * x; x := x - 1 until x = 0; write fact end | REPEAT           ==>  fact := fact * x; x := x - 1 until x = 0; write fact end
+                                        fact := fact * x; x := x - 1 until x = 0; write fact end | ID               ==>  := fact * x; x := x - 1 until x = 0; write fact end
+                                             := fact * x; x := x - 1 until x = 0; write fact end | ASSIGN           ==>  fact * x; x := x - 1 until x = 0; write fact end
+                                                fact * x; x := x - 1 until x = 0; write fact end | ID               ==>  * x; x := x - 1 until x = 0; write fact end
+                                                     * x; x := x - 1 until x = 0; write fact end | MULTIPLY         ==>  x; x := x - 1 until x = 0; write fact end
+                                                       x; x := x - 1 until x = 0; write fact end | ID               ==> ; x := x - 1 until x = 0; write fact end
+                                                        ; x := x - 1 until x = 0; write fact end | SEMICOLON        ==>  x := x - 1 until x = 0; write fact end
+                                                          x := x - 1 until x = 0; write fact end | ID               ==>  := x - 1 until x = 0; write fact end
+                                                            := x - 1 until x = 0; write fact end | ASSIGN           ==>  x - 1 until x = 0; write fact end
+                                                               x - 1 until x = 0; write fact end | ID               ==>  - 1 until x = 0; write fact end
+                                                                 - 1 until x = 0; write fact end | MINUS            ==>  1 until x = 0; write fact end
+                                                                   1 until x = 0; write fact end | INTNUM           ==>  until x = 0; write fact end
+                                                                     until x = 0; write fact end | UNTIL            ==>  x = 0; write fact end
+                                                                           x = 0; write fact end | ID               ==>  = 0; write fact end
+                                                                             = 0; write fact end | EQUALTO          ==>  0; write fact end
+                                                                               0; write fact end | INTNUM           ==> ; write fact end
+                                                                                ; write fact end | SEMICOLON        ==>  write fact end
+                                                                                  write fact end | WRITE            ==>  fact end
+                                                                                        fact end | ID               ==>  end
+                                                                                             end | END              ==>
+
+
+{ Sample program  in TINY language -  computes factorial}read x; { input an integer }if 0 < x then { don't compute if x <= 0 }  fact := 1;  repeat    fact := fact * x;    x := x - 1  until x = 0;  write fact  { output factorial of x }end
+ ==>
+READ ID SEMICOLON IF INTNUM LESSTHAN ID THEN ID ASSIGN INTNUM SEMICOLON REPEAT ID ASSIGN ID MULTIPLY ID SEMICOLON ID ASSIGN ID MINUS INTNUM UNTIL ID EQUALTO INTNUM SEMICOLON WRITE ID END
+
+####
+
+$ cat test_output.tok
+
+READ ID SEMICOLON IF INTNUM LESSTHAN ID THEN ID ASSIGN INTNUM SEMICOLON REPEAT ID ASSIGN ID MULTIPLY ID SEMICOLON ID ASSIGN ID MINUS INTNUM UNTIL ID EQUALTO INTNUM SEMICOLON WRITE ID END
+
+####
+
+That's all, folks.
