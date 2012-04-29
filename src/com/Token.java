@@ -84,6 +84,10 @@ public class Token implements Comparable
 		{
 			return "dollar";
 		}
+		else if(type==TokenType.META)
+		{
+			return "meta";
+		}
 		return null;
 	}
 	public FollowSet getFollowSet()

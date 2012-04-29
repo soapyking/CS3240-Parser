@@ -67,20 +67,43 @@ public class Lexer {
 	{
 		StringTokenizer tokenizer = new StringTokenizer(toToken);
 		int numtokens = tokenizer.countTokens();
+		String tokens[]=toToken.split(" ");
 		boolean token=true;
 		//boolean hitRules=false;
 		for(int i=0;i<numtokens;i++)
 		{
-			String strToken=tokenizer.nextToken();
-			if(strToken.compareToIgnoreCase("%tokens")==0)
+			if(tokens[i].compareToIgnoreCase("%tokens")==0)
 			{
-				stringToToken(strToken,"meta");
+				stringToToken(tokens[i],"meta");
 			}
-			else if(strToken.compareToIgnoreCase("%non-terminals")==0)
+			else if(tokens[i].compareToIgnoreCase("%non-terminals")==0)
 			{
-				stringToToken(strToken,"meta");
-				token=false;
+				stringToToken(tokens[i],"meta");
 			}
+			else if(tokens[i].compareToIgnoreCase("%start")==0)
+			{
+				stringToToken(tokens[i],"meta");
+			}
+			else if(tokens[i].compareToIgnoreCase("%rules")==0)
+			{
+				stringToToken(tokens[i],"meta");
+			}
+			else if(tokens[i].charAt(0)=='<')
+			{
+				stringToToken(tokens[i],"nonterminal");
+			}
+			else if(tokens[i].compareToIgnoreCase(":")==0)
+			{
+				stringToToken(tokens[i],"assign");
+			}
+			else
+			{
+				stringToToken(tokens[i],"terminal");
+			}
+			
+			/*String strToken=tokenizer.nextToken();
+			
+			
 			else if(strToken.compareToIgnoreCase("%Start")==0)
 			{
 				stringToToken(strToken,"meta");
@@ -106,8 +129,17 @@ public class Lexer {
 			{
 				stringToToken(strToken,"nonterminal");
 			}
+			if(strToken.compareToIgnoreCase("%tokens")==0)
+			{
+				stringToToken(strToken,"meta");
+			}
+			else if(strToken.compareToIgnoreCase("%non-terminals")==0)
+			{
+				stringToToken(strToken,"meta");
+				token=false;
+			}*/
 		}
-		stringToToken("","endofrule");
+		stringToToken("end","endofrule");
 
 	}
 

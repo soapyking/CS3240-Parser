@@ -6,12 +6,15 @@ public class ParseGen
 	private static Lexer lex;
 	private static Grammar grammar;
 	private static LinkedList<Token> terminals;
+	private static ParseTable parseTable;
+	private static ParseTableWriter parseTableWriter;
 	//private static LinkedList<Token> nonTerminals;
 	//private static ParseTable parseTable;
 
 		
 	public ParseGen()
 	{
+		parseTable = new ParseTable();
 		terminals = new LinkedList<Token>();
 		//nonTerminals = new LinkedList<Token>();
 		grammar = new Grammar();
@@ -22,28 +25,46 @@ public class ParseGen
 	 * Creates a grammar from the lexer's tokens.
 	 * Will make sure that the lexer has tokens before beginning.
 	 */
-	public void makeGrammar()
+	public static void makeGrammar()
 	{
+		boolean pastMeta=false;
 		while(lex.hasTokens())
 		{
 			Token token=lex.getToken();
-			if(token.getType() ==TokenType.TERMINAL)
+//			if(token.getTypeString().compareToIgnoreCase("terminal")==0)
+//			{
+//				terminals.add(token);
+//			}
+			try
 			{
-				terminals.add(token);
+			if(token.getName().compareToIgnoreCase("%Rules")==0)
+			{
+				pastMeta=true;
+				token=lex.getToken();
+				token=lex.getToken();
 			}
-			else if(token.getType() ==TokenType.NON_TERMINAL)
-			{
-				if(lex.nextToken().getType()==TokenType.ASSIGN)
+			if(pastMeta&&token.getTypeString().compareToIgnoreCase("nonterminal")==0)
 				{
-					Rule nextRule=new Rule(token);
-					LinkedList<Token> right = new LinkedList<Token>();
-					while((token=lex.getToken()).getType()!=TokenType.END_OF_RULE)
+					//System.out.println(lex.nextToken().getName());
+					if(lex.nextToken().getTypeString().compareToIgnoreCase("assign")==0)
 					{
-						right.add(token);
+						Rule nextRule=new Rule(token);
+						LinkedList<Token> right = new LinkedList<Token>();
+						while((token=lex.getToken()).getType()!=TokenType.END_OF_RULE)
+						{
+							if(token.getTypeString().compareToIgnoreCase("assign")!=0)
+							{
+								right.add(token);
+							}
+						}
+						nextRule.addRight_hs(right);
+						grammar.add(nextRule);
 					}
-					nextRule.addRight_hs(right);
-					grammar.add(nextRule);
 				}
+			}
+			catch(NullPointerException e)
+			{
+				
 			}
 		}
 	}
@@ -55,21 +76,27 @@ public class ParseGen
 	 */
 	public static void main(String [] args)
 	{
+		
 		try
 		{
+			parseTableWriter = new ParseTableWriter(args[1]);
 			lex = new Lexer(args[0]);
+			System.out.println(args[0]);
 		}
 		catch(ArrayIndexOutOfBoundsException e)
 		{
 			e.printStackTrace();
 		}
 		lex.readFile();
-		ParseGen parse = new ParseGen();
-		parse.makeGrammar();
+		@SuppressWarnings("unused")
+		ParseGen parserGenerator = new ParseGen();
+		makeGrammar();
 		grammar.separate();
-		System.out.println(grammar);
+		//System.out.println(grammar);
 		grammar.makeFirstSet();
 		grammar.makeFollowSet();
+		parseTable.generateParseTable(grammar);
+		parseTableWriter.createFile(parseTable);
 		//lex.getTokenWriter().makeFirstSet();
 		//token.createFile(null);
 

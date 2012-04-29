@@ -29,11 +29,31 @@ public class ParseTable {
 		for(int i=0;i<grammar.countRules();i++)
 		{
 			Rule rule = grammar.getRule(i);
+			for(int j=0;j<rule.getRightHS().size();j++)
+			{
+				Token holder = rule.getRightHS().get(j);
+				if(isUnique(holder)&&(holder.getTypeString().compareToIgnoreCase("terminal")==0))
+				{
+					table.get(0).add(new Rule(holder.clone()));
+					numColumns++;
+				}
+			}
+			if(isUnique(rule))
+			{
+				table.add(new LinkedList<Rule>());
+				table.getLast().add(new Rule(rule.getLeftHS()));
+				numColumns++;
+			}
+		}
+		
+		for(int i=0;i<grammar.countRules();i++)
+		{
+			Rule rule = grammar.getRule(i);
 			
 			if(isUnique(rule.getLeftHS()))
 			{
 				table.get(0).add(new Rule(rule.getLeftHS().clone()));
-				numColumns++;
+				numRows++;
 			}
 			for(int j=0;j<rule.getRightHS().size();j++)
 			{
@@ -41,23 +61,14 @@ public class ParseTable {
 				if(isUnique(temp))
 				{
 					table.get(0).add(new Rule(rule.getLeftHS().clone()));
-					numColumns++;
+					numRows++;
 				}
 			}
 		}
-		for(int i=0;i<grammar.countRules();i++)
+		
+		for(int i=1;i<numRows-1;i++)
 		{
-			Rule rule = grammar.getRule(i);
-			if(isUnique(rule))
-			{
-				table.add(new LinkedList<Rule>());
-				table.getLast().add(new Rule(rule.getLeftHS()));
-				numRows++;
-			}
-		}
-		for(int i=0;i<numRows;i++)
-		{
-			for(int j=0;j<numColumns;j++)
+			for(int j=0;j<numColumns-1;j++)
 			{
 				table.get(i).add(new Rule(null));
 			}
@@ -67,12 +78,15 @@ public class ParseTable {
 	private boolean isUnique(Rule toTest)
 	{
 		boolean add = true;
-		for(int i=1;i<table.get(0).size();i++)
+		for(int i=0;i<table.size();i++)
 		{
-			if(table.get(i).get(0).getLeftHS().getName().compareToIgnoreCase(toTest.getLeftHS().getName())==0)
+			if(table.get(i)!=null)
 			{
-				add=false;
-				break;
+				if(table.get(i).get(0).getLeftHS().getName().compareToIgnoreCase(toTest.getLeftHS().getName())==0)
+				{
+					add=false;
+					break;
+				}
 			}
 		}
 		return add;
@@ -137,5 +151,19 @@ public class ParseTable {
 		}
 		table.get(cordRow).set(cordCol,toAdd);
 	}
+
+	public int getNumColumns() {
+		return numColumns;
+	}
+
+	public int getNumRows() {
+		return numRows;
+	}
+
+	public LinkedList<LinkedList<Rule>> getTable() {
+		return table;
+	}
+	
+	
 	
 }
