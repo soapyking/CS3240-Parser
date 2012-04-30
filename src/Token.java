@@ -3,18 +3,21 @@ public class Token implements Comparable
 	public FirstSet firstSet;
 	public FollowSet followSet;
 	private String name;
+        private String token_string;
 	private TokenType type;
-	
+
 
 	public Token()
 	{
 		this.type=TokenType.NON_TERMINAL;
+		this.token_string = "";
 		firstSet = new FirstSet();
 		followSet = new FollowSet();
 	}
-	public Token(String name, String stringType) 
+	public Token(String name, String stringType)
 	{
 		this.name=name;
+		this.token_string = "";
 		if(stringType.equals("keyword"))
 		{
 			this.type=TokenType.KEYWORD;
@@ -47,49 +50,34 @@ public class Token implements Comparable
 		followSet = new FollowSet();
 	}
 
-	
+    public Token(String name, String token_string, TokenType type){
+	this.name = name;
+	this.token_string = token_string;
+	this.type = type;
+	firstSet = new FirstSet();
+	followSet = new FollowSet();
+    }
 
 	public String toString()
 	{
-		return "Token name " + this.name + " Token type: " + this.type;
+	    return String.format("Token name: %15s | Type: %10s | String: %s", this.name, this.type, this.token_string);
 	}
-	
-	
+
+
 	public String getName() {
 		return name;
 	}
 	public TokenType getType() {
 		return type;
 	}
-	
+
 	public String getTypeString()
 	{
-		if(type==TokenType.KEYWORD)
-		{
-			return "keyword";
-		}
-		else if(type==TokenType.TERMINAL)
-		{
-			return "terminal";
-		}
-		else if(type==TokenType.NON_TERMINAL)
-		{
-			return "nonterminal";
-		}
-		else if(type==TokenType.ASSIGN)
-		{
-			return "assign";
-		}
-		else if(type==TokenType.DOLLAR)
-		{
-			return "dollar";
-		}
-		else if(type==TokenType.META)
-		{
-			return "meta";
-		}
+	    if(this.type == null)
 		return null;
+	    return this.type.toString();
 	}
+
 	public FollowSet getFollowSet()
 	{
 		return followSet;
@@ -99,7 +87,7 @@ public class Token implements Comparable
 		return firstSet;
 	}
 
-		
+
 
 	/**
 	 * Comparator for two Tokens. Simply uses a string compareTo() on the Tokens' name
@@ -129,6 +117,7 @@ public class Token implements Comparable
 		Token cloned = new Token();
 		cloned.name = this.name;
 		cloned.type = this.type;
+		cloned.token_string = this.token_string;
 		FollowSet follow = new FollowSet();
 		FirstSet first = firstSet.clone();
 		for(int i=0;i<followSet.getSet().size();i++)

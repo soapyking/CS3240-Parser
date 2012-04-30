@@ -3,7 +3,6 @@ import java.util.LinkedList;
 public class Grammar
 {
 	private LinkedList<Rule> rules;
-	private LinkedList<Token> nonTerminals;
 	//Used for determining unique nonterminals for use in the
 	//first and follow set methods
 
@@ -40,7 +39,7 @@ public class Grammar
 	/**
 	 * This method removes all immediate left recursion.
 	 * Will check every rule in the grammar to be sure.
-	 * Call this method before the separate method.
+	 * Call this method after the separate method.
 	 */
 	public void removeRecursion()
 	{
@@ -97,7 +96,46 @@ public class Grammar
 		}
 		rules = rulesCleaned;
 	}
+	
+	public void leftFactor() {
+		LinkedList<LinkedList<Rule>> categorized = categorizeRules();
+		
+		for(LinkedList<Rule> list: categorized) {
+			for(Rule r: list) {
+			}
+		}
+	}
 
+	/** 
+	 * Divides rules into a linked list of linked lists by their left tokens
+	 * This assumes the original list of rules are ordered
+	 * If I had thought of it, I would have used this for removeRecursion()
+	 * 
+	 * @return
+	 */
+	public LinkedList<LinkedList<Rule>> categorizeRules() {
+		LinkedList<LinkedList<Rule>> separated = new LinkedList<LinkedList<Rule>>();
+		LinkedList<Rule> curList = new LinkedList<Rule>();
+		String curName = null;
+		String prevName = null;
+		curName = rules.get(0).getLeftHS().getName();
+		prevName = curName;
+		for(Rule r: rules) {
+			curName = r.getLeftHS().getName();
+			if(prevName.compareTo(curName) == 0) {
+				System.out.println("Match on " + curName);
+				curList.add(r);
+			}
+			else {
+				System.out.println("Mismatch, now categorizing " + curName);
+				separated.add(curList);
+				curList = new LinkedList<Rule>();
+				curList.add(r);
+			}
+			prevName = curName;
+		}
+		return separated;
+	}
 
 	/**
 	 * This method populates the follow set of every nonterminal token in the 

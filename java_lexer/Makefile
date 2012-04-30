@@ -11,14 +11,14 @@ RECENT_JAVA := $(zsh ls -lt **/*.java | head -1)
 
 
 CLASSES = \
-	Lexer.java
+	source_lexer.java
 
 default: classes
 
 classes: $(CLASSES:.java=.class)
 
 run: default
-	java -cp .:regexp.jar Lexer
+	java -cp .:regexp.jar source_lexer
 
 check-syntax:
 	$(JC) $(JFLAGS) $(CLASSPATH) -Xlint $(CHK_SOURCES)

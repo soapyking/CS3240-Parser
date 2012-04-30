@@ -9,61 +9,22 @@ import java.util.regex.*;
 import java.util.Dictionary;
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.LinkedList;
 import org.apache.regexp.*;
 
-public class Lexer {
+public class source_lexer {
 
     private boolean verbose = false;
 
-    public enum Token {
-
-	// Terminals
-
-	LEFTPAR     	("LEFTPAR"     , new RE("^" + "\\(")),
-	RIGHTPAR    	("RIGHTPAR"    , new RE("^" + "\\)")),
-	ASSIGN      	("ASSIGN"      , new RE("^" + ":=")),
-	COMMA       	("COMMA"       , new RE("^" + ",")),
-	SEMICOLON   	("SEMICOLON"   , new RE("^" + ";")),
-	PLUS        	("PLUS"        , new RE("^" + "\\+")),
-	MINUS       	("MINUS"       , new RE("^" + "-")),
-	MULTIPLY    	("MULTIPLY"    , new RE("^" + "\\*")),
-	MODULO      	("MODULO"      , new RE("^" + "%")),
-
-	// Keywords
-	BEGIN       	("BEGIN"       , new RE("^" + "BEGIN")),
-	END         	("END"         , new RE("^" + "END")),
-	PRINT       	("PRINT"       , new RE("^" + "PRINT")),
-
-	// Non-implemented
-	READ        	("READ"        , new RE("^" + "READ")),
-	WRITE           ("WRITE"       , new RE("^" + "WRITE")),
-	IF          	("IF"          , new RE("^" + "IF")),
-	THEN        	("THEN"        , new RE("^" + "THEN")),
-	UNTIL       	("UNTIL"       , new RE("^" + "UNTIL")),
-	LESSTHAN    	("LESSTHAN"    , new RE("^" + "<")),
-	GREATERTHAN 	("GREATERTHAN" , new RE("^" + ">")),
-	REPEAT      	("REPEAT"      , new RE("^" + "REPEAT")),
-	EQUALTO     	("EQUALTO"     , new RE("^" + "=")),
+    public LinkedList<Token> ll_token_list;
 
 
-	// Char classes
-	INTNUM      	("INTNUM"      , new RE("(^0)|(^[1-9][0-9]*)", RE.REPLACE_BACKREFERENCES)),
-	ID          	("ID"          , new RE("^[_A-Za-z][_A-Za-z0-9]{0,9}"));
-
-	private final String token;
-	private final RE regex;
-	Token(String token, RE regex){
-	    this.token = token;
-	    this.regex = regex;
-	}
-
-    }
-
-    public Lexer ( ) {
+    public source_lexer ( ) {
+	this.ll_token_list = new LinkedList<Token>();
 	this.verbose = false;
     }
 
-    public Lexer ( boolean verbose ) {
+    public source_lexer ( boolean verbose ) {
 	this();
 	this.setVerbose(verbose);
 
@@ -73,50 +34,41 @@ public class Lexer {
 	this.verbose = verbose;
     }
 
-    /* Condition the input file for parsing. */
-    private String condition( String input_string) {
+    private String tokenize( String input_string ) {
+	String input = new String(input_string);
+	String output_string = new String("");
+	String inputln = Integer.toString(input.length());
+	String chngeln = Integer.toString(15);
+	boolean changed;
 	RE regex;
-	/*
-	  Remove any comments -- one of the example files uses comments,
-	  and I just wanted to clear them out.
-	 */
-	regex = new RE("\\{.*?\\}");
-	input_string = regex.subst(input_string,"",RE.MATCH_MULTILINE & RE.REPLACE_ALL);
 
 	/*
 	  Collapse whitespace.
 	*/
 	regex = new RE("[:space:]+");
-	input_string = regex.subst(input_string," ",RE.MATCH_MULTILINE & RE.REPLACE_ALL);
+	input = regex.subst(input_string," ",RE.MATCH_MULTILINE & RE.REPLACE_ALL);
 
 	/*
 	  Also replace newlines with spaces. No need for them.
 	 */
 	regex = new RE("(\\n)|(\\r\\n)|(\\r)");
-	input_string = regex.subst(input_string," ",RE.REPLACE_ALL);
-
-	return input_string;
-    }
-
-    private String tokenize( String input_string ) {
-	String input = condition(input_string);
-	String output_string = new String("");
-	String inputln = Integer.toString(input.length());
-	String chngeln = Integer.toString(15);
-	boolean changed;
+	input = regex.subst(input," ",RE.REPLACE_ALL);
 
 	do{
 	    changed = false;
-	    for (Token t : Token.values()){
+	    for (SourceToken t : SourceToken.values()){
 		input = input.trim();
 		t.regex.setMatchFlags(RE.MATCH_CASEINDEPENDENT);
 		if (t.regex.match(input)){
-		    if(this.verbose)
-			System.out.printf("%" + inputln +"s | %-" + chngeln + "s  ==> ", input, t.token);
+		    String match_string = t.regex.getParen(0);
+		    // if(this.verbose)
+		    // 	System.out.printf("%" + inputln +"s | %-" + chngeln + "s  ==> ", input, t.token);
 		    input = t.regex.subst(input, "", RE.REPLACE_FIRSTONLY & RE.MATCH_CASEINDEPENDENT);
 		    output_string = output_string.trim() + " " + t.token.trim();
+
+		    ll_token_list.add(new Token(t.token, match_string, t.type));
 		    changed = true;
-		    if(this.verbose) System.out.println(input);
+		    // if(this.verbose) System.out.println(t.regex.getParen(0));
 		    break;
 		}
 
@@ -129,7 +81,13 @@ public class Lexer {
 	    return output_string + " SYNTAX_ERROR @ \"" + input + "\"";
 	}
 
-	if(this.verbose) System.out.println("\n");
+	ll_token_list.add(new Token("$", "", TokenType.DOLLAR));
+
+	if(this.verbose){
+	    for( Token g : ll_token_list){
+		System.out.println(g);
+	    }
+	}
 	return output_string;
 
     }
@@ -148,7 +106,7 @@ public class Lexer {
 	   Parse input arguments.
 	 */
 
-	String usage = "Usage: java -cp .:regexp.jar Lexer -v(erbose output)" //
+	String usage = "Usage: java -cp .:regexp.jar source_lexer -v(erbose output)" //
 	    + " [-i inputfile (default stdin)] [-o outputfile (default stdout)]";
 
 
@@ -225,10 +183,10 @@ public class Lexer {
 	}
 
 	/*
-	  Use the parsed arguments to set up the Lexer call...
+	  Use the parsed arguments to set up the source_lexer call...
 	*/
 
-	Lexer output = new Lexer(verbose_output);
+    source_lexer output = new source_lexer(verbose_output);
 
 
 	String lexer_input = "";

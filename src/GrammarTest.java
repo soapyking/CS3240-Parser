@@ -149,4 +149,13 @@ public class GrammarTest extends TestCase {
 		//System.out.println(gram.toString());
 		//System.out.println("----------------------------------");
 	}
+	
+	@Test
+	public void testCategorize() {
+		System.out.println("Testing categorizorizerism");
+		System.out.println(gram);
+		System.out.println("--------------------------");
+		LinkedList<LinkedList<Rule>> categorized = gram.categorizeRules();
+		System.out.println(categorized);
+	}
 }
