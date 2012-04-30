@@ -130,18 +130,13 @@ public class Token implements Comparable
 		cloned.name = this.name;
 		cloned.type = this.type;
 		FollowSet follow = new FollowSet();
-		FirstSet first = new FirstSet();
-		for(int i=0;i<firstSet.getSet().size();i++)
-		{
-			Token firstClone = firstSet.getSet().get(i).clone();
-			first.add(firstClone);
-		}
+		FirstSet first = firstSet.clone();
 		for(int i=0;i<followSet.getSet().size();i++)
 		{
 			Token followClone = followSet.getSet().get(i).clone();
 			first.add(followClone);
 		}
-		cloned.firstSet = first;
+		//cloned.firstSet = first;
 		cloned.followSet = follow;
 		return cloned;
 	}

@@ -141,19 +141,6 @@ public class Grammar
 								Xi.getFollowSet().add(Xiplus1);
 							}
 						}
-						
-	//					if(Xi.getTypeString().compareToIgnoreCase("nonterminal")== 0)
-	//					{
-	//						if(Xi.getFirstSet()!=null)
-	//						{
-	//							left.getFollowSet().add(Xi.getFirstSet().getSet());
-	//						}
-	//					}
-	//					if(Xi.getTypeString().compareToIgnoreCase("terminal")==0)
-	//					{
-	//						
-	//						left.getFollowSet().add(Xi);
-	//					}
 					}
 				}
 			}
@@ -178,7 +165,8 @@ public class Grammar
 				{
 					if(left.getFirstSet()!=null)
 					{
-						left.getFirstSet().add(Xi.clone());
+						left.getFirstSet().add(Xi);//.clone());
+						
 					}
 				}
 				else if(Xi.getTypeString().compareToIgnoreCase("nonterminal")==0)
@@ -223,6 +211,11 @@ public class Grammar
 	{
 		Rule returned = rules.get(index);
 		return returned;
+	}
+	
+	public boolean contains(Token LeftHS)
+	{
+		return false;
 	}
 
 	/**

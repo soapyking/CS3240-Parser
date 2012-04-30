@@ -60,7 +60,7 @@ public class Rule
 		LinkedList<Token> right  = new LinkedList<Token>();
 		for(int i=0;i<this.right_hs.size();i++)
 		{
-			right.add(this.right_hs.get(i));
+			right.add(this.right_hs.get(i).clone());
 		}
 		Rule returning = new Rule(left);
 		returning.addRight_hs(right);

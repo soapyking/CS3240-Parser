@@ -75,6 +75,18 @@ public class FirstSet
 			return set.get(set.size()-1);
 		}
 	}
+	
+	public FirstSet clone()
+	{
+		LinkedList<Token> newSet = new LinkedList<Token>();
+		for(int i=0;i<set.size();i++)
+		{
+			newSet.add(set.get(i).clone());
+		}
+		FirstSet returned = new FirstSet();
+		returned.add(newSet);
+		return returned;
+	}
 
 	public String toString()
 	{
