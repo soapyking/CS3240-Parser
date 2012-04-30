@@ -11,7 +11,7 @@ public class ParseGen
 	//private static LinkedList<Token> nonTerminals;
 	//private static ParseTable parseTable;
 
-		
+
 	public ParseGen()
 	{
 		parseTable = new ParseTable();
@@ -31,10 +31,10 @@ public class ParseGen
 		while(lex.hasTokens())
 		{
 			Token token=lex.getToken();
-//			if(token.getTypeString().compareToIgnoreCase("terminal")==0)
-//			{
-//				terminals.add(token);
-//			}
+			if(token.getTypeString().compareToIgnoreCase("terminal")==0)
+			{
+				terminals.add(token);
+			}
 			try
 			{
 			if(token.getName().compareToIgnoreCase("%Rules")==0)
@@ -45,7 +45,7 @@ public class ParseGen
 			}
 			if(pastMeta&&token.getTypeString().compareToIgnoreCase("nonterminal")==0)
 				{
-					//System.out.println(lex.nextToken().getName());
+					System.out.println(lex.nextToken().getName());
 					if(lex.nextToken().getTypeString().compareToIgnoreCase("assign")==0)
 					{
 						Rule nextRule=new Rule(token);
@@ -64,19 +64,19 @@ public class ParseGen
 			}
 			catch(NullPointerException e)
 			{
-				
+
 			}
 		}
 	}
 
 	/**
-	 * This program will be command line only and will consist of java 
+	 * This program will be command line only and will consist of java
 	 * (file that contains the grammar definition) (where to save) (if last
 	 * request was a file, this will have the name of the file in the current directory)
 	 */
 	public static void main(String [] args)
 	{
-		
+
 		try
 		{
 			parseTableWriter = new ParseTableWriter(args[1]);
@@ -88,11 +88,12 @@ public class ParseGen
 			e.printStackTrace();
 		}
 		lex.readFile();
+		System.out.println(lex);
 		@SuppressWarnings("unused")
 		ParseGen parserGenerator = new ParseGen();
 		makeGrammar();
 		grammar.separate();
-		//System.out.println(grammar);
+		System.out.println(grammar);
 		grammar.makeFirstSet();
 		grammar.makeFollowSet();
 		parseTable.generateParseTable(grammar);

@@ -60,7 +60,7 @@ public class Token implements Comparable
 
 	public String toString()
 	{
-	    return String.format("Token name: %15s | Type: %10s | String: %s", this.name, this.type, this.token_string);
+	    return String.format("Token name: %15s | Type: %15s | String: %s", this.name, this.type, this.token_string);
 	}
 
 

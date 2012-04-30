@@ -25,7 +25,7 @@ public class Grammar
 	{
 		rules.add(rule);
 	}
-	
+
 	/**
 	 * Returns how many rules there are in the grammar
 	 *
@@ -96,21 +96,21 @@ public class Grammar
 		}
 		rules = rulesCleaned;
 	}
-	
+
 	public void leftFactor() {
 		LinkedList<LinkedList<Rule>> categorized = categorizeRules();
-		
+
 		for(LinkedList<Rule> list: categorized) {
 			for(Rule r: list) {
 			}
 		}
 	}
 
-	/** 
+	/**
 	 * Divides rules into a linked list of linked lists by their left tokens
 	 * This assumes the original list of rules are ordered
 	 * If I had thought of it, I would have used this for removeRecursion()
-	 * 
+	 *
 	 * @return
 	 */
 	public LinkedList<LinkedList<Rule>> categorizeRules() {
@@ -138,7 +138,7 @@ public class Grammar
 	}
 
 	/**
-	 * This method populates the follow set of every nonterminal token in the 
+	 * This method populates the follow set of every nonterminal token in the
 	 * grammar.
 	 */
 	public void makeFollowSet()
@@ -179,7 +179,7 @@ public class Grammar
 								Xi.getFollowSet().add(Xiplus1);
 							}
 						}
-						
+
 	//					if(Xi.getTypeString().compareToIgnoreCase("nonterminal")== 0)
 	//					{
 	//						if(Xi.getFirstSet()!=null)
@@ -189,7 +189,7 @@ public class Grammar
 	//					}
 	//					if(Xi.getTypeString().compareToIgnoreCase("terminal")==0)
 	//					{
-	//						
+	//
 	//						left.getFollowSet().add(Xi);
 	//					}
 					}
@@ -229,7 +229,7 @@ public class Grammar
 			}
 		}
 	}
-	
+
 	public void printFirstSet()
 	{
 		for(int i=0;i<rules.size();i++)

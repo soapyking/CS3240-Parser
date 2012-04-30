@@ -32,6 +32,9 @@ classes: $(CLASSES:.java=.class)
 check-syntax:
 	$(JC) $(JFLAGS) -classpath $(CLASSPATH) -Xlint $(CHK_SOURCES)
 
+run:
+	echo "#!/bin/bash\necho ---------\ncd src\n$(RUN) \$$@" > test.sh
+
 test-fast: $(basename $(RECENT_JAVA)).run
 
 %.run: %.class
