@@ -11,7 +11,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import org.apache.regexp.*;
 
-public class Lexer {
+public class source_lexer {
 
     private boolean verbose = false;
 
@@ -59,11 +59,11 @@ public class Lexer {
 
     }
 
-    public Lexer ( ) {
+    public source_lexer ( ) {
 	this.verbose = false;
     }
 
-    public Lexer ( boolean verbose ) {
+    public source_lexer ( boolean verbose ) {
 	this();
 	this.setVerbose(verbose);
 
@@ -148,7 +148,7 @@ public class Lexer {
 	   Parse input arguments.
 	 */
 
-	String usage = "Usage: java -cp .:regexp.jar Lexer -v(erbose output)" //
+	String usage = "Usage: java -cp .:regexp.jar source_lexer -v(erbose output)" //
 	    + " [-i inputfile (default stdin)] [-o outputfile (default stdout)]";
 
 
@@ -225,10 +225,10 @@ public class Lexer {
 	}
 
 	/*
-	  Use the parsed arguments to set up the Lexer call...
+	  Use the parsed arguments to set up the source_lexer call...
 	*/
 
-	Lexer output = new Lexer(verbose_output);
+	source_lexer output = new source_lexer(verbose_output);
 
 
 	String lexer_input = "";

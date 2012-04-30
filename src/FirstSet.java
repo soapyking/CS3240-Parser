@@ -29,7 +29,7 @@ public class FirstSet
 			this.set.add(toAdd);
 		}
 	}
-	
+
 	/**
 	 * Wrapper of the last method in order to have an efficient and clean
 	 * way to add an entire linked list of tokens to the first set.
@@ -58,12 +58,12 @@ public class FirstSet
 	{
 		return set;
 	}
-	
+
 	public int getSize()
 	{
 		return set.size();
 	}
-	
+
 	public Token get(int index)
 	{
 		if(index<set.size())
