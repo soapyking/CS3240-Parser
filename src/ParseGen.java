@@ -1,6 +1,6 @@
 import java.lang.ArrayIndexOutOfBoundsException;
 import java.util.LinkedList;
-nimport java.io.*;
+import java.io.*;
 
 public class ParseGen
 {
@@ -104,108 +104,8 @@ public class ParseGen
 	for (Rule t: temp){
 	    if (temp != null) grammar.rules.remove(t);
 	}
-
-<<<<<<< variant A
-	/**
-	 * Creates a grammar from the lexer's tokens.
-	 * Will make sure that the lexer has tokens before beginning.
-	 */
-	public static Grammar makeGrammar()
-	{
-		Grammar grammar = new Grammar();
-		boolean pastMeta=false;
-		while(lex.hasTokens())
-		{
-			Token token=lex.getToken();
-//			if(token.getTypeString().compareToIgnoreCase("terminal")==0)
-//			{
-//				terminals.add(token);
-//			}
-			try
-			{
-				if(token.getName().compareToIgnoreCase("%Rules")==0)
-				{
-					pastMeta=true;
-					token=lex.getToken();
-					token=lex.getToken();
-				}
-				if(pastMeta&&token.getTypeString().compareToIgnoreCase("nonterminal")==0)
-				{
-					//System.out.println(lex.nextToken().getName());
-					if(lex.nextToken().getTypeString().compareToIgnoreCase("assign")==0)
-					{
-						Rule nextRule=new Rule(token);
-						LinkedList<Token> right = new LinkedList<Token>();
-						while((token=lex.getToken()).getType()!=TokenType.END_OF_RULE)
-						{
-							if(token.getTypeString().compareToIgnoreCase("assign")!=0)
-							{
-								right.add(token);
-							}
-						}
-						nextRule.addRight_hs(right);
-						grammar.add(nextRule);
-					}
-				}
-			}
-			catch(NullPointerException e)
-			{
-
-			}
-		}
-		return grammar;
-	}
->>>>>>> variant B
     }
-####### Ancestor
-	/**
-	 * Creates a grammar from the lexer's tokens.
-	 * Will make sure that the lexer has tokens before beginning.
-	 */
-	public static void makeGrammar()
-	{
-		boolean pastMeta=false;
-		while(lex.hasTokens())
-		{
-			Token token=lex.getToken();
-//			if(token.getTypeString().compareToIgnoreCase("terminal")==0)
-//			{
-//				terminals.add(token);
-//			}
-			try
-			{
-			if(token.getName().compareToIgnoreCase("%Rules")==0)
-			{
-				pastMeta=true;
-				token=lex.getToken();
-				token=lex.getToken();
-			}
-			if(pastMeta&&token.getTypeString().compareToIgnoreCase("nonterminal")==0)
-				{
-					//System.out.println(lex.nextToken().getName());
-					if(lex.nextToken().getTypeString().compareToIgnoreCase("assign")==0)
-					{
-						Rule nextRule=new Rule(token);
-						LinkedList<Token> right = new LinkedList<Token>();
-						while((token=lex.getToken()).getType()!=TokenType.END_OF_RULE)
-						{
-							if(token.getTypeString().compareToIgnoreCase("assign")!=0)
-							{
-								right.add(token);
-							}
-						}
-						nextRule.addRight_hs(right);
-						grammar.add(nextRule);
-					}
-				}
-			}
-			catch(NullPointerException e)
-			{
 
-			}
-		}
-	}
-======= end
 
     /**
      * This program will be command line only and will consist of java
