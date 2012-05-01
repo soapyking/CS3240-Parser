@@ -1,2 +1,12 @@
-row 0
-
+,ASSIGN,BEGIN,COMMA,END,EPSILON,ID,INTNUM,LEFTPAR,MINUS,MODULO,MULTIPLY,PLUS,PRINT,RIGHTPAR,Read,SEMICOLON,dollar,
+<Tiny-program>,[],[],[],[],[],[ <Tiny-program> --> BEGIN <statement-list> END ],[],[],[],[],[],[],[ <Tiny-program> --> BEGIN <statement-list> END ],[],[ <Tiny-program> --> BEGIN <statement-list> END ],[],[],
+<bin-op>,[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],
+<exp-list>,[],[],[],[],[],[     <exp-list> --> <exp> <exp-list>_rem ],[     <exp-list> --> <exp> <exp-list>_rem ],[     <exp-list> --> <exp> <exp-list>_rem ],[],[],[],[],[],[],[],[],[],
+<exp-list>_rem,[],[],[],[],[],[ <exp-list>_rem --> COMMA <exp> <exp-list>_rem ],[ <exp-list>_rem --> COMMA <exp> <exp-list>_rem ],[ <exp-list>_rem --> COMMA <exp> <exp-list>_rem ],[],[],[],[],[],[],[],[],[],
+<exp>,[],[],[],[],[],[          <exp> --> LEFTPAR <exp> RIGHTPAR <exp>_rem ],[          <exp> --> LEFTPAR <exp> RIGHTPAR <exp>_rem ],[          <exp> --> LEFTPAR <exp> RIGHTPAR <exp>_rem ],[],[],[],[],[],[],[],[],[],
+<exp>_rem,[],[],[],[],[],[      <exp>_rem --> <bin-op> <exp> <exp>_rem ],[      <exp>_rem --> <bin-op> <exp> <exp>_rem ],[      <exp>_rem --> <bin-op> <exp> <exp>_rem ],[      <exp>_rem --> <bin-op> <exp> <exp>_rem ],[      <exp>_rem --> <bin-op> <exp> <exp>_rem ],[      <exp>_rem --> <bin-op> <exp> <exp>_rem ],[      <exp>_rem --> <bin-op> <exp> <exp>_rem ],[],[],[],[],[],
+<id-list>,[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],
+<id-list>_rem,[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],
+<statement-list>,[],[],[],[],[],[<statement-list> --> <statement> <statement-list>_rem ],[],[],[],[],[],[],[<statement-list> --> <statement> <statement-list>_rem ],[],[<statement-list> --> <statement> <statement-list>_rem ],[],[],
+<statement-list>_rem,[],[],[],[],[],[<statement-list>_rem --> <statement> <statement-list>_rem ],[],[],[],[],[],[],[<statement-list>_rem --> <statement> <statement-list>_rem ],[],[<statement-list>_rem --> <statement> <statement-list>_rem ],[],[],
+<statement>,[],[],[],[],[],[    <statement> --> PRINT LEFTPAR <exp-list> RIGHTPAR SEMICOLON ,     <statement> --> ID ASSIGN <exp> SEMICOLON ,     <statement> --> Read LEFTPAR <id-list> RIGHTPAR SEMICOLON ],[    <statement> --> PRINT LEFTPAR <exp-list> RIGHTPAR SEMICOLON ,     <statement> --> ID ASSIGN <exp> SEMICOLON ],[    <statement> --> PRINT LEFTPAR <exp-list> RIGHTPAR SEMICOLON ,     <statement> --> ID ASSIGN <exp> SEMICOLON ],[],[],[],[],[],[],[],[],[]
