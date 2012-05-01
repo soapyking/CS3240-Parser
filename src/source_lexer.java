@@ -14,13 +14,9 @@ import java.util.Map;
 import org.apache.regexp.*;
 
 public class source_lexer {
-
     private boolean verbose = false;
-
     public LinkedList<Token> ll_token_list;
-
     public LexerType lextype;
-
     private TreeMap<Token,Rule> rules;
 
     public enum LexerType { SOURCE, GRAMMAR };
@@ -51,8 +47,6 @@ public class source_lexer {
 	String chngeln = Integer.toString(15);
 	boolean changed;
 	RE regex;
-
-
 
 	do{
 	    changed = false;
@@ -130,7 +124,6 @@ public class source_lexer {
 	    }
 	}
 	return output_string;
-
     }
 
 
@@ -143,11 +136,7 @@ public class source_lexer {
 	} catch(IOException ioe){
 	    ioe.printStackTrace();
 	}
-
-
 	return outfile;
-
-
     }
 
     public String toString(){
@@ -157,7 +146,6 @@ public class source_lexer {
 	}
 	return str;
     }
-
 
     public static void main(String[] args){
 	BufferedReader console = new BufferedReader(new InputStreamReader(System.in));
@@ -174,9 +162,7 @@ public class source_lexer {
 	String usage = "Usage: java -cp .:regexp.jar source_lexer -v(erbose output)" //
 	    + " [-i inputfile (default stdin)] [-o outputfile (default stdout)]";
 
-
 	for(int i = 0; i < args.length; i++){
-
 	    /*
 	      Input filename for the untokenized code.
 	    */
@@ -216,8 +202,6 @@ public class source_lexer {
 			System.out.printf("Unknown argument: %s. \n%s\n", args[i], usage);
 			System.exit(1);
 		    }
-
-
 		}
 	    }
 
@@ -253,8 +237,6 @@ public class source_lexer {
 
 	source_lexer output = new source_lexer(LexerType.GRAMMAR, verbose_output);
 
-
-
 	file = console;
 
 	try{
@@ -264,8 +246,6 @@ public class source_lexer {
 	}catch(Exception e){};
 
 	String lexer_input = source_lexer.readFile(file);
-
-
 	String lexer_output = output.tokenize(lexer_input);
 
 	if(output_file == null){
@@ -284,9 +264,5 @@ public class source_lexer {
 		ioe.printStackTrace();
 	    }
 	}
-
-
-
-
     }
 }
