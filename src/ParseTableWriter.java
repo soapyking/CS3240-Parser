@@ -21,11 +21,11 @@ public class ParseTableWriter {
 	public void createFile(ParseTable parse)
 	{
 		String firstRow = new String();
-		for(int i=0;i<parse.getNumRows();i++)
+		for(int i=0;i<parse.getNumRows()+1;i++)
 		{
 			firstRow += "row ";
 			firstRow += i;
-			firstRow += ",";
+			firstRow += "\n";
 			LinkedList<Rule> rules = parse.getTable().get(i);
 			for(int j=0;j<rules.size();j++)
 			{
@@ -43,17 +43,14 @@ public class ParseTableWriter {
 					}
 					firstRow+=",";
 				}
-				firstRow+="\n";
 			}
+			firstRow+="\n";
 		}
 		try
 		{
 			System.out.println("firstRow: " + firstRow + "length" + firstRow.length());
 			parseTableWrite.write(firstRow, 0,firstRow.length());
-			//parseTableWrite.flush();
 			parseTableWrite.close();
-			//parseTableWrite.write("fuck off", 0, 5);
-			//parseTableWrite.close();
 		}
 		catch(IOException e)
 		{

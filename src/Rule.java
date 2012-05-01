@@ -10,13 +10,13 @@ public class Rule
 		this.left_hs=left_hs;
 		right_hs=null;
 	}
-	
+
 	public Rule(Token left_hs,LinkedList<Token> right_hs)
 	{
 		this.left_hs=left_hs;
 		this.right_hs=right_hs;
 	}
-	
+
 	public boolean searchRightForName(String search)
 	{
 		for(int i=0;i<right_hs.size();i++)
@@ -48,19 +48,19 @@ public class Rule
 	{
 		return right_hs;
 	}
-	
+
 	public void addRight_hs(LinkedList<Token> right)
 	{
 		this.right_hs=right;
 	}
-	
+
 	public Rule clone()
 	{
 		Token left = new Token(this.left_hs.getName(),this.left_hs.getTypeString());
 		LinkedList<Token> right  = new LinkedList<Token>();
 		for(int i=0;i<this.right_hs.size();i++)
 		{
-			right.add(this.right_hs.get(i));
+			right.add(this.right_hs.get(i).clone());
 		}
 		Rule returning = new Rule(left);
 		returning.addRight_hs(right);
@@ -69,17 +69,24 @@ public class Rule
 
 	public String toString()
 	{
-		String returned = new String();
-		returned += left_hs;
-		returned += " -> \n";
-		for(int i=0;i<right_hs.size();i++)
-		{
-			returned+="          ";
-			returned+= right_hs.get(i);
-			returned+="\n";
-		}
-		returned += "\n";
-		return returned;
+	    String returned = "";
+	    returned += String.format("%15s --> ", left_hs.getName().trim());
+	    for (Token t : right_hs){
+		if( t == null || t.getName() == null )
+		    return "";
+		returned += String.format("%-15s ", t.getName().trim());
+		// returned += left_hs;
+		// returned += "\n --> \n";
+		// for(int i=0;i<right_hs.size();i++)
+		// {
+		// 	returned+="          ";
+		// 	returned+= right_hs.get(i);
+		// 	returned+="\n";
+		// }
+		// returned += "\n";
+	    }
+
+	    return returned + "\n";
 	}
-	
+
 }

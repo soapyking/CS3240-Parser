@@ -25,6 +25,7 @@ public class ParseTable {
 	private void setupParseTable(Grammar grammar)
 	{
 		table.add(new LinkedList<Rule>());
+		table.get(0).add(new Rule(null));
 		//initialize the first row
 		for(int i=0;i<grammar.countRules();i++)
 		{
@@ -34,33 +35,29 @@ public class ParseTable {
 				Token holder = rule.getRightHS().get(j);
 				if(isUnique(holder)&&(holder.getTypeString().compareToIgnoreCase("terminal")==0))
 				{
-					table.get(0).add(new Rule(holder.clone()));
+					table.get(0).add(new Rule(holder));
 					numColumns++;
 				}
-			}
-			if(isUnique(rule))
-			{
-				table.add(new LinkedList<Rule>());
-				table.getLast().add(new Rule(rule.getLeftHS()));
-				numColumns++;
 			}
 		}
 		
 		for(int i=0;i<grammar.countRules();i++)
 		{
 			Rule rule = grammar.getRule(i);
-			
-			if(isUnique(rule.getLeftHS()))
+			if(isUnique(rule))
 			{
-				table.get(0).add(new Rule(rule.getLeftHS().clone()));
+				table.add(new LinkedList<Rule>());
+				table.getLast().add(new Rule(rule.getLeftHS()));
 				numRows++;
 			}
 			for(int j=0;j<rule.getRightHS().size();j++)
 			{
 				Token temp = rule.getRightHS().get(j);
-				if(isUnique(temp))
+				if((temp.getTypeString().compareToIgnoreCase("nonterminal"))==0&&
+						(isUniqueNonTerminal(temp)))
 				{
-					table.get(0).add(new Rule(rule.getLeftHS().clone()));
+					table.add(new LinkedList<Rule>());
+					table.getLast().add(new Rule(temp));
 					numRows++;
 				}
 			}
@@ -80,9 +77,41 @@ public class ParseTable {
 		boolean add = true;
 		for(int i=0;i<table.size();i++)
 		{
-			if(table.get(i)!=null)
+			if(table.get(i)!=null&&table.get(i).get(0).getLeftHS()!=null)
 			{
-				if(table.get(i).get(0).getLeftHS().getName().compareToIgnoreCase(toTest.getLeftHS().getName())==0)
+				String compareTo = table.get(i).get(0).getLeftHS().getName();
+				if(compareTo.compareToIgnoreCase(toTest.getLeftHS().getName())==0)
+				{
+					return false;
+				}
+			}
+		}
+		return add;
+	}
+	private boolean isUniqueNonTerminal(Token toTest)
+	{
+		boolean isUnique = true;
+		for(int i=0;i<table.size();i++)
+		{
+			if(table.get(i)!=null && (table.get(i).get(0).getLeftHS()!=null))
+			{
+				String compareTo = table.get(i).get(0).getLeftHS().getName();
+				if(compareTo.compareToIgnoreCase(toTest.getName())==0)
+				{
+					return false;
+				}
+			}
+		}
+		return isUnique;
+	}
+	private boolean isUnique(Token toTest)
+	{
+		boolean add = true;
+		for(int i=0;i<table.get(0).size();i++)
+		{
+			if(table.get(0).get(i).getLeftHS()!=null)
+			{
+				if(table.get(0).get(i).getLeftHS().getName().compareToIgnoreCase(toTest.getName())==0)
 				{
 					add=false;
 					break;
@@ -91,40 +120,38 @@ public class ParseTable {
 		}
 		return add;
 	}
-	
-	private boolean isUnique(Token toTest)
-	{
-		boolean add = true;
-		for(int i=0;i<table.get(0).size();i++)
-		{
-			if(table.get(0).get(i).getLeftHS().getName().compareToIgnoreCase(toTest.getName())==0)
-			{
-				add=false;
-				break;
-			}
-		}
-		return add;
-	}
-	
 	public void generateParseTable(Grammar grammar)
 	{	
 		setupParseTable(grammar);
+		System.out.println("\n\n\n\n");
+		for(int i=0;i<grammar.countRules();i++)
+		{
+			Rule rule = grammar.getRule(i);
+			for(int j=0;j<rule.getRightHS().size();j++)
+			{
+				System.out.println("What's going on? im in the method");
+				System.out.println("and i step outside" + grammar.getRule(i).getLeftHS().getName());
+				System.out.println(grammar.getRule(i).getLeftHS().getFirstSet()+"\n");
+			}
+		}
 		for(int i=0;i<grammar.countRules();i++)
 		{
 			Rule rule = grammar.getRule(i);
 			for(int j=0;j<rule.getRightHS().size();j++)
 			{
 				Token tempToken = rule.getRightHS().get(j);
-				FirstSet checkFirst = tempToken.getFirstSet();
-				for(int k=0;k<checkFirst.getSet().size();k++)
+				if(tempToken.getTypeString().compareToIgnoreCase("nonterminal")==0)
 				{
-					Token tokeninFirstSet = checkFirst.get(k);
-					add(new Rule(rule.getLeftHS().clone()),new Rule(tokeninFirstSet),rule);
+					FirstSet checkFirst = tempToken.getFirstSet();
+					for(int k=0;k<checkFirst.getSet().size();k++)
+					{
+						Token tokeninFirstSet = checkFirst.get(k);
+						add(new Rule(rule.getLeftHS().clone()),new Rule(tokeninFirstSet),rule);
+					}
 				}
 			}
 		}
 	}
-	
 	
 	public void add(Rule row, Rule column, Rule toAdd)
 	{
