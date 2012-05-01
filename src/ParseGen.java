@@ -71,7 +71,7 @@ public class ParseGen
 			}
 		    }else
 		    if(token.type == TokenType.LINE_END){
-			if(lhs == null) System.out.println("prev" + prev);
+			//if(lhs == null) System.out.println("prev" + prev);
 			state = grammar_sm.rules_lhs;
 			Rule nextRule = new Rule(lhs);
 			nextRule.addRight_hs(parseStack);
@@ -79,7 +79,7 @@ public class ParseGen
 			parseStack = new LinkedList<Token>();
 			continue;
 		    } else if (token.type == TokenType.RULE_SEP){
-			if(lhs == null) System.out.println("prev" + prev);
+			//if(lhs == null) System.out.println("prev" + prev);
 			Rule nextRule = new Rule(lhs);
 			nextRule.addRight_hs(parseStack);
 			grammar.add(nextRule);
@@ -146,11 +146,11 @@ public class ParseGen
 	//System.out.println(grammar);
 	grammar.makeFirstSet();
 	grammar.makeFollowSet();
-	System.out.println("FirstSet :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: ");
-	grammar.printFirstSet();
-	System.out.println("FollowSet ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: ");
-	grammar.printFollowSet();
-	System.out.println("END :: ");
+	// System.out.println("FirstSet :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: ");
+	// grammar.printFirstSet();
+	// System.out.println("FollowSet ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: ");
+	// grammar.printFollowSet();
+	// System.out.println("END :: ");
 
 
 	System.out.print(grammar);

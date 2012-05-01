@@ -77,14 +77,14 @@ public class source_lexer {
 		    t.regex.setMatchFlags(RE.MATCH_CASEINDEPENDENT);
 		    if (t.regex.match(input)){
 			String match_string = t.regex.getParen(0);
-			// if(this.verbose)
-			// 	System.out.printf("%" + inputln +"s | %-" + chngeln + "s  ==> ", input, t.token);
+			 if(this.verbose)
+			 	System.out.printf("%" + inputln +"s | %-" + chngeln + "s  ==> ", input, t.token);
 			input = t.regex.subst(input, "", RE.REPLACE_FIRSTONLY & RE.MATCH_CASEINDEPENDENT);
 			output_string = output_string.trim() + " " + t.token.trim();
 
 			ll_token_list.add(new Token(t.token, match_string, t.type));
 			changed = true;
-			// if(this.verbose) System.out.println(t.regex.getParen(0));
+			 if(this.verbose) System.out.println(t.regex.getParen(0));
 			break;
 		    }
 		}
@@ -97,14 +97,14 @@ public class source_lexer {
 		    t.regex.setMatchFlags(RE.MATCH_CASEINDEPENDENT);
 		    if (t.regex.match(input)){
 			String match_string = t.regex.getParen(0);
-			// if(this.verbose)
-			// 	System.out.printf("%" + inputln +"s | %-" + chngeln + "s  ==> ", input, t.token);
+			 if(this.verbose)
+			 	System.out.printf("%" + inputln +"s | %-" + chngeln + "s  ==> ", input, t.token);
 			input = t.regex.subst(input, "", RE.REPLACE_FIRSTONLY & RE.MATCH_CASEINDEPENDENT);
 			output_string = output_string.trim() + " " + t.token.trim();
 
 			ll_token_list.add(new Token(match_string.trim(), match_string.trim(), t.type));
 			changed = true;
-			// if(this.verbose) System.out.println(t.regex.getParen(0));
+			 if(this.verbose) System.out.println(t.regex.getParen(0));
 			break;
 		    }
 		}
@@ -144,7 +144,9 @@ public class source_lexer {
 	    ioe.printStackTrace();
 	}
 
+
 	return outfile;
+
 
     }
 

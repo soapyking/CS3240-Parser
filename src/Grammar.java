@@ -100,6 +100,7 @@ public class Grammar
 			}
 		}
 		rules = rulesCleaned;
+
 	}
 
     private class Pair {
@@ -187,7 +188,9 @@ public class Grammar
 	//	System.out.println("TOP_LOOP");
 	changed = false;
 
-
+	if (categorized == null){
+	    break;
+	}
 	    ntA_production_check:
 	    for(LinkedList<Rule> ntA_productions: categorized) {
 		for(int i = 0; i < ntA_productions.size(); i++){
@@ -280,6 +283,10 @@ public class Grammar
 		LinkedList<Rule> curList = new LinkedList<Rule>();
 		String curName = null;
 		String prevName = null;
+
+		if (rules.size() == 0){
+		    return null;
+		}
 		curName = rules.get(0).getLeftHS().getName();
 		prevName = curName;
 		for(Rule r: rules) {
