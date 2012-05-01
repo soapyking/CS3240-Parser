@@ -101,7 +101,20 @@ public class Grammar
 		LinkedList<LinkedList<Rule>> categorized = categorizeRules();
 		
 		for(LinkedList<Rule> list: categorized) {
-			for(Rule r: list) {
+			for(int i = 0; i < list.size(); i++) {
+				boolean match = true;
+				int position = 0;
+				while(match) {
+					match = true;
+					LinkedList<Token> right_rem = new LinkedList<Token>();
+					Token curToken = list.get(i).getRightHS().getFirst();
+					for(int j = 0; j < list.size(); j++) {
+						if(j!=i) {
+							if
+							right_rem
+						}
+					}
+				}
 			}
 		}
 	}

@@ -1,20 +1,17 @@
+import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.LinkedList;
 
 public class TokenWriter
 {
-	FileWriter tokenWrite;
-	public TokenWriter(String file)
+	File file;
+	FileWriter writer;
+	BufferedWriter buff;
+	public TokenWriter(String fileName)
 	{
-		try
-		{
-			tokenWrite = new FileWriter(file);
-		}
-		catch(IOException e)
-		{
-			e.printStackTrace();
-		}
+		file = new File(fileName);
 	}
 
 	public void createFile(LinkedList<Rule> allTheRules)
@@ -39,9 +36,10 @@ public class TokenWriter
 		}
 		try
 		{
-			tokenWrite.write(tokens,0,12);
-			tokenWrite.flush();
-			tokenWrite.close();
+			writer = new FileWriter(file);
+			buff = new BufferedWriter(writer);
+			buff.write(tokens);
+			buff.close();
 		}
 		catch(IOException e)
 		{
@@ -50,7 +48,7 @@ public class TokenWriter
 	}
 	public static void main(String [] args)
 	{
-		TokenWriter token = new TokenWriter("/home/alex/output.tik");
+		TokenWriter token = new TokenWriter("output.tik");
 		token.createFile(null);
 	}
 }
