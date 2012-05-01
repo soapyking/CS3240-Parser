@@ -10,7 +10,7 @@ public class ParseGen
     private static LinkedList<Token> terminals;
     private static ParseTable parseTable;
     private static ParseTableWriter parseTableWriter;
-    private static LinkedList<Token> nonTerminals;
+    //private static LinkedList<Token> nonTerminals;
     //private static ParseTable parseTable;
 
     public enum grammar_sm {
@@ -22,7 +22,7 @@ public class ParseGen
     {
 	parseTable = new ParseTable();
 	terminals = new LinkedList<Token>();
-	nonTerminals = new LinkedList<Token>();
+	//nonTerminals = new LinkedList<Token>();
 	grammar = new Grammar();
     }
 
@@ -64,7 +64,6 @@ public class ParseGen
 			} else if( token.type == TokenType.NON_TERMINAL){
 			    //System.out.println(token);
 			    lhs = token;
-			    nonTerminals.add(token);
 			    continue;
 			} else{
 			    System.out.println("WTF? -> " + lhs);
@@ -74,19 +73,22 @@ public class ParseGen
 		    if(token.type == TokenType.LINE_END){
 			//if(lhs == null) System.out.println("prev" + prev);
 			state = grammar_sm.rules_lhs;
+			lhs = grammar.searchGrammar(lhs);
 			Rule nextRule = new Rule(lhs);
 			nextRule.addRight_hs(parseStack);
 			grammar.add(nextRule);
 			parseStack = new LinkedList<Token>();
 			continue;
 		    } else if (token.type == TokenType.RULE_SEP){
-			//if(lhs == null) System.out.println("prev" + prev);
+			if(lhs == null) System.out.println("prev" + prev);
+			lhs = grammar.searchGrammar(lhs);
 			Rule nextRule = new Rule(lhs);
 			nextRule.addRight_hs(parseStack);
 			grammar.add(nextRule);
 			parseStack = new LinkedList<Token>();
 			continue;
 		    } else if(state == grammar_sm.rules_rhs){
+		    	token = grammar.searchGrammar(token);
 			parseStack.add(token);
 		    }
 		}

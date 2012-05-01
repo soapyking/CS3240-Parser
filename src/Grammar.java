@@ -485,4 +485,37 @@ public class Grammar
 		rules = newRules;
 	    */
 	}
+	
+	public Token searchLHS(Token search)
+	{
+		for(int i=0;i<rules.size();i++)
+		{
+			if(search.getName().compareToIgnoreCase(rules.get(i).getLeftHS().getName())==0)
+			{
+				return rules.get(i).getLeftHS();
+			}
+		}
+		return search;
+	}
+	
+	public Token searchGrammar(Token search)
+	{
+		for(int i=0;i<rules.size();i++)
+		{
+			Rule rule = rules.get(i);
+			if(search.getName().compareToIgnoreCase(rule.getLeftHS().getName())==0)
+			{
+				return rules.get(i).getLeftHS();
+			}
+			for(int j=0;j<rule.getRightHS().size();j++)
+			{
+				Token right = rule.getRightHS().get(j);
+				if(search.getName().compareToIgnoreCase(right.getName())==0)
+				{
+					return right;
+				}
+			}
+		}
+		return search;
+	}
 }
