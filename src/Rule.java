@@ -69,17 +69,22 @@ public class Rule
 
 	public String toString()
 	{
-		String returned = new String();
-		returned += left_hs;
-		returned += "\n --> \n";
-		for(int i=0;i<right_hs.size();i++)
-		{
-			returned+="          ";
-			returned+= right_hs.get(i);
-			returned+="\n";
-		}
-		returned += "\n";
-		return returned;
+	    String returned = "";
+	    returned += String.format("%15s --> ", left_hs.getName().trim());
+	    for (Token t : right_hs){
+		returned += String.format("%-15s ", t.getName().trim());
+		// returned += left_hs;
+		// returned += "\n --> \n";
+		// for(int i=0;i<right_hs.size();i++)
+		// {
+		// 	returned+="          ";
+		// 	returned+= right_hs.get(i);
+		// 	returned+="\n";
+		// }
+		// returned += "\n";
+	    }
+
+	    return returned + "\n";
 	}
 
 }

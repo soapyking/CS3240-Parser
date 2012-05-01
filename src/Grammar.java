@@ -106,6 +106,7 @@ public class Grammar
 
 		for(LinkedList<Rule> list: categorized) {
 			for(Rule r: list) {
+			    System.out.println(r + "\n##########");
 			}
 		}
 	}

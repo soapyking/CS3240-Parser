@@ -9,7 +9,9 @@ RECENT_JAVA = $(shell ls -1t **/*.java | head -1)
 SRC_DIR = ./src
 BIN_DIR = ./bin
 
-RUN = java -cp $(subst :./,:../,$(CLASSPATH))
+RUN = java -cp $(subst :./,:./,$(CLASSPATH))
+
+JUNIT = org.junit.runner.JUnitCore
 
 null:=
 space:= $(null) $(null)
@@ -36,6 +38,10 @@ run:
 	echo "#!/bin/bash\necho ---------\ncd src\n$(RUN) \$$@" > test.sh
 
 test-fast: $(basename $(RECENT_JAVA)).run
+
+test:
+	$(RUN) $(JUNIT) $(TFILE)
+
 
 %.run: %.class
 	echo "#!/bin/bash\necho ---------\ncd src\n$(RUN) $(notdir $(basename $<)) \$$@" > test.sh
