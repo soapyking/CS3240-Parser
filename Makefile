@@ -36,10 +36,12 @@ check-syntax:
 	$(JC) $(JFLAGS) -classpath $(CLASSPATH) -Xlint $(CHK_SOURCES)
 
 run:
-	echo "#!/bin/bash\necho ---------\ncd src\n$(RUN) \$$@" > test.sh
+	echo "#!/bin/bash\necho ---------\ncd src\n$(RUN) \$$@" > run.sh
+	chmod +x run.sh
 
 debug:
-	echo "#!/bin/bash\necho ---------\ncd src\n$(DEBUG) \$$@" > test.sh
+	echo "#!/bin/bash\necho ---------\ncd src\n$(DEBUG) \$$@" > debug.sh
+	chmod +x debug.sh
 
 test-fast: $(basename $(RECENT_JAVA)).run
 

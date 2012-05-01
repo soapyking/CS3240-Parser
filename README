@@ -1,9 +1,79 @@
-I should change this to something more acceptible
- _____________
-< Stewart sucks. >
- -------------
-        \   ^__^
-         \  (oo)\_______
-            (__)\       )\/\
-                ||----w |
-                ||     ||
+CS2340 Final Project
+
+Alex Bires
+Chris Julian
+Stewart Butler
+
+################################################################################
+# Directory information:
+################################################################################
+
+This document assumes you are on a UNIX-based platform. It is tested,
+and should work correctly on the cc-discovery.gatech.edu type machines.
+
+After unzipping the files, you should find the following directory
+structure:
+
+  ./res/ -- a few resource files, such as the required jar archives. The
+  	    jar files provide a usable RegExp system for Java, as well
+  	    as a multi-key map data structure that was useful for
+  	    constructing the parsing table.
+
+	    If you do not use the included Makefile, be sure to include
+	    this in your classpath when you execute the code. This will
+	    be covered further down.
+
+  ./src/ -- Source directory for all the java code.
+
+  ./bin/ -- Target directory for compilation, location of the class
+  	    files.
+
+Also, a few important files:
+
+  ./Makefile -- A GCC make file that will construct all the components
+  	        you need to test our system.
+
+################################################################################
+# Usage information:
+################################################################################
+
+Please use the following syntax to test the code.
+
+
+---------- Lexer ----------
+
+First, compile the lexer. From the root directory:
+
+$> make
+$> make run
+$> ./lexer.sh [OPTION]... [< PIPE INPUT]
+
+[OPTION]:
+  -v               : Activate verbose mode. Will show the parser's execution path.
+
+  -o [OUTPUT_FILE] : Target output file, the '*.tok' file you pass the
+     		     parser driver. If left undirected, the lexer will
+     		     output to STDOUT.
+
+  -i [INPUT_FILE]  : The TINY-language-format or similar source input
+     		     file. If left undeclared, the lexer will assume you
+     		     will be piping it input. In bash, this is the same
+     		     as
+		     $> ./lexer.sh < input_file.tny
+		     or:
+		     $> cat input_file.tny | ./lexer.sh
+
+[< INPUT]:
+   Another convention for input via STDIN on most *NIX shells.
+
+---------- ParseGen ----------
+
+First, compile the parser generator. From the root directory:
+
+$> make
+$> make run
+$> ./parser_generator.sh [GRAMMAR_FILE] [OUTPUT_FILE]
+
+[GRAMMAR_FILE]:
+
+  Standard gr

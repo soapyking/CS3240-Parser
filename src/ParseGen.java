@@ -5,7 +5,7 @@ import java.io.*;
 public class ParseGen
 {
     //private static Lexer lex;
-    private static source_lexer lex;
+    private static Lexer lex;
     private static Grammar grammar;
     private static LinkedList<Token> terminals;
     private static ParseTable parseTable;
@@ -162,7 +162,7 @@ public class ParseGen
 	//     }
 	//lex.readFile();
 
-	lex = new source_lexer(source_lexer.LexerType.GRAMMAR, false);
+	lex = new Lexer(Lexer.LexerType.GRAMMAR, false);
 
 	try{
 	    lex.tokenize(lex.readFile(new BufferedReader(new FileReader(args[0]))));
