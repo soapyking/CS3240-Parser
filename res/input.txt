@@ -1,4 +1,4 @@
-%Tokens BEGIN END SEMICOLON COMMA INTNUM LEFTPAR RIGHTPAR ASSIGN ID PLUS MINUX MULTIPLY MODULO 
+%Tokens BEGIN END SEMICOLON COMMA INTNUM LEFTPAR RIGHTPAR ASSIGN ID PLUS MINUS MULTIPLY MODULO
 %Non-terminals <Tiny-program> <statement-list> <statement> <id-list> <exp-list> <exp> <bin-op>
 %Start <Tiny-program>
 %Rules

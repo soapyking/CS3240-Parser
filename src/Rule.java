@@ -10,13 +10,13 @@ public class Rule
 		this.left_hs=left_hs;
 		right_hs=null;
 	}
-	
+
 	public Rule(Token left_hs,LinkedList<Token> right_hs)
 	{
 		this.left_hs=left_hs;
 		this.right_hs=right_hs;
 	}
-	
+
 	public boolean searchRightForName(String search)
 	{
 		for(int i=0;i<right_hs.size();i++)
@@ -48,12 +48,12 @@ public class Rule
 	{
 		return right_hs;
 	}
-	
+
 	public void addRight_hs(LinkedList<Token> right)
 	{
 		this.right_hs=right;
 	}
-	
+
 	public Rule clone()
 	{
 		Token left = new Token(this.left_hs.getName(),this.left_hs.getTypeString());
@@ -71,7 +71,7 @@ public class Rule
 	{
 		String returned = new String();
 		returned += left_hs;
-		returned += " -> \n";
+		returned += "\n --> \n";
 		for(int i=0;i<right_hs.size();i++)
 		{
 			returned+="          ";
@@ -81,5 +81,5 @@ public class Rule
 		returned += "\n";
 		return returned;
 	}
-	
+
 }

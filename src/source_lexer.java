@@ -6,10 +6,11 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.util.regex.*;
-import java.util.Dictionary;
+import java.util.TreeMap;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Map;
 import org.apache.regexp.*;
 
 public class source_lexer {
@@ -18,23 +19,32 @@ public class source_lexer {
 
     public LinkedList<Token> ll_token_list;
 
+    public LexerType lextype;
 
-    public source_lexer ( ) {
+    private TreeMap<Token,Rule> rules;
+
+    public enum LexerType { SOURCE, GRAMMAR };
+
+    public enum grammar_sm {
+	init, err, token, start, rules_m, rules_lhs, rules_rhs;
+    }
+
+    public source_lexer ( LexerType type ) {
+	this.lextype = type;
 	this.ll_token_list = new LinkedList<Token>();
 	this.verbose = false;
     }
 
-    public source_lexer ( boolean verbose ) {
-	this();
+    public source_lexer ( LexerType type, boolean verbose ) {
+	this(type);
 	this.setVerbose(verbose);
-
     }
 
     public void setVerbose( boolean verbose) {
 	this.verbose = verbose;
     }
 
-    private String tokenize( String input_string ) {
+    public String tokenize( String input_string ) {
 	String input = new String(input_string);
 	String output_string = new String("");
 	String inputln = Integer.toString(input.length());
@@ -42,34 +52,61 @@ public class source_lexer {
 	boolean changed;
 	RE regex;
 
-	/*
-	  Collapse whitespace.
-	*/
-	regex = new RE("[:space:]+");
-	input = regex.subst(input_string," ",RE.MATCH_MULTILINE & RE.REPLACE_ALL);
 
-	/*
-	  Also replace newlines with spaces. No need for them.
-	 */
-	regex = new RE("(\\n)|(\\r\\n)|(\\r)");
-	input = regex.subst(input," ",RE.REPLACE_ALL);
 
 	do{
 	    changed = false;
-	    for (SourceToken t : SourceToken.values()){
-		input = input.trim();
-		t.regex.setMatchFlags(RE.MATCH_CASEINDEPENDENT);
-		if (t.regex.match(input)){
-		    String match_string = t.regex.getParen(0);
-		    // if(this.verbose)
-		    // 	System.out.printf("%" + inputln +"s | %-" + chngeln + "s  ==> ", input, t.token);
-		    input = t.regex.subst(input, "", RE.REPLACE_FIRSTONLY & RE.MATCH_CASEINDEPENDENT);
-		    output_string = output_string.trim() + " " + t.token.trim();
+	    if (this.lextype == LexerType.SOURCE){
+		/*
+		  Collapse whitespace.
+		*/
+		regex = new RE("[:space:]+");
+		input = regex.subst(input_string," ",RE.MATCH_MULTILINE & RE.REPLACE_ALL);
 
-		    ll_token_list.add(new Token(t.token, match_string, t.type));
-		    changed = true;
-		    // if(this.verbose) System.out.println(t.regex.getParen(0));
-		    break;
+		/*
+		  Also replace newlines with spaces. No need for them.
+		*/
+		regex = new RE("(\\n)|(\\r\\n)|(\\r)");
+		input = regex.subst(input," ",RE.REPLACE_ALL);
+
+		/*
+		    Extract the Source tokens, and the match strings.
+		 */
+		for (SourceToken t : SourceToken.values()){
+		    input = input.trim();
+		    t.regex.setMatchFlags(RE.MATCH_CASEINDEPENDENT);
+		    if (t.regex.match(input)){
+			String match_string = t.regex.getParen(0);
+			// if(this.verbose)
+			// 	System.out.printf("%" + inputln +"s | %-" + chngeln + "s  ==> ", input, t.token);
+			input = t.regex.subst(input, "", RE.REPLACE_FIRSTONLY & RE.MATCH_CASEINDEPENDENT);
+			output_string = output_string.trim() + " " + t.token.trim();
+
+			ll_token_list.add(new Token(t.token, match_string, t.type));
+			changed = true;
+			// if(this.verbose) System.out.println(t.regex.getParen(0));
+			break;
+		    }
+		}
+
+	    } else{
+		/*
+		  Grammar input file.
+		 */
+		for (GrammarToken t : GrammarToken.values()){
+		    t.regex.setMatchFlags(RE.MATCH_CASEINDEPENDENT);
+		    if (t.regex.match(input)){
+			String match_string = t.regex.getParen(0);
+			// if(this.verbose)
+			// 	System.out.printf("%" + inputln +"s | %-" + chngeln + "s  ==> ", input, t.token);
+			input = t.regex.subst(input, "", RE.REPLACE_FIRSTONLY & RE.MATCH_CASEINDEPENDENT);
+			output_string = output_string.trim() + " " + t.token.trim();
+
+			ll_token_list.add(new Token(match_string.trim(), match_string.trim(), t.type));
+			changed = true;
+			// if(this.verbose) System.out.println(t.regex.getParen(0));
+			break;
+		    }
 		}
 
 	    }
@@ -77,8 +114,12 @@ public class source_lexer {
 	}while(changed && input.length() > 0);
 
 	if (input.length() > 0){
-	    System.out.println("Syntax error. \n");
-	    return output_string + " SYNTAX_ERROR @ \"" + input + "\"";
+	    String error_string = "";
+	    error_string += "Syntax error. \n";
+	    for ( Token t : ll_token_list ){
+		error_string += t + "\n";
+	    }
+	    return error_string + "\nSYNTAX_ERROR @ \"" + input + "\"";
 	}
 
 	ll_token_list.add(new Token("$", "", TokenType.DOLLAR));
@@ -92,6 +133,28 @@ public class source_lexer {
 
     }
 
+
+    public static String readFile(BufferedReader file){
+
+	String outfile = "", buffer;
+	try{
+	    while((buffer = file.readLine()) != null && buffer.length() != 0)
+		    outfile += buffer + "\n";
+	} catch(IOException ioe){
+	    ioe.printStackTrace();
+	}
+
+	return outfile;
+
+    }
+
+    public String toString(){
+	String str = "";
+	for (Token t : ll_token_list){
+	    str += t + "\n";
+	}
+	return str;
+    }
 
 
     public static void main(String[] args){
@@ -186,30 +249,20 @@ public class source_lexer {
 	  Use the parsed arguments to set up the source_lexer call...
 	*/
 
-    source_lexer output = new source_lexer(verbose_output);
+	source_lexer output = new source_lexer(LexerType.GRAMMAR, verbose_output);
 
 
-	String lexer_input = "";
 
-	if (input_file == null) {
-	    String buffer;
-	    try{
-		while((buffer = console.readLine()) != null && buffer.length() != 0)
-		    lexer_input += buffer;
-	    } catch(IOException ioe){
-		ioe.printStackTrace();
-	    }
-	} else {
-	    String buffer;
+	file = console;
 
-	    try{
+	try{
+	    if (input_file != null){
 		file = new BufferedReader(new FileReader(input_file));
-		while((buffer = file.readLine()) != null && buffer.length() != 0)
-		    lexer_input += buffer;
-	    } catch(IOException ioe){
-		ioe.printStackTrace();
 	    }
-	}
+	}catch(Exception e){};
+
+	String lexer_input = source_lexer.readFile(file);
+
 
 	String lexer_output = output.tokenize(lexer_input);
 

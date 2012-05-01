@@ -1,8 +1,9 @@
 import java.util.LinkedList;
+import java.util.HashMap;
 
 public class Grammar
 {
-	private LinkedList<Rule> rules;
+    public LinkedList<Rule> rules;
 	//Used for determining unique nonterminals for use in the
 	//first and follow set methods
 
@@ -23,7 +24,8 @@ public class Grammar
 	 */
 	public void add(Rule rule)
 	{
-		rules.add(rule);
+
+	    rules.add(rule);
 	}
 
 	/**
@@ -57,6 +59,8 @@ public class Grammar
 				prevName = curName;
 			}
 			LinkedList<Token> right = thisRule.getRightHS();
+			System.out.printf("%20s :%s: %-20s\n", left.getName(), left.compareTo(right.getFirst()), right.getFirst().getName());
+
 			if (left.compareTo(right.getFirst()) == 0) {
 				recursionEncounter = true;
 				String leftRemName = left.getName() + "_rem";
@@ -209,6 +213,7 @@ public class Grammar
 			for(int i=0;i<countRules();i++)
 			{
 				Rule rule = rules.get(i);
+
 				Token left = rule.getLeftHS();
 				LinkedList<Token> rightHS = rule.getRightHS();
 				Token Xi = rightHS.get(0);
@@ -269,9 +274,12 @@ public class Grammar
 	 */
 	public void separate()
 	{
+	    return;
+	    /*
 		LinkedList<Rule> newRules = new LinkedList<Rule>();
 		while(!(rules.isEmpty()))
 		{
+		    System.out.println("Separating...");
 			Rule removed = rules.poll().clone();
 			Token leftHS = removed.getLeftHS().clone();
 			LinkedList<Token> rightHS = removed.getRightHS();
@@ -298,5 +306,6 @@ public class Grammar
 		}
 		rules = null;
 		rules = newRules;
+	    */
 	}
 }

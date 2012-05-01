@@ -13,7 +13,7 @@ public class Lexer {
 
 	public Lexer()
 	{
-		ll_token_list = new LinkedList<Token>();
+		ll_token_list =  new LinkedList<Token>();
 		tokenWriter = new TokenWriter("/tmp/output.tik");
 	}
 
@@ -155,8 +155,10 @@ public class Lexer {
 	{
 		Token token=new Token(input,type);
 		for( Token t : ll_token_list){
-		    if ( t.equals(token) )
+		    if ( t.equals(token) ){
+			//System.out.println("Token " + t + " is already in LL");
 			return;
+		    }
 		}
 		ll_token_list.add(token);
 
