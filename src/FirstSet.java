@@ -53,6 +53,37 @@ public class FirstSet
 			}
 		}
 	}
+	
+	public void addNoEpsilons(LinkedList<Token> toAdd)
+	{
+		for(int i=0;i<toAdd.size();i++)
+		{
+			Token innerAdd = toAdd.get(i);
+			if(innerAdd.getName().compareToIgnoreCase("epsilon")!=0)
+			{
+				add(innerAdd);
+			}
+		}
+	}
+	public void addNoEpsilons(Token toAdd)
+	{
+		if(toAdd.getName().compareToIgnoreCase("epsilon")!=0)
+		{
+			add(toAdd);
+		}
+	}
+	
+	public boolean hasEpsilon()
+	{
+		for(int i=0;i<set.size();i++)
+		{
+			if(set.get(i).getName().compareToIgnoreCase("epsilon")==0)
+			{
+				return true;
+			}
+		}
+		return false;
+	}
 
 	public LinkedList<Token> getSet()
 	{
