@@ -1,4 +1,4 @@
 #!/bin/bash
 echo ---------
 cd src
-java -cp .:../src:../res/junit-4.11-SNAPSHOT-20120416-1530.jar:../res/regexp.jar $@
+java -classpath .:../src:/home/stewart/git/CS3240-Parser/src/junit.jar:/home/stewart/git/CS3240-Parser/src/regexp.jar $@

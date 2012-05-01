@@ -143,9 +143,18 @@ public class ParseGen
 	grammar.removeRecursion();
 	//System.out.println(grammar);
 	grammar.leftFactor();
-	System.out.println(grammar);
-	//grammar.makeFirstSet();
-	//grammar.makeFollowSet();
+	//System.out.println(grammar);
+	grammar.makeFirstSet();
+	grammar.makeFollowSet();
+	System.out.println("FirstSet :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: ");
+	grammar.printFirstSet();
+	System.out.println("FollowSet ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: ");
+	grammar.printFollowSet();
+	System.out.println("END :: ");
+
+
+	System.out.print(grammar);
+
 	//parseTable.generateParseTable(grammar);
 	//parseTableWriter.createFile(parseTable);
 	//lex.getTokenWriter().makeFirstSet();

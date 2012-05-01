@@ -81,8 +81,8 @@ public class FirstSet
 		String output=new String();
 		for(int i=0;i<set.size();i++)
 		{
-			output+=set.get(i).getName();
+			output+=set.get(i).getName() + " ";
 		}
-		return output;
+		return output.trim();
 	}
 }

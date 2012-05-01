@@ -1,6 +1,6 @@
 JFLAGS = -g -classpath $(CLASSPATH)
 JC = javac
-JARS = $(wildcard ./res/*.jar)
+JARS = $(wildcard $(shell pwd)/src/*.jar)
 CLASSPATH_STR = . $(SRC_DIR) $(JARS)
 CLASSPATH = $(subst $(space),:,$(CLASSPATH_STR))
 
@@ -9,7 +9,8 @@ RECENT_JAVA = $(shell ls -1t **/*.java | head -1)
 SRC_DIR = ./src
 BIN_DIR = ./bin
 
-RUN = java -cp $(subst :./,:./,$(CLASSPATH))
+RUN = java -classpath $(subst :./,:../,$(CLASSPATH))
+DEBUG = jdb -classpath $(subst :./,:./,$(CLASSPATH))
 
 JUNIT = org.junit.runner.JUnitCore
 
@@ -36,6 +37,9 @@ check-syntax:
 
 run:
 	echo "#!/bin/bash\necho ---------\ncd src\n$(RUN) \$$@" > test.sh
+
+debug:
+	echo "#!/bin/bash\necho ---------\ncd src\n$(DEBUG) \$$@" > test.sh
 
 test-fast: $(basename $(RECENT_JAVA)).run
 

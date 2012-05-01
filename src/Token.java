@@ -65,7 +65,9 @@ public class Token implements Comparable
 
 
 	public String getName() {
-		return name;
+	    if(name == null)
+		this.name = "";
+	    return name;
 	}
 	public TokenType getType() {
 		return type;

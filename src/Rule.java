@@ -72,6 +72,8 @@ public class Rule
 	    String returned = "";
 	    returned += String.format("%15s --> ", left_hs.getName().trim());
 	    for (Token t : right_hs){
+		if( t == null || t.getName() == null )
+		    return "";
 		returned += String.format("%-15s ", t.getName().trim());
 		// returned += left_hs;
 		// returned += "\n --> \n";
