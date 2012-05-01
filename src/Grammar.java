@@ -367,29 +367,42 @@ public class Grammar
 	 */
 	public void makeFirstSet()
 	{
-		for(int k=0;k<countRules();k++)
+		for(int ki=0;ki<countRules();ki++)
 		{
 			for(int i=0;i<countRules();i++)
 			{
+				boolean toContinue = true;
+				int k=0;
 				Rule rule = rules.get(i);
-
-				Token left = rule.getLeftHS();
-				LinkedList<Token> rightHS = rule.getRightHS();
-				Token Xi = rightHS.get(0);
-				if(Xi.getTypeString().compareToIgnoreCase("terminal")==0)
+				while(toContinue&&(k<rule.getRightHS().size()))
 				{
-					if(left.getFirstSet()!=null)
+					Token left = rule.getLeftHS();
+					LinkedList<Token> rightHS = rule.getRightHS();
+					Token Xi = rightHS.get(k);
+					if(Xi.getTypeString().compareToIgnoreCase("terminal")==0)
 					{
-						left.getFirstSet().add(Xi);//.clone());
-
+						if(left.getFirstSet()!=null)
+						{
+							left.getFirstSet().addNoEpsilons(Xi);//.clone());
+	
+						}
 					}
+					else if(Xi.getTypeString().compareToIgnoreCase("nonterminal")==0)
+					{
+						if(left.getFirstSet()!=null)
+						{
+							left.getFirstSet().addNoEpsilons(Xi.getFirstSet().getSet());
+						}
+					}
+					if(!Xi.getFirstSet().hasEpsilon())
+					{
+						toContinue=false;
+					}
+					k++;
 				}
-				else if(Xi.getTypeString().compareToIgnoreCase("nonterminal")==0)
+				if(toContinue)
 				{
-					if(left.getFirstSet()!=null)
-					{
-						left.getFirstSet().add(Xi.getFirstSet().getSet());
-					}
+					rule.getLeftHS().getFirstSet().add(new Token("EPSILON","token"));
 				}
 			}
 		}
