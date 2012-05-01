@@ -73,6 +73,12 @@ public class Grammar
 				rightRem.add(new Token(leftRem.getName(), left.getTypeString()));
 				Rule ruleRem = new Rule(leftRem, rightRem);
 				rulesCleaned.add(ruleRem);
+
+				// ADD EPSILON -- stewart
+				LinkedList<Token> tmp = new LinkedList<Token>();
+				tmp.add(new Token("EPSILON", TokenType.TERMINAL.toString()));
+				rulesCleaned.add(new Rule(leftRem, tmp));
+
 				if(recursionEncounter) {
 					for(Rule r: this.rules) {
 						if(r.getLeftHS().compareTo(thisRule.getLeftHS()) == 0) {
@@ -223,8 +229,9 @@ public class Grammar
 		    if ( beta.size() < production.getRightHS().size() ){
 
 			//System.out.println("Beta: " + listToStr(beta));
-			if( beta.size() <= 1 ){
-			    continue;
+			if( beta.size() == 0 ){
+			    beta = new LinkedList<Token>();
+			    beta.add(new Token("EPSILON", TokenType.TERMINAL.toString()));
 			}
 
 			String AstrName = conflictProduction.get(0).getLeftHS().getName() + "_lf";
@@ -477,5 +484,38 @@ public class Grammar
 		rules = null;
 		rules = newRules;
 	    */
+	}
+	
+	public Token searchLHS(Token search)
+	{
+		for(int i=0;i<rules.size();i++)
+		{
+			if(search.getName().compareToIgnoreCase(rules.get(i).getLeftHS().getName())==0)
+			{
+				return rules.get(i).getLeftHS();
+			}
+		}
+		return search;
+	}
+	
+	public Token searchGrammar(Token search)
+	{
+		for(int i=0;i<rules.size();i++)
+		{
+			Rule rule = rules.get(i);
+			if(search.getName().compareToIgnoreCase(rule.getLeftHS().getName())==0)
+			{
+				return rules.get(i).getLeftHS();
+			}
+			for(int j=0;j<rule.getRightHS().size();j++)
+			{
+				Token right = rule.getRightHS().get(j);
+				if(search.getName().compareToIgnoreCase(right.getName())==0)
+				{
+					return right;
+				}
+			}
+		}
+		return search;
 	}
 }

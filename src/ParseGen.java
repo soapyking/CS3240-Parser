@@ -39,7 +39,8 @@ public class ParseGen
 	LinkedList<Token> parseStack = new LinkedList<Token>();
 	Token lhs = null, prev = null;
 
-	for ( Token token : llist){
+	for ( Token token : llist)
+	{
 	    if(token.type == TokenType.DOLLAR){
 		break;
 	    }
@@ -48,51 +49,85 @@ public class ParseGen
 	    if(token.type == TokenType.TERMINAL){
 		terminals.add(token);
 	    }
-	    try{
-		if(token.token_string.compareToIgnoreCase("%Rules")==0){
-		    state = grammar_sm.rules_m;
-		    continue;
-		}else if(state == grammar_sm.rules_m && token.type == TokenType.LINE_END){
-		    state = grammar_sm.rules_lhs;
-		    continue;
-		}else if(state == grammar_sm.rules_lhs || state == grammar_sm.rules_rhs ){
-		    if(state == grammar_sm.rules_lhs){
-
-			if( token.type == TokenType.ASSIGN){
-			    state = grammar_sm.rules_rhs;
+	    try
+	    {
+			if(token.token_string.compareToIgnoreCase("%Rules")==0)
+			{
+			    state = grammar_sm.rules_m;
 			    continue;
-			} else if( token.type == TokenType.NON_TERMINAL){
-			    //System.out.println(token);
-			    lhs = token;
-			    continue;
-			} else{
-			    System.out.println("WTF? -> " + lhs);
-			    break;
 			}
-		    }else
-		    if(token.type == TokenType.LINE_END){
-			//if(lhs == null) System.out.println("prev" + prev);
-			state = grammar_sm.rules_lhs;
-			Rule nextRule = new Rule(lhs);
-			nextRule.addRight_hs(parseStack);
-			grammar.add(nextRule);
-			parseStack = new LinkedList<Token>();
-			continue;
-		    } else if (token.type == TokenType.RULE_SEP){
-			//if(lhs == null) System.out.println("prev" + prev);
-			Rule nextRule = new Rule(lhs);
-			nextRule.addRight_hs(parseStack);
-			grammar.add(nextRule);
-			parseStack = new LinkedList<Token>();
-			continue;
-		    } else if(state == grammar_sm.rules_rhs){
-			parseStack.add(token);
-		    }
+			else if(state == grammar_sm.rules_m && token.type == TokenType.LINE_END)
+			{
+			    state = grammar_sm.rules_lhs;
+			    continue;
+			}
+			else if(state == grammar_sm.rules_lhs || state == grammar_sm.rules_rhs )
+			{
+			    if(state == grammar_sm.rules_lhs)
+			    {
+			    	if( token.type == TokenType.ASSIGN)
+					{
+					    state = grammar_sm.rules_rhs;
+					    continue;
+						} 
+						else if( token.type == TokenType.NON_TERMINAL){
+					    //System.out.println(token);
+					    	lhs = token;
+					    	continue;
+						} 
+						else
+						{
+							System.out.println("WTF? -> " + lhs);
+							break;
+						}
+			    	}
+			    	else
+			    if(token.type == TokenType.LINE_END)
+			    {
+					//if(lhs == null) System.out.println("prev" + prev);
+					state = grammar_sm.rules_lhs;
+					lhs = grammar.searchGrammar(lhs);
+					Rule nextRule = new Rule(lhs);
+					for(int i=0;i<parseStack.size();i++)
+					{
+						if(parseStack.get(i).getName().compareToIgnoreCase(lhs.getName())==0)
+						{
+							parseStack.set(i,lhs);
+						}
+					}
+					nextRule.addRight_hs(parseStack);
+					grammar.add(nextRule);
+					parseStack = new LinkedList<Token>();
+					continue;
+			    } 
+			    else if (token.type == TokenType.RULE_SEP)
+			    {
+			    	if(lhs == null) System.out.println("prev" + prev);
+			    	lhs = grammar.searchGrammar(lhs);
+			    	Rule nextRule = new Rule(lhs);
+			    	for(int i=0;i<parseStack.size();i++)
+					{
+						if(parseStack.get(i).getName().compareToIgnoreCase(lhs.getName())==0)
+						{
+							parseStack.set(i,lhs);
+						}
+					}
+			    	nextRule.addRight_hs(parseStack);
+			    	grammar.add(nextRule);
+			    	parseStack = new LinkedList<Token>();
+			    	continue;
+			    } 
+			    else if(state == grammar_sm.rules_rhs)
+			    {
+			    	token = grammar.searchGrammar(token);
+			    	parseStack.add(token);
+			    }
+			}
+	
+			prev = token;
 		}
-
-		prev = token;
-		}catch(NullPointerException e){
-		System.out.println("NULL PTR");
+	    catch(NullPointerException e){
+	    	System.out.println("NULL PTR");
 	    }
 	}
 
@@ -138,25 +173,32 @@ public class ParseGen
 	    ParseGen parserGenerator = new ParseGen();
 	makeGrammar(lex.ll_token_list);
 	//System.out.println(grammar);
-	grammar.separate();
+	//grammar.separate();
 	//System.out.println(grammar + "\n-----------\n");
-	grammar.removeRecursion();
+	//grammar.removeRecursion();
 	//System.out.println(grammar);
-	grammar.leftFactor();
+	//grammar.leftFactor();
 	//System.out.println(grammar);
 	grammar.makeFirstSet();
 	grammar.makeFollowSet();
 	// System.out.println("FirstSet :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: ");
-	// grammar.printFirstSet();
-	// System.out.println("FollowSet ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: ");
+	 grammar.printFirstSet();
+	 System.out.println("FollowSet ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: ");
 	// grammar.printFollowSet();
 	// System.out.println("END :: ");
 
 
 	System.out.print(grammar);
 
-	//parseTable.generateParseTable(grammar);
-	//parseTableWriter.createFile(parseTable);
+	parseTable = new ParseTable();
+	parseTable.generateParseTable(grammar);//, terminals, nonTerminals);
+	parseTableWriter = new ParseTableWriter(args[1]);
+
+
+	parseTableWriter.createFile(parseTable);
+
+	//TokenWriter tokenWrite = new TokenWriter(args[2]);
+	//tokenWrite.createFile(grammar.rules);
 	//lex.getTokenWriter().makeFirstSet();
 	//token.createFile(null);
 

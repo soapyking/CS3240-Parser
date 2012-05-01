@@ -5,7 +5,7 @@ import java.util.LinkedList;
 public class ParseTableWriter {
 
 	FileWriter parseTableWrite;
-	
+
 	public ParseTableWriter(String file)
 	{
 		try
@@ -17,7 +17,7 @@ public class ParseTableWriter {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void createFile(ParseTable parse)
 	{
 		String firstRow = new String();
@@ -26,6 +26,9 @@ public class ParseTableWriter {
 			firstRow += "row ";
 			firstRow += i;
 			firstRow += "\n";
+
+			if ( i == 0)
+			    firstRow += ","; // STEWART << OFFSETS FIRST ROW BY ONE ITEM FOR HEADER, TO MAKE A PROPER TABLE.
 			LinkedList<Rule> rules = parse.getTable().get(i);
 			for(int j=0;j<rules.size();j++)
 			{
@@ -44,7 +47,10 @@ public class ParseTableWriter {
 					firstRow+=",";
 				}
 			}
-			firstRow+="\n";
+			// Row should not end with comma termination
+			firstRow = firstRow.substring(0,firstRow.length()-1);
+
+			firstRow += "\n";
 		}
 		try
 		{
