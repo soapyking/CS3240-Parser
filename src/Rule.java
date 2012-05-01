@@ -74,7 +74,7 @@ public class Rule
 	    for (Token t : right_hs){
 		if( t == null || t.getName() == null )
 		    return "";
-		returned += String.format("%-15s ", t.getName().trim());
+		returned += t.getName().trim() + " ";//String.format("%-15s ", t.getName().trim());
 		// returned += left_hs;
 		// returned += "\n --> \n";
 		// for(int i=0;i<right_hs.size();i++)

@@ -8,6 +8,7 @@
 <statement> : ID ASSIGN <exp> SEMICOLON
 <statement> : READ LEFTPAR <id-list> RIGHTPAR SEMICOLON
 <statement> : READ ID SEMICOLON
+<statement> : READ
 <id-list> : <id-list> COMMA ID | ID
 <exp-list> : <exp-list> COMMA <exp> | <exp>
 <exp> : ID | INTNUM | LEFTPAR <exp> RIGHTPAR | <exp> <bin-op> <exp>

@@ -10,7 +10,7 @@ public class ParseGen
     private static LinkedList<Token> terminals;
     private static ParseTable parseTable;
     private static ParseTableWriter parseTableWriter;
-    //private static LinkedList<Token> nonTerminals;
+    private static LinkedList<Token> nonTerminals;
     //private static ParseTable parseTable;
 
     public enum grammar_sm {
@@ -22,7 +22,7 @@ public class ParseGen
     {
 	parseTable = new ParseTable();
 	terminals = new LinkedList<Token>();
-	//nonTerminals = new LinkedList<Token>();
+	nonTerminals = new LinkedList<Token>();
 	grammar = new Grammar();
     }
 
@@ -64,6 +64,7 @@ public class ParseGen
 			} else if( token.type == TokenType.NON_TERMINAL){
 			    //System.out.println(token);
 			    lhs = token;
+			    nonTerminals.add(token);
 			    continue;
 			} else{
 			    System.out.println("WTF? -> " + lhs);
@@ -155,8 +156,15 @@ public class ParseGen
 
 	System.out.print(grammar);
 
-	//parseTable.generateParseTable(grammar);
-	//parseTableWriter.createFile(parseTable);
+	parseTable = new ParseTable();
+	parseTable.generateParseTable(grammar);//, terminals, nonTerminals);
+	parseTableWriter = new ParseTableWriter(args[1]);
+
+
+	parseTableWriter.createFile(parseTable);
+
+	//TokenWriter tokenWrite = new TokenWriter(args[2]);
+	//tokenWrite.createFile(grammar.rules);
 	//lex.getTokenWriter().makeFirstSet();
 	//token.createFile(null);
 
