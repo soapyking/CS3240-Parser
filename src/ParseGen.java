@@ -21,6 +21,7 @@ public class ParseGen
     public ParseGen()
     {
 	parseTable = new ParseTable();
+	
 	terminals = new LinkedList<Token>();
 	//nonTerminals = new LinkedList<Token>();
 	grammar = new Grammar();
@@ -33,7 +34,7 @@ public class ParseGen
      */
     public static void makeGrammar(LinkedList<Token> llist)
     {
-	boolean pastMeta=false;
+	//boolean pastMeta=false;
 	grammar_sm state = grammar_sm.init;
 
 	LinkedList<Token> parseStack = new LinkedList<Token>();
@@ -73,6 +74,7 @@ public class ParseGen
 		    if(token.type == TokenType.LINE_END){
 			if(lhs == null) System.out.println("prev" + prev);
 			state = grammar_sm.rules_lhs;
+			lhs = grammar.searchGrammar(lhs);
 			Rule nextRule = new Rule(lhs);
 			nextRule.addRight_hs(parseStack);
 			grammar.add(nextRule);
@@ -80,12 +82,14 @@ public class ParseGen
 			continue;
 		    } else if (token.type == TokenType.RULE_SEP){
 			if(lhs == null) System.out.println("prev" + prev);
+			lhs = grammar.searchGrammar(lhs);
 			Rule nextRule = new Rule(lhs);
 			nextRule.addRight_hs(parseStack);
 			grammar.add(nextRule);
 			parseStack = new LinkedList<Token>();
 			continue;
 		    } else if(state == grammar_sm.rules_rhs){
+		    	token = grammar.searchGrammar(token);
 			parseStack.add(token);
 		    }
 		}
@@ -146,17 +150,17 @@ public class ParseGen
 	//System.out.println(grammar);
 	grammar.makeFirstSet();
 	grammar.makeFollowSet();
-	System.out.println("FirstSet :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: ");
+	//System.out.println("FirstSet :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: ");
 	grammar.printFirstSet();
 	System.out.println("FollowSet ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: ");
 	grammar.printFollowSet();
-	System.out.println("END :: ");
+	//System.out.println("END :: ");
 
 
 	System.out.print(grammar);
 
-	//parseTable.generateParseTable(grammar);
-	//parseTableWriter.createFile(parseTable);
+	parseTable.generateParseTable(grammar);
+	parseTableWriter.createFile(parseTable);
 	//lex.getTokenWriter().makeFirstSet();
 	//token.createFile(null);
 
