@@ -231,7 +231,7 @@ public class ParseTable {
 
 		System.out.println("###############\n###############\n" + p.toString().trim());
 		for ( Token alpha : p.getRightHS() ) {
-		    alpha.getFirstSet().add(new Token("EPSILON", TokenType.TERMINAL.toString()));
+		    //alpha.getFirstSet().add(new Token("EPSILON", TokenType.TERMINAL.toString()));
 		    System.out.println("-----------\nAlpha: " + alpha.getName() + "\nAlpha.first: " + alpha.getFirstSet() + "\nAlpha.follow: " + alpha.getFollowSet());
 
 		    // For every production A-> a_1 | a_2 | ... | a_n, add First(a_i) to Map[A,a].
