@@ -156,7 +156,8 @@ public class ParseGen
 	// System.out.println("END :: ");
 
 
-	System.out.print(grammar);
+	for ( Rule r : grammar.rules )
+	    System.out.println(r);
 
 	parseTable = new ParseTable();
 	parseTable.generateParseTable(grammar);//, terminals, nonTerminals);

@@ -1,4 +1,5 @@
 import java.util.*;
+import org.apache.commons.collections.MapIterator;
 import org.apache.commons.collections.map.MultiKeyMap;
 
 public class ParseTable {
@@ -14,6 +15,9 @@ public class ParseTable {
 	 * token for which a usual row or column will be labeled.
 	 */
 	private LinkedList<LinkedList<Rule>> table;
+    private MultiKeyMap parseTable = null;
+    private Set<String> nonterm_keys = null;
+    private Set<String> term_keys = null;
 	private int numColumns;
 	private int numRows;
 
@@ -176,8 +180,8 @@ public class ParseTable {
     public void generateParseTable(Grammar grammar){ //, LinkedList<Token> terminals, LinkedList<Token> nonterminals){
 	MultiKeyMap parseTable = new MultiKeyMap();
 	//TreeMap<Pair<String>, LinkedList<Rule>> parseTable = new TreeMap<Pair<String>, LinkedList<Rule>>();
-	//TreeMap<String, Pair<String>> tkeys = new TreeMap<String, Pair<String>>();
-	// TreeMap<String, Pair<String>> nkeys = new TreeMap<String, Pair<String>>();
+	TreeMap<String, String> tkeys = new TreeMap<String, String>();
+	TreeMap<String, String> nkeys = new TreeMap<String, String>();
 	TreeMap<String, LinkedList<Rule>> productions = new TreeMap<String, LinkedList<Rule>>();
 
 	LinkedList<Token> terminals = new LinkedList<Token>(), nonterminals = new LinkedList<Token>();
@@ -201,8 +205,8 @@ public class ParseTable {
 	for ( String T : terminals_k ){
 	    for ( String N : nonterminals_k ){
 		//Pair<String> key = new Pair<String>(T,N);
-		//tkeys.put(T, key);
-		//nkeys.put(N, key);
+		nkeys.put(N, N);
+		tkeys.put(T, T);
 		//parseTable.put(key, new LinkedList<Rule>());
 		parseTable.put(N,T, new LinkedList<Rule>());
 		//System.out.println("" + N + " " + key.equals(nkeys.get(N)) + " " + key.equals(nkeys.get(new String(N) + "")));
@@ -226,13 +230,13 @@ public class ParseTable {
 
 	// Begin Alg on Louden 178 for generating parsing table
 	for( String key : nonterminals_k ) {
-	    System.out.println(key.trim());
+	    //System.out.println(key.trim());
 	    for ( Rule p : productions.get(key)) {
 
-		System.out.println("###############\n###############\n" + p.toString().trim());
+		//System.out.println("###############\n###############\n" + p.toString().trim());
 		for ( Token alpha : p.getRightHS() ) {
 		    //alpha.getFirstSet().add(new Token("EPSILON", TokenType.TERMINAL.toString()));
-		    System.out.println("-----------\nAlpha: " + alpha.getName() + "\nAlpha.first: " + alpha.getFirstSet() + "\nAlpha.follow: " + alpha.getFollowSet());
+		    //System.out.println("-----------\nAlpha: " + alpha.getName() + "\nAlpha.first: " + alpha.getFirstSet() + "\nAlpha.follow: " + alpha.getFollowSet());
 
 		    // For every production A-> a_1 | a_2 | ... | a_n, add First(a_i) to Map[A,a].
 		    for (Token a : alpha.getFirstSet().getSet()){
@@ -252,14 +256,14 @@ public class ParseTable {
 			    // 	continue;
 			    // }
 			    // parseTable.get(cell).add(p);
-			    ((LinkedList<Rule>)parseTable.get(p.getLeftHS().getName(),a.getName())).add(p);
-			    System.out.println("Current Cell -> M[" + p.getLeftHS().getName() + "," + a.getName() + "] := " + parseTable.get(p.getLeftHS().getName(), a.getName()).toString().trim());
+			    ((LinkedList<Rule>)parseTable.get(nkeys.get(p.getLeftHS().getName()),tkeys.get(a.getName()))).add(p);
+			    //System.out.println("Current Cell -> M[" + p.getLeftHS().getName() + "," + a.getName() + "] := " + parseTable.get(p.getLeftHS().getName(), a.getName()).toString().trim());
 			    //System.out.println("Current Cell -> M[" + cell.M + "," + cell.N + "] := " + parseTable.get(cell));
 
 			}
 			// If epsilon is in First(alpha), for each element a of Follow(A) (a token or $), add A -> alpha to M[A,alpha]
 			if(a.getName().equals("EPSILON")){
-			    System.out.println("<< IN LL(1) Rule 2");
+			    //System.out.println("<< IN LL(1) Rule 2");
 			    for ( Token f : alpha.getFollowSet().getSet()){
 			    // 	if( f.type == TokenType.TERMINAL){
 			    // 	    cell = tkeys.get(f.getName());
@@ -269,8 +273,8 @@ public class ParseTable {
 			    // 	    continue;
 			    // 	}
 			    // 	parseTable.get(cell).add(p);
-				((LinkedList<Rule>)parseTable.get(p.getLeftHS().getName(),f.getName())).add(p);
-				System.out.println("Current Cell -> M[" + p.getLeftHS().getName() + "," + f.getName() + "] := " + parseTable.get(p.getLeftHS().getName(), f.getName()).toString().trim());
+				((LinkedList<Rule>)parseTable.get(nkeys.get(p.getLeftHS().getName()),tkeys.get(f.getName()))).add(p);
+				//System.out.println("Current Cell -> M[" + p.getLeftHS().getName() + "," + f.getName() + "] := " + parseTable.get(p.getLeftHS().getName(), f.getName()).toString().trim());
 				//System.out.println("\tCurrent Cell -> M[" + cell.M + "," + cell.N + "] := " + parseTable.get(cell));
 			    }
 			}
@@ -279,10 +283,43 @@ public class ParseTable {
 	    }
 	}
 
+
+	this.parseTable = parseTable;
+	this.nonterm_keys = nkeys.keySet();
+	this.term_keys = tkeys.keySet();
+	System.out.println(mapToCsv(parseTable, nkeys.keySet(), tkeys.keySet()));
+
 	this.table = new LinkedList();
 	this.table.add(new LinkedList());
 
     }
+    public String toString() {
+	if ( this.parseTable == null || this.nonterm_keys == null || this.term_keys == null ){
+	    return "";
+	}
+	return this.mapToCsv(this.parseTable, this.nonterm_keys, this.term_keys);
+    }
+
+    private String mapToCsv(MultiKeyMap m , Set<String> nonterm, Set<String> term){
+	String csv = ",";
+
+	for( String t : term ) {
+	    csv += t + ",";
+	}
+	csv += "\n";
+	for( String nt : nonterm ) {
+	    csv += nt + ",";
+	    for( String t : term ) {
+		csv += m.get(nt,t).toString().trim() + ",";
+	    }
+
+	    csv += "\n";
+	}
+
+	return csv.substring(0, csv.length()-2) + "\n";
+
+    }
+
 
     public LinkedList<String> deduplicate_key(LinkedList<Token> tokens){
 	LinkedList<String> deduplicated = new LinkedList<String>();

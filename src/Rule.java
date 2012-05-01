@@ -86,7 +86,7 @@ public class Rule
 		// returned += "\n";
 	    }
 
-	    return returned + "\n";
+	    return returned;
 	}
 
 }
