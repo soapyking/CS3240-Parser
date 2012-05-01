@@ -6,7 +6,8 @@
 <statement-list> : <statement-list> <statement> | <statement>
 <statement> : PRINT LEFTPAR <exp-list> RIGHTPAR SEMICOLON
 <statement> : ID ASSIGN <exp> SEMICOLON
-<statement> : Read LEFTPAR <id-list> RIGHTPAR SEMICOLON
+<statement> : READ LEFTPAR <id-list> RIGHTPAR SEMICOLON
+<statement> : READ ID SEMICOLON
 <id-list> : <id-list> COMMA ID | ID
 <exp-list> : <exp-list> COMMA <exp> | <exp>
 <exp> : ID | INTNUM | LEFTPAR <exp> RIGHTPAR | <exp> <bin-op> <exp>

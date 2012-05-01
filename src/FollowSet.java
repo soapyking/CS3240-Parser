@@ -29,7 +29,7 @@ public class FollowSet
 			this.set.add(toAdd);
 		}
 	}
-	
+
 	/**
 	 * Wrapper of the last method in order to have an efficient and clean
 	 * way to add an entire linked list of tokens to the follow set.
@@ -58,7 +58,7 @@ public class FollowSet
 	{
 		return set;
 	}
-	
+
 	public Token get(int index)
 	{
 		if(index<set.size())
@@ -76,7 +76,7 @@ public class FollowSet
 		String output=new String();
 		for(int i=0;i<set.size();i++)
 		{
-			output+=set.get(i).getName();
+			output+=set.get(i).getName() + " ";
 		}
 		return output;
 	}

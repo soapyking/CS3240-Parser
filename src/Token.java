@@ -1,10 +1,10 @@
 public class Token implements Comparable
 {
-	public FirstSet firstSet;
-	public FollowSet followSet;
-	private String name;
-        private String token_string;
-	private TokenType type;
+    public FirstSet firstSet;
+    public FollowSet followSet;
+    public String name;
+    public String token_string;
+    public TokenType type;
 
 
 	public Token()
@@ -60,12 +60,14 @@ public class Token implements Comparable
 
 	public String toString()
 	{
-	    return String.format("Token name: %15s | Type: %10s | String: %s", this.name, this.type, this.token_string);
+	    return String.format("Token name: %10s :: Type: %10s :: String: %s", this.name.trim(), this.type, this.token_string.trim());
 	}
 
 
 	public String getName() {
-		return name;
+	    if(name == null)
+		this.name = "";
+	    return name;
 	}
 	public TokenType getType() {
 		return type;
@@ -73,8 +75,9 @@ public class Token implements Comparable
 
 	public String getTypeString()
 	{
-	    if(this.type == null)
+	    if(this.type == null){
 		return null;
+	    }
 	    return this.type.toString();
 	}
 
@@ -97,6 +100,7 @@ public class Token implements Comparable
 		if (inOther == this) return 0;
 		Token other = (Token)inOther;
 		return this.name.compareTo(other.getName());
+		//return this.name.trim().equals(other.getName().trim()) ? 0 : 1;
 	}
 
 	public boolean equals(Token obj)

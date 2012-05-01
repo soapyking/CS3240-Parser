@@ -13,8 +13,8 @@ public class Lexer {
 
 	public Lexer()
 	{
-		ll_token_list = new LinkedList<Token>();
-		tokenWriter = new TokenWriter("/home/alex/output.tik");
+		ll_token_list =  new LinkedList<Token>();
+		tokenWriter = new TokenWriter("/tmp/output.tik");
 	}
 
 	public Lexer(String filepath)
@@ -23,7 +23,7 @@ public class Lexer {
 		{
 			ll_token_list = new LinkedList<Token>();
 			file = new File(filepath);
-			tokenWriter = new TokenWriter("/home/alex/output.tik");
+			tokenWriter = new TokenWriter("/tmp/output.tik");
 		}
 		catch(NullPointerException e)
 		{
@@ -100,10 +100,10 @@ public class Lexer {
 			{
 				stringToToken(tokens[i],"terminal");
 			}
-			
+
 			/*String strToken=tokenizer.nextToken();
-			
-			
+
+
 			else if(strToken.compareToIgnoreCase("%Start")==0)
 			{
 				stringToToken(strToken,"meta");
@@ -154,7 +154,14 @@ public class Lexer {
 	private void stringToToken(String input, String type)
 	{
 		Token token=new Token(input,type);
+		for( Token t : ll_token_list){
+		    if ( t.equals(token) ){
+			//System.out.println("Token " + t + " is already in LL");
+			return;
+		    }
+		}
 		ll_token_list.add(token);
+
 	}
 
 
@@ -229,7 +236,7 @@ public class Lexer {
 
 	public static void main(String [] args)
 	{
-		Lexer lex = new Lexer("../../res/input.txt");
+		Lexer lex = new Lexer("../res/input.txt");
 		lex.readFile();
 		System.out.println(lex);
 	}
