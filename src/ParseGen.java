@@ -192,11 +192,11 @@ public class ParseGen
 	    System.out.println(r);
 
 	parseTable = new ParseTable();
-	parseTable.generateParseTable(grammar);//, terminals, nonTerminals);
-	parseTableWriter = new ParseTableWriter(args[1]);
+	//parseTable.generateParseTable(grammar);//, terminals, nonTerminals);
+	//parseTableWriter = new ParseTableWriter(args[1]);
 
 
-	parseTableWriter.createFile(parseTable);
+	//parseTableWriter.createFile(parseTable);
 
 	//TokenWriter tokenWrite = new TokenWriter(args[2]);
 	//tokenWrite.createFile(grammar.rules);
