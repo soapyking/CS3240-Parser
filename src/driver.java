@@ -19,17 +19,17 @@ public class driver {
 		File tokenFile = new File("java_lexer/test_output.tok");
 		File tableFile = new File("java_lexer/parsetable.csv");
 		String line = null;
-		//HashSet probably unnecessary if using MultiKeyMaps
-		HashSet<LinkedList<String>> table = new HashSet<LinkedList<String>>();
 		MultiKeyMap mkp = new MultiKeyMap();
+		String[] tokens = null;
 		try {
 			FileReader reader = new FileReader(tokenFile);
 			BufferedReader buff = new BufferedReader(reader);
 			//This assumes there's only 1 line of tokens
 			//Glob help us all if there's more
 			line = buff.readLine();
-			String[] tokens = line.split(" ");
+			tokens = line.split(" ");
 			buff.close();
+			reader.close();
 			reader = new FileReader(tableFile);
 			buff = new BufferedReader(reader);
 			line = buff.readLine();
@@ -38,9 +38,7 @@ public class driver {
 			for(int i = 1; i < tempTermTokens.length; i++) {
 				termTokens.add(tempTermTokens[i]);
 			}
-			LinkedList<String> nontermTokens = new LinkedList<String>();
 			while((line = buff.readLine()) != null) {
-				//Remove the syso's after debugging
 				String[] rules = line.split(",");
 				String nonTerm = rules[0];
 				LinkedList<String> entries = new LinkedList<String>();
@@ -51,12 +49,18 @@ public class driver {
 					mkp.put(nonTerm, termTokens.get(i), entries.get(i));
 				}
 			}
+			buff.close();
+			reader.close();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 			System.exit(1);
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.exit(1);
+		}
+		
+		for(String s: tokens) {
+			
 		}
 	}
 }
