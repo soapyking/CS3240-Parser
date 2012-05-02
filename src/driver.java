@@ -6,6 +6,9 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList; 
+import java.util.Set;
+
+import org.apache.commons.collections.map.MultiKeyMap;
 
 public class driver {
 
@@ -18,6 +21,7 @@ public class driver {
 		String line = null;
 		//HashSet probably unnecessary if using MultiKeyMaps
 		HashSet<LinkedList<String>> table = new HashSet<LinkedList<String>>();
+		MultiKeyMap mkp = new MultiKeyMap();
 		try {
 			FileReader reader = new FileReader(tokenFile);
 			BufferedReader buff = new BufferedReader(reader);
@@ -28,13 +32,24 @@ public class driver {
 			buff.close();
 			reader = new FileReader(tableFile);
 			buff = new BufferedReader(reader);
+			line = buff.readLine();
+			String tempTermTokens[] = line.split(" ");
+			LinkedList<String> termTokens = new LinkedList<String>();
+			for(int i = 1; i < tempTermTokens.length; i++) {
+				termTokens.add(tempTermTokens[i]);
+			}
+			LinkedList<String> nontermTokens = new LinkedList<String>();
 			while((line = buff.readLine()) != null) {
 				//Remove the syso's after debugging
 				String[] rules = line.split(",");
-				for(String s: rules) {
-					System.out.print(s + " ");
+				String nonTerm = rules[0];
+				LinkedList<String> entries = new LinkedList<String>();
+				for(int i = 1; i < rules.length; i++) {
+					entries.add(rules[i]);
 				}
-				System.out.println();
+				for(int i = 0; i < entries.size(); i++) {
+					mkp.put(nonTerm, termTokens.get(i), entries.get(i));
+				}
 			}
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
