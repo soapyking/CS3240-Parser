@@ -502,7 +502,7 @@ public class Grammar
 		rules = newRules;
 	    */
 	}
-	
+
 	public Token searchLHS(Token search)
 	{
 		for(int i=0;i<rules.size();i++)
@@ -514,7 +514,7 @@ public class Grammar
 		}
 		return search;
 	}
-	
+
 	public Token searchGrammar(Token search)
 	{
 		for(int i=0;i<rules.size();i++)

@@ -1,243 +1,272 @@
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
-import java.util.StringTokenizer;
+import java.io.InputStreamReader;
+import java.io.BufferedReader;
+import java.io.PrintWriter;
 import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.util.regex.*;
+import java.util.TreeMap;
+import java.util.Arrays;
+import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Map;
+import org.apache.regexp.*;
 
 public class Lexer {
-	private File file;
-	private TokenWriter tokenWriter;
-	public LinkedList<Token> ll_token_list;
+    private boolean verbose = false;
+    public LinkedList<Token> ll_token_list;
+    public LexerType lextype;
+    private TreeMap<Token,Rule> rules;
 
-	public Lexer()
-	{
-		ll_token_list =  new LinkedList<Token>();
-		tokenWriter = new TokenWriter("/tmp/output.tik");
+    public enum LexerType { SOURCE, GRAMMAR };
+
+    public enum grammar_sm {
+	init, err, token, start, rules_m, rules_lhs, rules_rhs;
+    }
+
+    public Lexer ( LexerType type ) {
+	this.lextype = type;
+	this.ll_token_list = new LinkedList<Token>();
+	this.verbose = false;
+    }
+
+    public Lexer ( LexerType type, boolean verbose ) {
+	this(type);
+	this.setVerbose(verbose);
+    }
+
+    public void setVerbose( boolean verbose) {
+	this.verbose = verbose;
+    }
+
+    public String tokenize( String input_string ) {
+	String input = new String(input_string);
+	String output_string = new String("");
+	String inputln = Integer.toString(input.length());
+	String chngeln = Integer.toString(15);
+	boolean changed;
+	RE regex;
+
+	if (this.lextype == LexerType.SOURCE){
+	    /*
+	      Collapse whitespace.
+	    */
+	    regex = new RE("[:space:]+");
+	    input = regex.subst(input_string," ",RE.MATCH_MULTILINE & RE.REPLACE_ALL);
+
+	    /*
+	      Also replace newlines with spaces. No need for them.
+	    */
+	    regex = new RE("(\\n)|(\\r\\n)|(\\r)");
+	    input = regex.subst(input," ",RE.REPLACE_ALL);
 	}
 
-	public Lexer(String filepath)
-	{
-		try
-		{
-			ll_token_list = new LinkedList<Token>();
-			file = new File(filepath);
-			tokenWriter = new TokenWriter("/tmp/output.tik");
-		}
-		catch(NullPointerException e)
-		{
-			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * Reads in a file and then calls the getTokens method to add all of the tokens
-	 * into the token queue.
-	 */
-	public void readFile()
-	{
-		try
-		{
-			FileReader tempread = new FileReader(file);
-			BufferedReader bufread = new BufferedReader(tempread);
-			while(bufread.ready())
-			{
-				String line = bufread.readLine();
-				getTokens(line);
-			}
-		}
-		catch(FileNotFoundException e)
-		{
-			System.out.println("fuck you!!!!!!!!\n Enter in a godddamned real file");
-		}
-		catch(IOException e)
-		{
-			e.printStackTrace();
-		}
-	}
+	do{
+	    changed = false;
+	    if (this.lextype == LexerType.SOURCE){
 
 
-	/**
-	 * This method will return the "tokens" from the string tokenized that are space delimited.
-	 *
-	 * @param toToken the string that is to be tokenized
-	 */
-	public void getTokens(String toToken)
-	{
-		StringTokenizer tokenizer = new StringTokenizer(toToken);
-		int numtokens = tokenizer.countTokens();
-		String tokens[]=toToken.split(" ");
-		boolean token=true;
-		//boolean hitRules=false;
-		for(int i=0;i<numtokens;i++)
-		{
-			if(tokens[i].compareToIgnoreCase("%tokens")==0)
-			{
-				stringToToken(tokens[i],"meta");
-			}
-			else if(tokens[i].compareToIgnoreCase("%non-terminals")==0)
-			{
-				stringToToken(tokens[i],"meta");
-			}
-			else if(tokens[i].compareToIgnoreCase("%start")==0)
-			{
-				stringToToken(tokens[i],"meta");
-			}
-			else if(tokens[i].compareToIgnoreCase("%rules")==0)
-			{
-				stringToToken(tokens[i],"meta");
-			}
-			else if(tokens[i].charAt(0)=='<')
-			{
-				stringToToken(tokens[i],"nonterminal");
-			}
-			else if(tokens[i].compareToIgnoreCase(":")==0)
-			{
-				stringToToken(tokens[i],"assign");
-			}
-			else
-			{
-				stringToToken(tokens[i],"terminal");
-			}
+		/*
+		    Extract the Source tokens, and the match strings.
+		 */
+		for (SourceToken t : SourceToken.values()){
+		    input = input.trim();
+		    t.regex.setMatchFlags(RE.MATCH_CASEINDEPENDENT);
+		    if (t.regex.match(input)){
+			String match_string = t.regex.getParen(0);
+			 if(this.verbose)
+			 	System.out.printf("%" + inputln +"s | %-" + chngeln + "s  ==> ", input, t.token);
+			input = t.regex.subst(input, "", RE.REPLACE_FIRSTONLY & RE.MATCH_CASEINDEPENDENT);
+			output_string = output_string.trim() + " " + t.token.trim();
 
-			/*String strToken=tokenizer.nextToken();
-
-
-			else if(strToken.compareToIgnoreCase("%Start")==0)
-			{
-				stringToToken(strToken,"meta");
-			}
-			else if(strToken.compareToIgnoreCase("%rules")==0)
-			{
-				stringToToken(strToken,"meta");
-				//hitRules=true;
-			}
-			else if(strToken.charAt(0)=='<')
-			{
-				stringToToken(strToken,"nonterminal");
-			}
-			else if(strToken.compareTo(":")==0)
-			{
-				stringToToken(strToken,"assign");
-			}
-			else if(token==true)
-			{
-				stringToToken(strToken,"terminal");
-			}
-			else if(token==false)
-			{
-				stringToToken(strToken,"nonterminal");
-			}
-			if(strToken.compareToIgnoreCase("%tokens")==0)
-			{
-				stringToToken(strToken,"meta");
-			}
-			else if(strToken.compareToIgnoreCase("%non-terminals")==0)
-			{
-				stringToToken(strToken,"meta");
-				token=false;
-			}*/
-		}
-		stringToToken("end","endofrule");
-
-	}
-
-
-	/**
-	 * Changes the string "token" that is passed in and wraps it into the class Token.
-	 * This method will add the token to the ll_token_list automatically.
-	 *
-	 * @param input 		The string that will be the token's description
-	 * @param type			The string that is the type of the token
-	 */
-	private void stringToToken(String input, String type)
-	{
-		Token token=new Token(input,type);
-		for( Token t : ll_token_list){
-		    if ( t.equals(token) ){
-			//System.out.println("Token " + t + " is already in LL");
-			return;
+			ll_token_list.add(new Token(t.token, match_string, t.type));
+			changed = true;
+			 if(this.verbose) System.out.println(t.regex.getParen(0));
+			break;
 		    }
 		}
-		ll_token_list.add(token);
 
+	    } else{
+		/*
+		  Grammar input file.
+		 */
+		for (GrammarToken t : GrammarToken.values()){
+		    t.regex.setMatchFlags(RE.MATCH_CASEINDEPENDENT);
+		    if (t.regex.match(input)){
+			String match_string = t.regex.getParen(0);
+			 if(this.verbose)
+			 	System.out.printf("%" + inputln +"s | %-" + chngeln + "s  ==> ", input, t.token);
+			input = t.regex.subst(input, "", RE.REPLACE_FIRSTONLY & RE.MATCH_CASEINDEPENDENT);
+			output_string = output_string.trim() + " " + t.token.trim();
+
+			ll_token_list.add(new Token(match_string.trim(), match_string.trim(), t.type));
+			changed = true;
+			 if(this.verbose) System.out.println(t.regex.getParen(0));
+			break;
+		    }
+		}
+
+	    }
+
+	}while(changed && input.length() > 0);
+
+	if (input.length() > 0){
+	    String error_string = "";
+	    error_string += "Syntax error. \n";
+	    for ( Token t : ll_token_list ){
+		error_string += t + "\n";
+	    }
+	    return error_string + "\nSYNTAX_ERROR @ \"" + input + "\"";
 	}
 
+	ll_token_list.add(new Token("$", "", TokenType.DOLLAR));
+
+	if(this.verbose){
+	    for( Token g : ll_token_list){
+		System.out.println(g);
+	    }
+	}
+	return output_string;
+    }
 
 
-	/**
-	 * Returns the next token that is available.
-	 *
-	 * @return the next token that will be available to the parser
+    public static String readFile(BufferedReader file){
+
+	String outfile = "", buffer;
+	try{
+	    while((buffer = file.readLine()) != null && buffer.length() != 0)
+		    outfile += buffer + "\n";
+	} catch(IOException ioe){
+	    ioe.printStackTrace();
+	}
+	return outfile;
+    }
+
+    public String toString(){
+	String str = "";
+	for (Token t : ll_token_list){
+	    str += t + "\n";
+	}
+	return str;
+    }
+
+    public static void main(String[] args){
+	BufferedReader console = new BufferedReader(new InputStreamReader(System.in));
+	BufferedReader file;
+
+	boolean verbose_output = false;
+	String output_file = null;
+	String input_file = null;
+
+	/*
+	   Parse input arguments.
 	 */
-	public Token getToken()
-	{
-		if(ll_token_list.peek()!=null)
-		{
-			return ll_token_list.poll();
+
+	String usage = "Usage: java -cp .:regexp.jar Lexer -v(erbose output)" //
+	    + " [-i inputfile (default stdin)] [-o outputfile (default stdout)]";
+
+	for(int i = 0; i < args.length; i++){
+	    /*
+	      Input filename for the untokenized code.
+	    */
+	    if (args[i].indexOf("-i") == 0){
+		if(args[i].length() > 0){
+		    String tmp = args[i].substring(2,args[i].length());
+		    if (tmp.length() == 0){
+			try{
+			    input_file = args[++i];
+			    continue;
+			}catch(ArrayIndexOutOfBoundsException e){
+			    System.out.printf("Bad argument for '-i'. \n%s\n",usage);
+			    System.exit(1);
+			}
+		    } else {
+			System.out.printf("Unknown argument: %s. \n%s\n", args[i], usage);
+			System.exit(1);
+		    }
 		}
-		else
-		{
-			return null;
+	    }
+
+	    /*
+	      Output filename for the tokens.
+	    */
+	    if (args[i].indexOf("-o") == 0){
+		if (args[i].length() > 0){
+		    String tmp = args[i].substring(2,args[i].length());
+		    if (tmp.length() == 0){
+			try{
+			    output_file = args[++i];
+			    continue;
+			}catch(ArrayIndexOutOfBoundsException e){
+			    System.out.printf("Bad argument for '-o'. \n%s\n",usage);
+			    System.exit(1);
+			}
+		    } else {
+			System.out.printf("Unknown argument: %s. \n%s\n", args[i], usage);
+			System.exit(1);
+		    }
 		}
+	    }
+
+	    /*
+	      Enable verbose output, for debugging. Doesn't help much if you are
+	      piping the output of the lexer around, or using stdout.
+	    */
+	    if (args[i].indexOf("-v") == 0){
+		if (args[i].length() == "-v".length()){
+		    verbose_output = true;
+		    continue;
+		} else {
+		    System.out.printf("Unknown argument: %s. \n%s\n", args[i], usage);
+		    System.exit(1);
+		}
+	    }
+
+	    /*
+	       Help message.
+	    */
+	    if (args[i].indexOf("-h") == 0){
+		    System.out.printf("%s\n", usage);
+		    System.exit(1);
+	    }
+
+	    System.out.printf("Unknown argument: %s. \n%s\n", args[i], usage);
+	    System.exit(1);
 	}
 
+	/*
+	  Use the parsed arguments to set up the Lexer call...
+	*/
 
-	/**
-	 * Returns whether or not the Lexer has any tokens
-	 *
-	 * @return true if the lexer has more tokens
-	 * 		   false if the lexer doesn't
-	 */
-	public boolean hasTokens()
-	{
-		if(ll_token_list.peek()!=null)
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
+	Lexer output = new Lexer(LexerType.SOURCE, verbose_output);
+
+	file = console;
+
+	try{
+	    if (input_file != null){
+		file = new BufferedReader(new FileReader(input_file));
+	    }
+	}catch(Exception e){};
+
+	String lexer_input = Lexer.readFile(file);
+	String lexer_output = output.tokenize(lexer_input);
+
+	if(output_file == null){
+	    if (verbose_output)
+		System.out.println(lexer_input + "\n ==> \n" + lexer_output);
+	    else
+		System.out.println(lexer_output);
+	}else {
+	    if (verbose_output)
+		System.out.println(lexer_input + "\n ==> \n" + lexer_output);
+	    try{
+		PrintWriter out = new PrintWriter(new FileWriter(output_file));
+		out.println(lexer_output);
+		out.close();
+	    }catch(IOException ioe){
+		ioe.printStackTrace();
+	    }
 	}
-
-	public TokenWriter getTokenWriter()
-	{
-		return tokenWriter;
-	}
-
-
-	/**
-	 * Returns the next token in the linked list without removing it from the linked list.
-	 *
-	 * @return the token that is next in the linked list.
-	 */
-	public Token nextToken()
-	{
-		if(hasTokens())
-		{
-			return ll_token_list.peek();
-		}
-		return null;
-	}
-
-
-	public String toString()
-	{
-		String returned = new String();
-		for(int i=0;i<ll_token_list.size();i++)
-		{
-			returned+=ll_token_list.get(i);
-			returned+="\n";
-		}
-		return returned;
-	}
-
-	public static void main(String [] args)
-	{
-		Lexer lex = new Lexer("../res/input.txt");
-		lex.readFile();
-		System.out.println(lex);
-	}
+    }
 }
