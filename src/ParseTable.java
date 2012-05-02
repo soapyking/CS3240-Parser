@@ -159,9 +159,16 @@ public class ParseTable {
 	    nonterminals.add(r.getLeftHS());
 	    for ( Token t : r.getRightHS() ){
 		    if (t.getType() == TokenType.TERMINAL)
-			terminals.add(t);
+		    {
+		    	if(!(t.getName().trim().startsWith("EPSILON",0)))
+		    	{
+		    		terminals.add(t);
+		    	}
+		    }
 		    else
-			nonterminals.add(t);
+		    {
+		    	nonterminals.add(t);
+		    }
 	    }
 	}
 
