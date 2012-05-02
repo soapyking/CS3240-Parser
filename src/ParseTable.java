@@ -110,6 +110,7 @@ public class ParseTable {
 		}
 		return isUnique;
 	}
+
 	private boolean isUnique(Token toTest)
 	{
 		boolean add = true;
@@ -126,66 +127,28 @@ public class ParseTable {
 		}
 		return add;
 	}
-	// public void generateParseTable(Grammar grammar)
-	// {
-	// 	setupParseTable(grammar);
-	// 	System.out.println("\n\n\n\n");
-	// 	for(int i=0;i<grammar.countRules();i++)
-	// 	{
-	// 		Rule rule = grammar.getRule(i);
-	// 		for(int j=0;j<rule.getRightHS().size();j++)
-	// 		{
-	// 			System.out.println("What's going on? im in the method");
-	// 			System.out.println("and i step outside" + grammar.getRule(i).getLeftHS().getName());
-	// 			System.out.println(grammar.getRule(i).getLeftHS().getFirstSet()+"\n");
-	// 		}
-	// 	}
-	// 	for(int i=0;i<grammar.countRules();i++)
-	// 	{
-	// 		Rule rule = grammar.getRule(i);
-	// 		for(int j=0;j<rule.getRightHS().size();j++)
-	// 		{
-	// 			Token tempToken = rule.getRightHS().get(j);
-	// 			if(tempToken.getTypeString().compareToIgnoreCase("nonterminal")==0)
-	// 			{
-	// 				FirstSet checkFirst = tempToken.getFirstSet();
-	// 				for(int k=0;k<checkFirst.getSet().size();k++)
-	// 				{
-	// 					Token tokeninFirstSet = checkFirst.get(k);
-	// 					add(new Rule(rule.getLeftHS().clone()),new Rule(tokeninFirstSet),rule);
-	// 				}
-	// 			}
-	// 		}
-	// 	}
-	// }
 
-    private class Pair < K extends Comparable<K> > implements Comparable< Pair<K> > {
-	K M;
-	K N;
-
-	public Pair ( K M, K N) {
-	    this.M = M;
-	    this.N = N;
-	}
-
-	public int compareTo( Pair<K> j) {
-	    if(M.compareTo(j.M) == 0 && N.compareTo(j.N) == 0)
-		return 0;
-	    else if(M.compareTo(j.M) == 0)
-		return N.compareTo(j.N);
-	    else
-		return M.compareTo(j.M);
-	}
-    }
+    /**
+       Generates a parsing table based on the grammar.
+     */
     public void generateParseTable(Grammar grammar){ //, LinkedList<Token> terminals, LinkedList<Token> nonterminals){
+	// A multiple key map, just how it sounds.
 	MultiKeyMap parseTable = new MultiKeyMap();
-	//TreeMap<Pair<String>, LinkedList<Rule>> parseTable = new TreeMap<Pair<String>, LinkedList<Rule>>();
+
+	// Workaround for lack of comparison-based MultiKeyMap. Use a
+	// comparison-based map for the keys, and index it on the non-
+	// key objects (different-instance strings that are 'equal' according to String.compareTo(String)).
+
 	TreeMap<String, String> tkeys = new TreeMap<String, String>();
 	TreeMap<String, String> nkeys = new TreeMap<String, String>();
+
+	// List of all the productions, indexed by non-terminal.
 	TreeMap<String, LinkedList<Rule>> productions = new TreeMap<String, LinkedList<Rule>>();
 
+	// Two linked lists of tokens and nonterminals
 	LinkedList<Token> terminals = new LinkedList<Token>(), nonterminals = new LinkedList<Token>();
 
+	// Popluate the token/nonterminal lists
 	for ( Rule r : grammar.rules ) {
 	    nonterminals.add(r.getLeftHS());
 	    for ( Token t : r.getRightHS() ){
@@ -196,20 +159,19 @@ public class ParseTable {
 	    }
 	}
 
+	// Implicit termination of input
 	terminals.add(new Token("dollar", TokenType.DOLLAR.toString()));
 
+	// Deduplicate the linked lists.
 	LinkedList<String> nonterminals_k = deduplicate_key(nonterminals);
 	LinkedList<String> terminals_k = deduplicate_key(terminals);
 
 	// Create empty table containing all M,N
 	for ( String T : terminals_k ){
 	    for ( String N : nonterminals_k ){
-		//Pair<String> key = new Pair<String>(T,N);
 		nkeys.put(N, N);
 		tkeys.put(T, T);
-		//parseTable.put(key, new LinkedList<Rule>());
 		parseTable.put(N,T, new LinkedList<Rule>());
-		//System.out.println("" + N + " " + key.equals(nkeys.get(N)) + " " + key.equals(nkeys.get(new String(N) + "")));
 	    }
 	}
 
@@ -230,52 +192,23 @@ public class ParseTable {
 
 	// Begin Alg on Louden 178 for generating parsing table
 	for( String key : nonterminals_k ) {
-	    //System.out.println(key.trim());
 	    for ( Rule p : productions.get(key)) {
-
-		//System.out.println("###############\n###############\n" + p.toString().trim());
 		for ( Token alpha : p.getRightHS() ) {
-		    //alpha.getFirstSet().add(new Token("EPSILON", TokenType.TERMINAL.toString()));
-		    //System.out.println("-----------\nAlpha: " + alpha.getName() + "\nAlpha.first: " + alpha.getFirstSet() + "\nAlpha.follow: " + alpha.getFollowSet());
-
-		    // For every production A-> a_1 | a_2 | ... | a_n, add First(a_i) to Map[A,a].
+		    // For every production A-> a_1 | a_2 | ... | a_n,
+		    // add First(a_i) to Map[A,a].
 		    for (Token a : alpha.getFirstSet().getSet()){
-			Pair<String> cell;
 			if (a.type == TokenType.NON_TERMINAL){
 			    continue;
 			}
 			if (!a.getName().equals("EPSILON")){
-
-
-			    // if(a.type == TokenType.TERMINAL){
-			    // 	cell = tkeys.get(a.getName());
-			    // } else if (a.type == TokenType.NON_TERMINAL){
-			    // 	cell = nkeys.get(a.getName());
-			    // } else {
-			    // 	System.out.println("################################################################################ WTF??");
-			    // 	continue;
-			    // }
-			    // parseTable.get(cell).add(p);
 			    ((LinkedList<Rule>)parseTable.get(nkeys.get(p.getLeftHS().getName()),tkeys.get(a.getName()))).add(p);
-			    //System.out.println("Current Cell -> M[" + p.getLeftHS().getName() + "," + a.getName() + "] := " + parseTable.get(p.getLeftHS().getName(), a.getName()).toString().trim());
-			    //System.out.println("Current Cell -> M[" + cell.M + "," + cell.N + "] := " + parseTable.get(cell));
-
 			}
-			// If epsilon is in First(alpha), for each element a of Follow(A) (a token or $), add A -> alpha to M[A,alpha]
+			// If epsilon is in First(alpha), for each
+			// element a of Follow(A) (a token or $), add A
+			// -> alpha to M[A,alpha]
 			if(a.getName().equals("EPSILON")){
-			    //System.out.println("<< IN LL(1) Rule 2");
 			    for ( Token f : alpha.getFollowSet().getSet()){
-			    // 	if( f.type == TokenType.TERMINAL){
-			    // 	    cell = tkeys.get(f.getName());
-			    // 	} else if (f.type == TokenType.NON_TERMINAL){
-			    // 	    cell = nkeys.get(f.getName());
-			    // 	} else {
-			    // 	    continue;
-			    // 	}
-			    // 	parseTable.get(cell).add(p);
 				((LinkedList<Rule>)parseTable.get(nkeys.get(p.getLeftHS().getName()),tkeys.get(f.getName()))).add(p);
-				//System.out.println("Current Cell -> M[" + p.getLeftHS().getName() + "," + f.getName() + "] := " + parseTable.get(p.getLeftHS().getName(), f.getName()).toString().trim());
-				//System.out.println("\tCurrent Cell -> M[" + cell.M + "," + cell.N + "] := " + parseTable.get(cell));
 			    }
 			}
 		    }
@@ -283,16 +216,24 @@ public class ParseTable {
 	    }
 	}
 
-
+	// Save the parse table as an instance variable, as well as the keySets for the MultiKeyMap.
 	this.parseTable = parseTable;
 	this.nonterm_keys = nkeys.keySet();
 	this.term_keys = tkeys.keySet();
 	System.out.println(mapToCsv(parseTable, nkeys.keySet(), tkeys.keySet()));
 
+	// Old parser table data structures. Here because it keeps
+	// things from breaking, may be removed later if whatever
+	// depends on it stops whining... =D
+
 	this.table = new LinkedList();
 	this.table.add(new LinkedList());
-
     }
+
+    /**
+       toString() wrapper of the mapToCsv() private method. Transforms
+       the parse table into a CSV file for ease of everything.
+    */
     public String toString() {
 	if ( this.parseTable == null || this.nonterm_keys == null || this.term_keys == null ){
 	    return "";
@@ -300,6 +241,9 @@ public class ParseTable {
 	return this.mapToCsv(this.parseTable, this.nonterm_keys, this.term_keys);
     }
 
+    /**
+       Outputs a CSV-formatted string representation of the parser table.
+    */
     private String mapToCsv(MultiKeyMap m , Set<String> nonterm, Set<String> term){
 	String csv = ",";
 
@@ -327,6 +271,9 @@ public class ParseTable {
     }
 
 
+    /**
+	Removes duplicate entries in the LinkedList.
+     */
     public LinkedList<String> deduplicate_key(LinkedList<Token> tokens){
 	LinkedList<String> deduplicated = new LinkedList<String>();
 	outloop:
@@ -343,6 +290,9 @@ public class ParseTable {
 	return deduplicated;
     }
 
+    /**
+       No longer used.
+     */
 	public void add(Rule row, Rule column, Rule toAdd)
 	{
 		String nonterminal = row.getLeftHS().getName();
@@ -369,14 +319,23 @@ public class ParseTable {
 		table.get(cordRow).set(cordCol,toAdd);
 	}
 
+    /**
+       No longer used.
+     */
 	public int getNumColumns() {
 		return numColumns;
 	}
 
+    /**
+       No longer used.
+     */
 	public int getNumRows() {
 		return numRows;
 	}
 
+    /**
+       No longer used.
+     */
 	public LinkedList<LinkedList<Rule>> getTable() {
 		return table;
 	}

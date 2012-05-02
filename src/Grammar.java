@@ -5,110 +5,112 @@ import java.lang.Math.*;
 public class Grammar
 {
     public LinkedList<Rule> rules;
-	//Used for determining unique nonterminals for use in the
-	//first and follow set methods
+    //Used for determining unique nonterminals for use in the
+    //first and follow set methods
 
-	public Grammar()
-	{
-		rules = new LinkedList<Rule>();
-	}
+    public Grammar()
+    {
+	rules = new LinkedList<Rule>();
+    }
 
-	public Grammar(LinkedList<Rule> rules)
-	{
-		this.rules = rules;
-	}
+    public Grammar(LinkedList<Rule> rules)
+    {
+	this.rules = rules;
+    }
 
-	/**
-	 * Adds a rule to the grammar.
-	 *
-	 * @param rule The rule to add to the grammar.
-	 */
-	public void add(Rule rule)
-	{
+    /**
+     * Adds a rule to the grammar.
+     *
+     * @param rule The rule to add to the grammar.
+     */
+    public void add(Rule rule)
+    {
 
-	    rules.add(rule);
-	}
+	rules.add(rule);
+    }
 
-	/**
-	 * Returns how many rules there are in the grammar
-	 *
-	 * @return the number of rules there are in the grammar
-	 */
-	public int countRules()
-	{
-		return rules.size();
-	}
+    /**
+     * Returns how many rules there are in the grammar
+     *
+     * @return the number of rules there are in the grammar
+     */
+    public int countRules()
+    {
+	return rules.size();
+    }
 
-	/**
-	 * This method removes all immediate left recursion.
-	 * Will check every rule in the grammar to be sure.
-	 * Call this method after the separate method.
-	 */
-	public void removeRecursion()
-	{
-		LinkedList<Rule> rulesCleaned = new LinkedList<Rule>();
-		boolean recursionEncounter = false;
-		String curName = null;
-		String prevName = null;
-		for(int i=0;i<countRules();i++)
-		{
-			Rule thisRule = rules.get(i);
-			Token left = thisRule.getLeftHS();
-			curName = left.getName();
-			if(curName != prevName) {
-				recursionEncounter = false;
-				prevName = curName;
-			}
-			LinkedList<Token> right = thisRule.getRightHS();
-			//System.out.printf("%20s :%s: %-20s\n", left.getName(), left.compareTo(right.getFirst()), right.getFirst().getName());
-
-			if (left.compareTo(right.getFirst()) == 0) {
-				recursionEncounter = true;
-				String leftRemName = left.getName() + "_rem";
-				Token leftRem = new Token(leftRemName, left.getTypeString());
-				LinkedList<Token> rightRem = new LinkedList<Token>();
-				for(int j = 1; j < right.size(); j++) { //Deep copy Linked List, less the first element which is causing recursion
-					rightRem.add(right.get(j));
-				}
-				rightRem.add(new Token(leftRem.getName(), left.getTypeString()));
-				Rule ruleRem = new Rule(leftRem, rightRem);
-				rulesCleaned.add(ruleRem);
-
-				// ADD EPSILON -- stewart
-				LinkedList<Token> tmp = new LinkedList<Token>();
-				tmp.add(new Token("EPSILON", TokenType.TERMINAL.toString()));
-				rulesCleaned.add(new Rule(leftRem, tmp));
-
-				if(recursionEncounter) {
-					for(Rule r: this.rules) {
-						if(r.getLeftHS().compareTo(thisRule.getLeftHS()) == 0) {
-							if(r.getRightHS().getLast().getName() != leftRemName) {
-								r.getRightHS().add(new Token(leftRemName, left.getTypeString()));
-							}
-						}
-					}
-					for(Rule r: rulesCleaned) {
-						if(r.getLeftHS().compareTo(thisRule.getLeftHS()) == 0) {
-							if(r.getRightHS().getLast().getName() != leftRemName) {
-								r.getRightHS().add(new Token(leftRemName, left.getTypeString()));
-							}
-						}
-						if(r.getLeftHS().compareTo(thisRule.getLeftHS()) == 0) {
-							if(r.getRightHS().getLast().getName() != leftRemName) {
-								r.getRightHS().add(new Token(leftRemName, left.getTypeString()));
-							}
-						}
-					}
-				}
-			}
-			else {
-				rulesCleaned.add(thisRule);
-			}
+    /**
+     * This method removes all immediate left recursion.
+     * Will check every rule in the grammar to be sure.
+     * Call this method after the separate method.
+     */
+    public void removeRecursion()
+    {
+	LinkedList<Rule> rulesCleaned = new LinkedList<Rule>();
+	boolean recursionEncounter = false;
+	String curName = null;
+	String prevName = null;
+	for(int i=0;i<countRules();i++)
+	    {
+		Rule thisRule = rules.get(i);
+		Token left = thisRule.getLeftHS();
+		curName = left.getName();
+		if(curName != prevName) {
+		    recursionEncounter = false;
+		    prevName = curName;
 		}
-		rules = rulesCleaned;
+		LinkedList<Token> right = thisRule.getRightHS();
 
-	}
+		if (left.compareTo(right.getFirst()) == 0) {
+		    recursionEncounter = true;
+		    String leftRemName = left.getName() + "_rem";
+		    Token leftRem = new Token(leftRemName, left.getTypeString());
+		    LinkedList<Token> rightRem = new LinkedList<Token>();
+		    for(int j = 1; j < right.size(); j++) { //Deep copy Linked List, less the first element which is causing recursion
+			rightRem.add(right.get(j));
+		    }
+		    rightRem.add(new Token(leftRem.getName(), left.getTypeString()));
+		    Rule ruleRem = new Rule(leftRem, rightRem);
+		    rulesCleaned.add(ruleRem);
 
+		    // ADD EPSILON -- stewart
+		    LinkedList<Token> tmp = new LinkedList<Token>();
+		    tmp.add(new Token("EPSILON", TokenType.TERMINAL.toString()));
+		    rulesCleaned.add(new Rule(leftRem, tmp));
+
+		    if(recursionEncounter) {
+			for(Rule r: this.rules) {
+			    if(r.getLeftHS().compareTo(thisRule.getLeftHS()) == 0) {
+				if(r.getRightHS().getLast().getName() != leftRemName) {
+				    r.getRightHS().add(new Token(leftRemName, left.getTypeString()));
+				}
+			    }
+			}
+			for(Rule r: rulesCleaned) {
+			    if(r.getLeftHS().compareTo(thisRule.getLeftHS()) == 0) {
+				if(r.getRightHS().getLast().getName() != leftRemName) {
+				    r.getRightHS().add(new Token(leftRemName, left.getTypeString()));
+				}
+			    }
+			    if(r.getLeftHS().compareTo(thisRule.getLeftHS()) == 0) {
+				if(r.getRightHS().getLast().getName() != leftRemName) {
+				    r.getRightHS().add(new Token(leftRemName, left.getTypeString()));
+				}
+			    }
+			}
+		    }
+		}
+		else {
+		    rulesCleaned.add(thisRule);
+		}
+	    }
+	rules = rulesCleaned;
+
+    }
+
+    /**
+       Silly little Tuple private class, had a few functions that made life easier for left factoring.
+    */
     private class Pair {
 
 	Rule r1;
@@ -127,22 +129,22 @@ public class Grammar
 	// }
 
 	public LinkedList<Token> getPrefix(Rule a, Rule b){
-		return Grammar.getPrefix(a.getRightHS(), b.getRightHS());
+	    return Grammar.getPrefix(a.getRightHS(), b.getRightHS());
 	}
 
 	public LinkedList<Token> getPrefix(){
 	    if (r1 == null || r2 == null)
 		return null;
 	    try{
-	    return this.getPrefix(r1,r2);
+		return this.getPrefix(r1,r2);
 	    } catch(NullPointerException e)
 		{ return null; }
 	}
 
 	public String toString(){
 	    String r1str = "", r2str = "";
-		r1str = r1.toString().trim() + " ";
-		r2str = r2.toString().trim() + " ";
+	    r1str = r1.toString().trim() + " ";
+	    r2str = r2.toString().trim() + " ";
 
 	    return String.format("A> %s\nB> %s", r1str.trim(), r2str.trim());
 	}
@@ -182,21 +184,24 @@ public class Grammar
 	return out;
     }
 
+    /**
+       Removes left factorization.
+    */
     public void leftFactor() {
 	boolean changed;
 
 	do{
-	LinkedList<LinkedList<Rule>> categorized = categorizeRules();
-	LinkedList<Rule> conflictProduction = new LinkedList<Rule>();
-	LinkedList<Token> alpha = new LinkedList<Token>();
-	LinkedList<Token> beta;
+	    LinkedList<LinkedList<Rule>> categorized = categorizeRules();
+	    LinkedList<Rule> conflictProduction = new LinkedList<Rule>();
+	    LinkedList<Token> alpha = new LinkedList<Token>();
+	    LinkedList<Token> beta;
 
-	//	System.out.println("TOP_LOOP");
-	changed = false;
+	    changed = false;
 
-	if (categorized == null){
-	    break;
-	}
+	    if (categorized == null){
+		break;
+	    }
+
 	    ntA_production_check:
 	    for(LinkedList<Rule> ntA_productions: categorized) {
 		for(int i = 0; i < ntA_productions.size(); i++){
@@ -213,27 +218,35 @@ public class Grammar
 		}
 	    }
 
+	    // if alpha is more than one item, we're factoring.
 	    if (alpha.size() > 0 ){
 
 		LinkedList<Rule> new_rules = new LinkedList<Rule>();
-		//System.out.println("\nAlpha: " + listToStr(alpha));
 		Token A_prime = null;
 
-
+		// For every production in A...
 		for ( Rule production : conflictProduction ){
+		    // Ignore (possible?) null productions, in case I forgot to check bounds
 		    if( production == null ) {
 			break;
 		    }
-		    //System.out.println(production);
+
+		    // Find the postfix, everything but alpha...
 		    beta = getPostfix(alpha, production.getRightHS());
+
+		    // If the size of beta is less than the size of the
+		    // entire production, we can assume that everything
+		    // is kosher. Otherwise, we have an empty product
+		    // here.
 		    if ( beta.size() < production.getRightHS().size() ){
 
-			//System.out.println("Beta: " + listToStr(beta));
+			// If beta is empty, it becomes an epsilon production.
 			if( beta.size() == 0 ){
 			    beta = new LinkedList<Token>();
 			    beta.add(new Token("EPSILON", TokenType.TERMINAL.toString()));
 			}
 
+			// Creates a new nonterminal, adds the correct productions, and factors.
 			String AstrName = conflictProduction.get(0).getLeftHS().getName() + "_lf";
 
 			A_prime = new Token(AstrName, AstrName,conflictProduction.get(0).getLeftHS().type);
@@ -243,10 +256,17 @@ public class Grammar
 			    alpha_prime.add(a.clone());
 			}
 
+			// alpha_prime :=  A' alpha_k+1.... alpha_n
 			alpha_prime.add(A_prime);
+
+			// Add the new production A' -> A' beta (can be epsilon)
 			new_rules.add(new Rule(A_prime,beta));
 
 			if(changed == false){
+			    // If this is the FIRST run through this
+			    // inner loop, clear the production and
+			    // insert alpha_prime. Otherwise, remove the
+			    // production.
 			    production.getRightHS().clear();
 			    production.getRightHS().addAll(alpha_prime);
 			}else{
@@ -257,6 +277,7 @@ public class Grammar
 		    }
 
 		}
+		// If something changed, add the new rules to the grammar.
 		if ( changed ) {
 		    for ( Rule r : new_rules){
 			this.rules.add(r);
@@ -278,257 +299,228 @@ public class Grammar
 	}
 	return str;
     }
-	/**
-	 * Divides rules into a linked list of linked lists by their left tokens
-	 * This assumes the original list of rules are ordered
-	 * If I had thought of it, I would have used this for removeRecursion()
-	 *
-	 * @return
-	 */
-	public LinkedList<LinkedList<Rule>> categorizeRules() {
-		LinkedList<LinkedList<Rule>> separated = new LinkedList<LinkedList<Rule>>();
-		LinkedList<Rule> curList = new LinkedList<Rule>();
-		String curName = null;
-		String prevName = null;
+    /**
+     * Divides rules into a linked list of linked lists by their left tokens
+     * This assumes the original list of rules are ordered
+     * If I had thought of it, I would have used this for removeRecursion()
+     *
+     * @return
+     */
+    public LinkedList<LinkedList<Rule>> categorizeRules() {
+	LinkedList<LinkedList<Rule>> separated = new LinkedList<LinkedList<Rule>>();
+	LinkedList<Rule> curList = new LinkedList<Rule>();
+	String curName = null;
+	String prevName = null;
 
-		if (rules.size() == 0){
-		    return null;
-		}
-		curName = rules.get(0).getLeftHS().getName();
-		prevName = curName;
-		for(Rule r: rules) {
-			curName = r.getLeftHS().getName();
-			if(prevName.compareTo(curName) == 0) {
-			    //				System.out.println("Match on " + curName);
-				curList.add(r);
-			}
-			else {
-			    //				System.out.println("Mismatch, now categorizing " + curName);
-				separated.add(curList);
-				curList = new LinkedList<Rule>();
-				curList.add(r);
-			}
-			prevName = curName;
-		}
-		return separated;
+	if (rules.size() == 0){
+	    return null;
 	}
+	curName = rules.get(0).getLeftHS().getName();
+	prevName = curName;
+	for(Rule r: rules) {
+	    curName = r.getLeftHS().getName();
+	    if(prevName.compareTo(curName) == 0) {
+		//				System.out.println("Match on " + curName);
+		curList.add(r);
+	    }
+	    else {
+		//				System.out.println("Mismatch, now categorizing " + curName);
+		separated.add(curList);
+		curList = new LinkedList<Rule>();
+		curList.add(r);
+	    }
+	    prevName = curName;
+	}
+	return separated;
+    }
 
-	/**
-	 * This method populates the follow set of every nonterminal token in the
-	 * grammar.
-	 */
-	public void makeFollowSet()
-	{
-		for(int l=0;l<countRules();l++)
-		{
-			for(int i=0;i<countRules();i++)
-			{
-				Rule rule = rules.get(i);
+    /**
+     * This method populates the follow set of every nonterminal token in the
+     * grammar.
+     */
+    public void makeFollowSet()
+    {
+	for(int l=0;l<countRules();l++)
+	    {
+		for(int i=0;i<countRules();i++)
+		    {
+			Rule rule = rules.get(i);
+			Token left = rule.getLeftHS();
+			LinkedList<Token> rightHS = rule.getRightHS();
+			if(i==0)
+			    {
+				left.getFollowSet().add(new Token("dollar","dollar"));
+			    }
+			for(int j=0;j<rightHS.size();j++)
+			    {
+				Token Xi = rightHS.get(j);
+				if(j==rightHS.size()-1)
+				    {
+					if(left.getFollowSet()!=null)
+					    {
+						Xi.getFollowSet().add(left.getFollowSet().getSet());
+					    }
+				    }
+				else
+				    {
+					for(int k=(j+1);k<(j+2);k++)
+					    {
+						Token Xiplus1 = rightHS.get(k);
+						if(Xiplus1.getTypeString().compareToIgnoreCase("nonterminal")== 0 &&
+						   Xiplus1.getTypeString()!="terminal")
+						    {
+							Xi.getFollowSet().add(Xiplus1.getFirstSet().getSet());
+						    }
+						else if(Xiplus1.getTypeString().compareToIgnoreCase("terminal")== 0)
+						    {
+							Xi.getFollowSet().add(Xiplus1);
+						    }
+					    }
+				    }
+			    }
+		    }
+	    }
+    }
+
+    /**
+     * This method populates the first set of every non terminal token in
+     * the grammar.
+     */
+    public void makeFirstSet()
+    {
+	for(int ki=0;ki<countRules();ki++)
+	    {
+		for(int i=0;i<countRules();i++)
+		    {
+			boolean toContinue = true;
+			int k=0;
+			Rule rule = rules.get(i);
+			while(toContinue&&(k<rule.getRightHS().size()))
+			    {
 				Token left = rule.getLeftHS();
 				LinkedList<Token> rightHS = rule.getRightHS();
-				if(i==0)
-				{
-					left.getFollowSet().add(new Token("dollar","dollar"));
-				}
-				for(int j=0;j<rightHS.size();j++)
-				{
-					Token Xi = rightHS.get(j);
-					if(j==rightHS.size()-1)
-					{
-						if(left.getFollowSet()!=null)
-						{
-							Xi.getFollowSet().add(left.getFollowSet().getSet());
-						}
-					}
-					else
-					{
-						for(int k=(j+1);k<(j+2);k++)
-						{
-							Token Xiplus1 = rightHS.get(k);
-							if(Xiplus1.getTypeString().compareToIgnoreCase("nonterminal")== 0 &&
-									Xiplus1.getTypeString()!="terminal")
-							{
-								Xi.getFollowSet().add(Xiplus1.getFirstSet().getSet());
-							}
-							else if(Xiplus1.getTypeString().compareToIgnoreCase("terminal")== 0)
-							{
-								Xi.getFollowSet().add(Xiplus1);
-							}
-						}
-					}
-				}
-			}
-		}
-	}
+				Token Xi = rightHS.get(k);
+				if(Xi.getTypeString().compareToIgnoreCase("terminal")==0)
+				    {
+					if(left.getFirstSet()!=null)
+					    {
+						left.getFirstSet().addNoEpsilons(Xi);//.clone());
 
-	/**
-	 * This method populates the first set of every non terminal token in
-	 * the grammar.
-	 */
-	public void makeFirstSet()
-	{
-		for(int ki=0;ki<countRules();ki++)
-		{
-			for(int i=0;i<countRules();i++)
-			{
-				boolean toContinue = true;
-				int k=0;
-				Rule rule = rules.get(i);
-				while(toContinue&&(k<rule.getRightHS().size()))
-				{
-					Token left = rule.getLeftHS();
-					LinkedList<Token> rightHS = rule.getRightHS();
-					Token Xi = rightHS.get(k);
-					if(Xi.getTypeString().compareToIgnoreCase("terminal")==0)
-					{
-						if(left.getFirstSet()!=null)
-						{
-							left.getFirstSet().addNoEpsilons(Xi);//.clone());
-	
-						}
-					}
-					else if(Xi.getTypeString().compareToIgnoreCase("nonterminal")==0)
-					{
-						if(left.getFirstSet()!=null)
-						{
-							left.getFirstSet().addNoEpsilons(Xi.getFirstSet().getSet());
-						}
-					}
-					if(!Xi.getFirstSet().hasEpsilon())
-					{
-						toContinue=false;
-					}
-					k++;
-				}
-				if(toContinue)
-				{
-					rule.getLeftHS().getFirstSet().add(new Token("EPSILON","token"));
-				}
-			}
-		}
-	}
+					    }
+				    }
+				else if(Xi.getTypeString().compareToIgnoreCase("nonterminal")==0)
+				    {
+					if(left.getFirstSet()!=null)
+					    {
+						left.getFirstSet().addNoEpsilons(Xi.getFirstSet().getSet());
+					    }
+				    }
+				if(!Xi.getFirstSet().hasEpsilon())
+				    {
+					toContinue=false;
+				    }
+				k++;
+			    }
+			if(toContinue)
+			    {
+				rule.getLeftHS().getFirstSet().add(new Token("EPSILON","token"));
+			    }
+		    }
+	    }
+    }
 
-	public void printFirstSet()
-	{
-		for(int i=0;i<rules.size();i++)
-		{
-			if(rules.get(i).getLeftHS()!=null)
-			{
-				System.out.println(rules.get(i).getLeftHS().toString() + " = { \n");
-			}
-			if(rules.get(i).getLeftHS().getFirstSet()!=null)
-			{
-				System.out.println(rules.get(i).getLeftHS().getFirstSet().toString());
-			}
+    public void printFirstSet()
+    {
+	for(int i=0;i<rules.size();i++)
+	    {
+		if(rules.get(i).getLeftHS()!=null)
+		    {
+			System.out.println(rules.get(i).getLeftHS().toString() + " = { \n");
+		    }
+		if(rules.get(i).getLeftHS().getFirstSet()!=null)
+		    {
+			System.out.println(rules.get(i).getLeftHS().getFirstSet().toString());
+		    }
 
-			System.out.println("}\n");
-		}
-	}
+		System.out.println("}\n");
+	    }
+    }
 
-	public void printFollowSet()
-	{
-		for(int i=0;i<rules.size();i++)
-		{
-			if(rules.get(i).getLeftHS()!=null)
-			{
-				System.out.println(rules.get(i).getLeftHS().toString() + " = { \n");
-			}
-			if(rules.get(i).getLeftHS().getFollowSet()!=null)
-			{
-				System.out.println(rules.get(i).getLeftHS().getFollowSet().toString());
-			}
+    public void printFollowSet()
+    {
+	for(int i=0;i<rules.size();i++)
+	    {
+		if(rules.get(i).getLeftHS()!=null)
+		    {
+			System.out.println(rules.get(i).getLeftHS().toString() + " = { \n");
+		    }
+		if(rules.get(i).getLeftHS().getFollowSet()!=null)
+		    {
+			System.out.println(rules.get(i).getLeftHS().getFollowSet().toString());
+		    }
 
-			System.out.println("}\n");
-		}
-	}
+		System.out.println("}\n");
+	    }
+    }
 
-	public String toString()
-	{
-		String returned=new String();
-		for(int i=0;i<countRules();i++)
-		{
-			returned+=rules.get(i).toString();
-		}
-		return returned;
-	}
+    public String toString()
+    {
+	String returned=new String();
+	for(int i=0;i<countRules();i++)
+	    {
+		returned+=rules.get(i).toString();
+	    }
+	return returned;
+    }
 
-	public Rule getRule(int index)
-	{
-		Rule returned = rules.get(index);
-		return returned;
-	}
+    public Rule getRule(int index)
+    {
+	Rule returned = rules.get(index);
+	return returned;
+    }
 
-	/**
-	 * It separates every grammar rule that has a right hand side with an | in
-	 * it.  It makes a separate rule for every | that it encounters.
-	 */
-	public void separate()
-	{
-	    return;
-	    /*
-		LinkedList<Rule> newRules = new LinkedList<Rule>();
-		while(!(rules.isEmpty()))
-		{
-		    System.out.println("Separating...");
-			Rule removed = rules.poll().clone();
-			Token leftHS = removed.getLeftHS().clone();
-			LinkedList<Token> rightHS = removed.getRightHS();
-			LinkedList<Token> newRight = new LinkedList<Token>();
-			while(!(rightHS.isEmpty()))
-			{
-				Token removeToken = rightHS.poll().clone();
-				if(removeToken.getName().compareTo("|")==0)
-				{
-					Rule toAdd = new Rule(leftHS,newRight);
-					newRules.add(toAdd);
-					newRight = new LinkedList<Token>();
-				}
-				else
-				{
-					newRight.add(removeToken);
-					if(rightHS.isEmpty())
-					{
-						Rule toAdd = new Rule(leftHS,newRight);
-						newRules.add(toAdd);
-					}
-				}
-			}
-		}
-		rules = null;
-		rules = newRules;
-	    */
-	}
+    /**
+     * It separates every grammar rule that has a right hand side with an | in
+     * it.  It makes a separate rule for every | that it encounters.
+     */
+    public void separate()
+    {
+	// Now unused; the new lexer also handles the grammar files, and
+	// correctly separates them.
+	return;
 
-	public Token searchLHS(Token search)
-	{
-		for(int i=0;i<rules.size();i++)
-		{
-			if(search.getName().compareToIgnoreCase(rules.get(i).getLeftHS().getName())==0)
-			{
-				return rules.get(i).getLeftHS();
-			}
-		}
-		return search;
-	}
+    }
 
-	public Token searchGrammar(Token search)
-	{
-		for(int i=0;i<rules.size();i++)
-		{
-			Rule rule = rules.get(i);
-			if(search.getName().compareToIgnoreCase(rule.getLeftHS().getName())==0)
-			{
-				return rules.get(i).getLeftHS();
-			}
-			for(int j=0;j<rule.getRightHS().size();j++)
-			{
-				Token right = rule.getRightHS().get(j);
-				if(search.getName().compareToIgnoreCase(right.getName())==0)
-				{
-					return right;
-				}
-			}
-		}
-		return search;
-	}
+    public Token searchLHS(Token search)
+    {
+	for(int i=0;i<rules.size();i++)
+	    {
+		if(search.getName().compareToIgnoreCase(rules.get(i).getLeftHS().getName())==0)
+		    {
+			return rules.get(i).getLeftHS();
+		    }
+	    }
+	return search;
+    }
+
+    public Token searchGrammar(Token search)
+    {
+	for(int i=0;i<rules.size();i++)
+	    {
+		Rule rule = rules.get(i);
+		if(search.getName().compareToIgnoreCase(rule.getLeftHS().getName())==0)
+		    {
+			return rules.get(i).getLeftHS();
+		    }
+		for(int j=0;j<rule.getRightHS().size();j++)
+		    {
+			Token right = rule.getRightHS().get(j);
+			if(search.getName().compareToIgnoreCase(right.getName())==0)
+			    {
+				return right;
+			    }
+		    }
+	    }
+	return search;
+    }
 }
