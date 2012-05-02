@@ -310,7 +310,13 @@ public class ParseTable {
 	for( String nt : nonterm ) {
 	    csv += nt + ",";
 	    for( String t : term ) {
-		csv += m.get(nt,t).toString().trim() + ",";
+		String ruleString = "";
+		for ( Rule r: ((LinkedList<Rule>) m.get(nt,t))){
+		    for (Token tok : r.getRightHS()){
+			ruleString += tok.getName().toString() + " ";
+		    }
+		}
+		csv += ruleString.trim() + ",";
 	    }
 
 	    csv += "\n";

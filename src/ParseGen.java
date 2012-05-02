@@ -5,7 +5,7 @@ import java.io.*;
 public class ParseGen
 {
     //private static Lexer lex;
-    private static source_lexer lex;
+    private static Lexer lex;
     private static Grammar grammar;
     private static LinkedList<Token> terminals;
     private static ParseTable parseTable;
@@ -69,12 +69,12 @@ public class ParseGen
 					{
 					    state = grammar_sm.rules_rhs;
 					    continue;
-						} 
+						}
 						else if( token.type == TokenType.NON_TERMINAL){
 					    //System.out.println(token);
 					    	lhs = token;
 					    	continue;
-						} 
+						}
 						else
 						{
 							System.out.println("WTF? -> " + lhs);
@@ -99,7 +99,7 @@ public class ParseGen
 					grammar.add(nextRule);
 					parseStack = new LinkedList<Token>();
 					continue;
-			    } 
+			    }
 			    else if (token.type == TokenType.RULE_SEP)
 			    {
 			    	if(lhs == null) System.out.println("prev" + prev);
@@ -116,14 +116,14 @@ public class ParseGen
 			    	grammar.add(nextRule);
 			    	parseStack = new LinkedList<Token>();
 			    	continue;
-			    } 
+			    }
 			    else if(state == grammar_sm.rules_rhs)
 			    {
 			    	token = grammar.searchGrammar(token);
 			    	parseStack.add(token);
 			    }
 			}
-	
+
 			prev = token;
 		}
 	    catch(NullPointerException e){
@@ -162,7 +162,7 @@ public class ParseGen
 	//     }
 	//lex.readFile();
 
-	lex = new source_lexer(source_lexer.LexerType.GRAMMAR, false);
+	lex = new Lexer(Lexer.LexerType.GRAMMAR, false);
 
 	try{
 	    lex.tokenize(lex.readFile(new BufferedReader(new FileReader(args[0]))));
@@ -175,9 +175,9 @@ public class ParseGen
 	//System.out.println(grammar);
 	//grammar.separate();
 	//System.out.println(grammar + "\n-----------\n");
-	//grammar.removeRecursion();
+	grammar.removeRecursion();
 	//System.out.println(grammar);
-	//grammar.leftFactor();
+	grammar.leftFactor();
 	//System.out.println(grammar);
 	grammar.makeFirstSet();
 	grammar.makeFollowSet();
