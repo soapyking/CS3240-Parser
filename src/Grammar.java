@@ -414,7 +414,7 @@ public class Grammar
 						left.getFirstSet().addNoEpsilons(Xi.getFirstSet().getSet());
 					    }
 				    }
-				if(!Xi.getFirstSet().hasEpsilon())
+				if(!Xi.getFirstSet().hasEpsilon() && !(Xi.getName().trim().startsWith("EPSILON",0)))
 				    {
 					toContinue=false;
 				    }
