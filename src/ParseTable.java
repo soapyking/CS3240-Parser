@@ -20,12 +20,17 @@ public class ParseTable {
 	private int numColumns;
 	private int numRows;
 
-	public ParseTable()
-	{
-		table = new LinkedList<LinkedList<Rule>>();
-		numColumns = 0;
-		numRows=0;
-	}
+    public ParseTable()
+    {
+	table = new LinkedList<LinkedList<Rule>>();
+	numColumns = 0;
+	numRows=0;
+    }
+
+    public ParseTable(String csv){
+	this();
+	this.parseTableFromCSV(csv);
+    }
 
 	private void setupParseTable(Grammar grammar)
 	{
@@ -274,6 +279,74 @@ public class ParseTable {
 
 	return csv.substring(0, csv.length()-2) + "\n";
 
+    }
+
+    private void parseTableFromCSV(String csv){
+	// TreeMap<String, String> nonterm_keys = new TreeMap<String,String>();
+	// TreeMap<String, String> term_keys = new TreeMap<String,String>();
+	// this.parseTable = new MultiKeyMap();
+
+	// String[] nonterm_lines = csv.split("\n");
+	// String[] TokenLine = nonterm_lines[0].split(",");
+	// nonterm_lines = Arrays.copyOfRange(nonterm_lines, 1, nonterm_lines.length);
+
+	// for (String x : nonterm_lines){
+	//     String tmp = x.split(",")[0].trim();
+	//     if ( tmp  != "")
+	// 	nonterm_keys.put(tmp.trim(),tmp.trim());
+	// }
+
+	// for (String x : TokenLine) {
+	//     if (x.trim() != "")
+	// 	term_keys.put(x.trim(),x.trim());
+	// }
+
+	// for (String x : nonterm_keys.keySet()){
+	//     for (String y : term_keys.keySet()) {
+	// 	this.parseTable.put(x,y, new LinkedList<Rule>());
+	//     }
+	// }
+
+	// System.out.println(term_keys);
+	// System.out.println(nonterm_keys);
+
+	// int index = 0;
+	// for (String line : nonterm_lines){
+	//     index++;
+	//     String[] cells = line.split(",");
+
+
+
+	//     for( String cell : cells ){
+	// 	String nonterm = cell.split(",")[0];
+	// 	if(nonterm.trim().equals(""))
+	// 	    continue;
+	// 	System.out.println(nonterm);
+	// 	System.out.println(nonterm.trim().equals(""));
+	// 	System.out.println(nonterm_keys.get(nonterm));
+
+	// 	String[] entry = cell.split(" ");
+	// 	entry = Arrays.copyOfRange(entry, 1, entry.length);
+	// 	LinkedList<Token> tokenList = new LinkedList<Token>();
+
+	// 	for ( String item : entry ){
+	// 	    if(item.trim().equals(""))
+	// 		continue;
+	// 	    System.out.println("--" + item + "--");
+	// 	    if( nonterm_keys.containsKey(item) )
+	// 		tokenList.add(new Token(item, TokenType.NON_TERMINAL.toString()));
+	// 	    else
+	// 		tokenList.add(new Token(item, TokenType.TERMINAL.toString()));
+
+	// 	}
+	// 	LinkedList<Rule> ruleset = ((LinkedList<Rule>)this.parseTable.get(nonterm_keys.get(nonterm),term_keys.get(TokenLine[index])));
+
+	// 	ruleset.add(new Rule(new Token(nonterm_keys.get(nonterm), TokenType.NON_TERMINAL.toString()), tokenList));
+	// 	System.out.println("----");
+	//     }
+
+	// }
+	// System.out.println(this.parseTable);
     }
 
 
