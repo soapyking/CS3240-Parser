@@ -1,7 +1,11 @@
 import org.apache.regexp.*;
 
 public enum SourceToken{
-
+    /**
+       Enumeration that holds the string 'name' representation of a
+       syntax item in the grammar as well as the regular expression that
+       will match it in a source file.
+     */
 
     // Terminals
 

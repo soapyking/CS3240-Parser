@@ -2,6 +2,10 @@ import java.util.LinkedList;
 
 public class FirstSet
 {
+    /**
+       Maintains the first set of a token.
+     */
+
 	private LinkedList<Token> set;
 	public FirstSet()
 	{
@@ -53,7 +57,7 @@ public class FirstSet
 			}
 		}
 	}
-	
+
 	public void addNoEpsilons(LinkedList<Token> toAdd)
 	{
 		for(int i=0;i<toAdd.size();i++)
@@ -72,7 +76,7 @@ public class FirstSet
 			add(toAdd);
 		}
 	}
-	
+
 	public boolean hasEpsilon()
 	{
 		for(int i=0;i<set.size();i++)
@@ -106,7 +110,7 @@ public class FirstSet
 			return set.get(set.size()-1);
 		}
 	}
-	
+
 	public FirstSet clone()
 	{
 		LinkedList<Token> newSet = new LinkedList<Token>();

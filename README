@@ -76,4 +76,17 @@ $> ./parser_generator.sh [GRAMMAR_FILE] [OUTPUT_FILE]
 
 [GRAMMAR_FILE]:
 
-  Standard gr
+  A grammar file of the same format as given in the project
+  documentation. Known-working examples included in ./test
+
+[OUTPUT_FILE]:
+
+  A CSV file with the completed parser table.
+
+---------- driver ----------
+
+First, compile the driver. From the root directory:
+
+$> make
+$> make run
+$> ./parser_generator.sh [
