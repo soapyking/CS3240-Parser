@@ -1,19 +1,18 @@
 import java.util.*;
-import org.apache.commons.collections.MapIterator;
 import org.apache.commons.collections.map.MultiKeyMap;
 
+/**
+ * This class handles the parse table for the program.
+ * It is implemented with a 2d linked list where the
+ * "outer" linked list holds a linked list which represents a row in
+ * the parse table.  The first slot in the outer linked list will hold the
+ * top of the linked list, which will have rules for the columns.
+ * To signify which terminal and non terminal label will be applied on each
+ * column and row, the rule will only have a left hand side that is the
+ * token for which a usual row or column will be labeled.
+ */
 public class ParseTable {
 
-	/**
-	 * This class handles the parse table for the program.
-	 * It is implemented with a 2d linked list where the
-	 * "outer" linked list holds a linked list which represents a row in
-	 * the parse table.  The first slot in the outer linked list will hold the
-	 * top of the linked list, which will have rules for the columns.
-	 * To signify which terminal and non terminal label will be applied on each
-	 * column and row, the rule will only have a left hand side that is the
-	 * token for which a usual row or column will be labeled.
-	 */
 	private LinkedList<LinkedList<Rule>> table;
     private MultiKeyMap parseTable = null;
     private Set<String> nonterm_keys = null;
