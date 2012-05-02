@@ -367,9 +367,9 @@ public class Grammar
 	 */
 	public void makeFirstSet()
 	{
-		for(int ki=0;ki<countRules();ki++)
+		for(int ki=0;ki<countRules();ki++)//while loop in book 
 		{
-			for(int i=0;i<countRules();i++)
+			for(int i=0;i<countRules();i++)//for loop grabbing every rule 
 			{
 				boolean toContinue = true;
 				int k=0;
@@ -394,8 +394,12 @@ public class Grammar
 							left.getFirstSet().addNoEpsilons(Xi.getFirstSet().getSet());
 						}
 					}
-					if(!Xi.getFirstSet().hasEpsilon())
+					if((!Xi.getFirstSet().hasEpsilon())&&(!(Xi.getName().trim().startsWith("EPSILON",0))))
 					{
+						
+						System.out.println(Xi.getName());
+						System.out.println(Xi.getFirstSet().hasEpsilon());
+						System.out.println(Xi.getName().trim().startsWith("EPSILON",0));
 						toContinue=false;
 					}
 					k++;
