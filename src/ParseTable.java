@@ -13,7 +13,9 @@ import org.apache.commons.collections.map.MultiKeyMap;
  */
 public class ParseTable {
 
+	/** NOT USED **/
 	private LinkedList<LinkedList<Rule>> table;
+	
     private MultiKeyMap parseTable = null;
     private Set<String> nonterm_keys = null;
     private Set<String> term_keys = null;
@@ -281,75 +283,6 @@ public class ParseTable {
 
     }
 
-    private void parseTableFromCSV(String csv){
-	// TreeMap<String, String> nonterm_keys = new TreeMap<String,String>();
-	// TreeMap<String, String> term_keys = new TreeMap<String,String>();
-	// this.parseTable = new MultiKeyMap();
-
-	// String[] nonterm_lines = csv.split("\n");
-	// String[] TokenLine = nonterm_lines[0].split(",");
-	// nonterm_lines = Arrays.copyOfRange(nonterm_lines, 1, nonterm_lines.length);
-
-	// for (String x : nonterm_lines){
-	//     String tmp = x.split(",")[0].trim();
-	//     if ( tmp  != "")
-	// 	nonterm_keys.put(tmp.trim(),tmp.trim());
-	// }
-
-	// for (String x : TokenLine) {
-	//     if (x.trim() != "")
-	// 	term_keys.put(x.trim(),x.trim());
-	// }
-
-	// for (String x : nonterm_keys.keySet()){
-	//     for (String y : term_keys.keySet()) {
-	// 	this.parseTable.put(x,y, new LinkedList<Rule>());
-	//     }
-	// }
-
-	// System.out.println(term_keys);
-	// System.out.println(nonterm_keys);
-
-	// int index = 0;
-	// for (String line : nonterm_lines){
-	//     index++;
-	//     String[] cells = line.split(",");
-
-
-
-	//     for( String cell : cells ){
-	// 	String nonterm = cell.split(",")[0];
-	// 	if(nonterm.trim().equals(""))
-	// 	    continue;
-	// 	System.out.println(nonterm);
-	// 	System.out.println(nonterm.trim().equals(""));
-	// 	System.out.println(nonterm_keys.get(nonterm));
-
-	// 	String[] entry = cell.split(" ");
-	// 	entry = Arrays.copyOfRange(entry, 1, entry.length);
-	// 	LinkedList<Token> tokenList = new LinkedList<Token>();
-
-	// 	for ( String item : entry ){
-	// 	    if(item.trim().equals(""))
-	// 		continue;
-	// 	    System.out.println("--" + item + "--");
-	// 	    if( nonterm_keys.containsKey(item) )
-	// 		tokenList.add(new Token(item, TokenType.NON_TERMINAL.toString()));
-	// 	    else
-	// 		tokenList.add(new Token(item, TokenType.TERMINAL.toString()));
-
-	// 	}
-	// 	LinkedList<Rule> ruleset = ((LinkedList<Rule>)this.parseTable.get(nonterm_keys.get(nonterm),term_keys.get(TokenLine[index])));
-
-	// 	ruleset.add(new Rule(new Token(nonterm_keys.get(nonterm), TokenType.NON_TERMINAL.toString()), tokenList));
-	// 	System.out.println("----");
-	//     }
-
-	// }
-	// System.out.println(this.parseTable);
-    }
-
-
     /**
 	Removes duplicate entries in the LinkedList.
      */
@@ -398,6 +331,16 @@ public class ParseTable {
 		table.get(cordRow).set(cordCol,toAdd);
 	}
 
+	/**
+	 * Takes nonterm and term and returns the rule at the corresponding location in the table
+	 * @param nonterm
+	 * @param term
+	 * @return The rule in the table corresponding to the nonterm and term
+	 */
+	public Rule getIntersection(String nonterm, String term) {
+		return (Rule) parseTable.get(nonterm, term);
+	}
+	
     /**
        No longer used.
      */
@@ -419,6 +362,12 @@ public class ParseTable {
 		return table;
 	}
 
+	/**
+	 * No longer used
+	 * @param csv
+	 */
+    private void parseTableFromCSV(String csv){
+    }
 
 
 }
