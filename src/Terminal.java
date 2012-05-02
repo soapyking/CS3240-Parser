@@ -4,7 +4,7 @@ public class Terminal {
 	
 	public static void main(String[] args)
 	{
-		lex  = new Lexer(args[0]);
+//		lex  = new Lexer(args[0]);
 		
 	}
 }
